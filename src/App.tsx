@@ -4,18 +4,14 @@ import Button from "./components/Button/Button";
 import Header from "./components/Header/Header";
 import Text from "./components/Text/Text";
 
-const buttons = [
-	{ text: "Wallet", svg: WalletIcon, url: "/wallet" },
-	// { text: "Profile", svg: <ProfileIcon />, url: "/profile" },
-	// add more button objects here...
-];
+const buttons = [{ text: "Wallet", svg: WalletIcon, url: "/wallet" }];
 
 const App = () => {
 	return (
 		<div className="App">
 			<Header />
 			<div>
-				<Text text={"Cryptocurrency based on the game Animal Crossing"} />
+				<Text />
 				{buttons.map((button, index) => (
 					<Button
 						key={index}
