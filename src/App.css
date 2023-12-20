@@ -1,6 +1,13 @@
 #root {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 0;
-  text-align: center;
+	/* max-width: 1080px; */
+	margin: 0 auto;
+	padding: 0;
+	text-align: center;
+}
+
+.App {
+	height: 100vh;
+	background-image: url("./assets/bg.png");
+	background-repeat: no-repeat;
+	background-position: center;
 }
