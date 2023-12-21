@@ -1,11 +1,17 @@
-#root {
-	margin: 0 auto;
-	padding: 0;
+.App {
+  height: 100vh;
+  background-image: url("./assets/bg.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
-.App {
-	background-image: url("./assets/bg.png");
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: cover;
+.buttons-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+#root {
+  margin: 0 auto;
+  padding: 0;
 }
