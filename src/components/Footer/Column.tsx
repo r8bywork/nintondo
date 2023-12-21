@@ -1,6 +1,6 @@
 interface ColumnProps {
   title: string;
-  items: string[];
+  items: { text: string; href: string }[];
 }
 const Column = ({ title, items }: ColumnProps) => (
   <div className='w-full md:w-1/4 p-4'>
@@ -14,10 +14,10 @@ const Column = ({ title, items }: ColumnProps) => (
           className='text-white text-[12px] font-normal leading-[30px] mb-2 hover:text-gray-300'
         >
           <a
-            href='#'
+            href={item.href}
             className='no-underline'
           >
-            {item}
+            {item.text}
           </a>
         </li>
       ))}

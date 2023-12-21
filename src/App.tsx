@@ -1,16 +1,9 @@
 import './App.css';
-// import WalletIcon from './assets/wallet.svg?react';
-import NewWalletIcon from './assets/newwallet.svg?react';
 import Button from './components/Button/Button';
 import Header from './components/Header/Header';
 import Text from './components/Text/Text';
 import Footer from './components/Footer/Footer.tsx';
-
-const buttons = [
-  { text: 'Wallet', svg: NewWalletIcon, url: 'https://github.com/Nintondo/extension/releases/' },
-  { text: 'Markets', svg: NewWalletIcon, url: '/market' },
-  { text: 'Explorer', svg: NewWalletIcon, url: '/explorer' },
-];
+import { buttons } from './settings/settings.ts';
 
 const App = () => {
   return (
