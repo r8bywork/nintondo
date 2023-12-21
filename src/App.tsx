@@ -8,27 +8,30 @@ import { buttons } from './settings/settings.ts';
 const App = () => {
   return (
     <div className='App'>
-      <Header />
-
-      <div className='min-h-screen mt-[-100px] flex-grow flex items-center justify-center'>
-        <div className='w-[1080px]'>
-          <div className='mb-24'>
-            <Text />
-          </div>
-          <div className='flex justify-center py-1'>
-            {buttons.map((button, index) => (
-              <Button
-                key={index}
-                text={button.text}
-                SvgIcon={button.svg}
-                url={button.url}
-                className={'[&:not(:last-child)]:mr-[76px]'}
-              />
-            ))}
+      <div className={'app-container'}>
+        <Header />
+        <div className='min-h-screen mt-[-100px] flex-grow flex items-center justify-center'>
+          <div className='w-[1080px]'>
+            <div className='mb-24'>
+              <Text />
+            </div>
+            <div className='flex justify-center py-1'>
+              {buttons.map((button, index) => (
+                <Button
+                  key={index}
+                  text={button.text}
+                  SvgIcon={button.svg}
+                  url={button.url}
+                  className={'[&:not(:last-child)]:mr-[76px]'}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
-      <div className='bg-gradient-to-b from-transparent via-black/100 to-black/100'>
+
+      {/*<div className='bg-gradient-to-b from-transparent via-black/100 to-black/100'>*/}
+      <div className={'bg-black pt-[30px]'}>
         <div className={'w-[1080px] mx-auto'}>
           <div
             className='w-full mx-auto  text-lg text-white mb-[20px]'

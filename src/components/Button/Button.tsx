@@ -17,7 +17,7 @@ const Button = ({ onClick, text, SvgIcon, url, className }: ButtonProps) => {
       </div>
       <a
         href={url}
-        target='_blank'
+        target={url?.startsWith('#') ? '_self' : '_target'}
         rel='noopener noreferrer'
         className='text-[#1D2127] text-center font-inconsolata text-24px font-bold leading-normal'
       >

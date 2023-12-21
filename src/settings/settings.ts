@@ -42,6 +42,6 @@ export const footerContent = [
 
 export const buttons = [
   { text: 'Wallet', svg: NewWalletIcon, url: 'https://github.com/Nintondo/extension/releases/' },
-  { text: 'Markets', svg: Market, url: '/market' },
-  { text: 'Explorer', svg: Explorer, url: '/explorer' },
+  { text: 'Markets', svg: Market, url: '#markets' },
+  { text: 'Explorer', svg: Explorer, url: 'https://bells.quark.blue/' },
 ];

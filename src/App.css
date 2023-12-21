@@ -1,8 +1,12 @@
 .App {
+
+}
+
+.app-container {
   background-image: url("./assets/bgnew.jpg");
   background-repeat: no-repeat;
   background-position: top center;
-  background-size: initial;
+  background-size: cover;
 }
 
 .buttons-container {

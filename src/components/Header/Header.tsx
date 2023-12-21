@@ -4,7 +4,7 @@ const links = [
   { name: 'bells', url: '/bells' },
   { name: 'wallet', url: '#wallet' },
   { name: 'markets', url: '#markets' },
-  { name: 'explorer', url: '/explorer' },
+  { name: 'explorer', url: 'https://bells.quark.blue/' },
 ];
 
 const Header = () => {
