@@ -1,12 +1,8 @@
-.App {
-
-}
-
 .app-container {
-  background-image: url("./assets/bgnew.jpg");
+  background-image: url("./assets/original.png");
   background-repeat: no-repeat;
-  background-position: top center;
   background-size: cover;
+  background-position: center;
 }
 
 .buttons-container {

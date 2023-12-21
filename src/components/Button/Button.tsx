@@ -10,7 +10,8 @@ const Button = ({ onClick, text, SvgIcon, url, className }: ButtonProps) => {
   return (
     <button
       onClick={onClick}
-      className={`w-44 h-9 flex-shrink-0 rounded-full bg-gradient-to-r from-white to-yellow-400 flex items-center ${className}`}
+      style={{ filter: 'drop-shadow(0px 4px 20px rgba(255, 212, 92, 0.60))' }}
+      className={`w-44 h-9 rounded-full bg-gradient-to-r from-white to-yellow-400 flex items-center ${className}`}
     >
       <div className='w-13 h-13 rounded-full bg-white flex items-center justify-center mr-2'>
         <SvgIcon />
