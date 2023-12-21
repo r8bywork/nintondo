@@ -161,10 +161,10 @@ const App = () => {
           >
             <h2 className='text-4xl font-bold mb-4'>Markets</h2>
             <div className={'mb-[73px]'}>
-              <p>Where to buy $BEL?</p>
+              <p>Where to buy $BEL?</p> <br />
               {linksData.map((section, index) => (
                 <Fragment key={index}>
-                  <p>{section.type}:</p>
+                  <p>{section.type}:</p> <br />
                   <ul className='list-disc pl-4'>
                     {section.links.map((link, linkIndex) => (
                       <li key={linkIndex}>
@@ -175,6 +175,8 @@ const App = () => {
                         >
                           {link.name}
                         </a>
+                        <br />
+                        <br />
                       </li>
                     ))}
                   </ul>
