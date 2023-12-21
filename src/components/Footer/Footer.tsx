@@ -22,8 +22,8 @@ const Footer = () => {
 
   return (
     <div className={'Footer'}>
-      <div className='container mx-auto px-4 py-8'>
-        <div className='flex flex-wrap -mx-4'>
+      <div className='container py-8'>
+        <div className='flex flex-wrap'>
           {footerContent.map((column, index) => (
             <Column
               key={index}

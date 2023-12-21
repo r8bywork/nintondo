@@ -2,8 +2,8 @@ import Link from '../Link/Link';
 
 const links = [
   { name: 'bells', url: '/bells' },
-  { name: 'wallet', url: '/wallet' },
-  { name: 'markets', url: '/markets' },
+  { name: 'wallet', url: '#wallet' },
+  { name: 'markets', url: '#markets' },
   { name: 'explorer', url: '/explorer' },
 ];
 
@@ -14,9 +14,7 @@ const Header = () => {
         <Link
           href='/'
           text='NINTONDO.IO'
-          className={
-            'text-yellow-500 text-2xl font-bold leading-normal font-inconsolata text-shadow-md'
-          }
+          className={'text-yellow-500 text-2xl font-bold leading-normal text-shadow-md'}
         />
       </div>
       <div className={'flex'}>
