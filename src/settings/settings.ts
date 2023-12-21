@@ -41,7 +41,40 @@ export const footerContent = [
 ];
 
 export const buttons = [
-  { text: 'Wallet', svg: NewWalletIcon, url: 'https://github.com/Nintondo/extension/releases/' },
+  { text: 'Wallet', svg: NewWalletIcon, url: '#wallet' },
   { text: 'Markets', svg: Market, url: '#markets' },
   { text: 'Explorer', svg: Explorer, url: 'https://bells.quark.blue/' },
+];
+
+export const linksData = [
+  {
+    type: 'CEX',
+    links: [
+      {
+        link: 'https://nonkyc.io/market/BEL_USDT',
+        name: 'Nonkyc',
+      },
+      {
+        link: 'https://xeggex.com/market/BEL_USDT',
+        name: 'Xeggex',
+      },
+    ],
+  },
+  {
+    type: 'DEX',
+    links: [
+      {
+        link: 'https://belswap.org/',
+        name: 'Belswap',
+      },
+      {
+        link: 'https://opensea.io/collection/bells-curated',
+        name: 'OpenSea',
+      },
+      {
+        link: 'https://looksrare.org/collections/0x19b094c17F29a16F80bE04cdc0C3e274474C7724',
+        name: 'LooksRare',
+      },
+    ],
+  },
 ];

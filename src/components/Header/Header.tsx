@@ -1,7 +1,7 @@
 import Link from '../Link/Link';
 
 const links = [
-  { name: 'bells', url: '/bells' },
+  { name: 'POOL', url: '/' },
   { name: 'wallet', url: '#wallet' },
   { name: 'markets', url: '#markets' },
   { name: 'explorer', url: 'https://bells.quark.blue/' },

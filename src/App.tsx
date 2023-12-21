@@ -2,8 +2,9 @@ import './App.css';
 import Button from './components/Button/Button';
 import Header from './components/Header/Header';
 import Text from './components/Text/Text';
-import Footer from './components/Footer/Footer.tsx';
-import { buttons } from './settings/settings.ts';
+// import Footer from './components/Footer/Footer.tsx';
+import { buttons, linksData } from './settings/settings.ts';
+import { Fragment } from 'react';
 
 const App = () => {
   return (
@@ -52,13 +53,30 @@ const App = () => {
             id={'markets'}
           >
             <h2 className='text-4xl font-bold mb-4'>Markets</h2>
-            <div className={'underline'}>
-              <a href={'#'}>Market 1</a> <br />
-              <a href={'#'}>Market 2</a>
+            <div className={'mb-[73px]'}>
+              <p>Where to buy $BEL?</p>
+              {linksData.map((section, index) => (
+                <Fragment key={index}>
+                  <p>{section.type}:</p>
+                  <ul className='list-disc pl-4'>
+                    {section.links.map((link, linkIndex) => (
+                      <li key={linkIndex}>
+                        <a
+                          href={link.link}
+                          target={'_blank'}
+                          className='underline'
+                        >
+                          {link.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </Fragment>
+              ))}
             </div>
           </div>
 
-          <Footer />
+          {/*<Footer />*/}
           <div style={{ width: '100%', height: '100%', border: '1px white solid' }}></div>
           <div className='text-center text-white text-4xl pt-[50px] pb-[73px] font-extrabold break-words'>
             NINTONDO.IO
