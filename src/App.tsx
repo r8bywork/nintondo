@@ -4,13 +4,24 @@ import Header from './components/Header/Header';
 import Text from './components/Text/Text';
 // import Footer from './components/Footer/Footer.tsx';
 import { buttons, linksData } from './settings/settings.ts';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import WalletInfo from './components/WalletInfo/WalletInfo.tsx';
 
 const App = () => {
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className='App'>
-      <div className={'app-container'}>
+      <div
+        className={'app-container'}
+        style={{ backgroundPosition: `center -${scrollY + 10}px` }}
+      >
         <Header />
         <div className='main_screen'>
           <div className='mb-24'>
