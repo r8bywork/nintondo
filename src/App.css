@@ -1,8 +1,19 @@
+
 .app-container {
-  background-image: url("./assets/original2.png");
+  background-image: url("./assets/newbgwith.png");
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center;
+  background-attachment: fixed;
+  height: 100%
+}
+
+.main_screen {
+  min-height:100vh;
+  margin-top: -100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .buttons-container {

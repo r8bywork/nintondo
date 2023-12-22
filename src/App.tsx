@@ -5,159 +5,46 @@ import Text from './components/Text/Text';
 // import Footer from './components/Footer/Footer.tsx';
 import { buttons, linksData } from './settings/settings.ts';
 import { Fragment } from 'react';
+import WalletInfo from './components/WalletInfo/WalletInfo.tsx';
 
 const App = () => {
   return (
     <div className='App'>
       <div className={'app-container'}>
         <Header />
-        <div className='min-h-screen mt-[-100px] flex-grow flex items-center justify-center'>
-          <div className='w-[1080px]'>
-            <div className='mb-24'>
-              <Text />
-            </div>
-            <div className='flex justify-center py-1'>
-              {buttons.map((button, index) => (
-                <Button
-                  key={index}
-                  text={button.text}
-                  SvgIcon={button.svg}
-                  url={button.url}
-                  className={'[&:not(:last-child)]:mr-[76px]'}
-                />
-              ))}
-            </div>
+        <div className='main_screen'>
+          <div className='mb-24'>
+            <Text />
+          </div>
+
+          <div className='flex justify-center py-1'>
+            {buttons.map((button, index) => (
+              <Button
+                key={index}
+                text={button.text}
+                SvgIcon={button.svg}
+                url={button.url}
+                className={'[&:not(:last-child)]:mr-[76px]'}
+              />
+            ))}
           </div>
         </div>
       </div>
 
-      {/*<div className='bg-gradient-to-b from-transparent via-black/100 to-black/100'>*/}
-      <div className={'bg-black pt-[30px]'}>
+      <div className={'wallet_info bg-black pt-[30px] h-full indent-[20px]'}>
+        <div
+          className='w-[1080px] mx-auto'
+          id={'wallet'}
+        >
+          <WalletInfo />
+        </div>
+      </div>
+
+      <div className={'bg-black pt-[30px] h-full'}>
         <div className={'w-[1080px] mx-auto'}>
           <div
-            className='w-full mx-auto text-lg text-white mb-[20px] indent-[20px]'
-            id={'wallet'}
-          >
-            <h2 className='text-4xl font-bold mb-4'>Wallet</h2>
-            <p>Nintondo Wallet for Bells - A New Horizon for Your Crypto Adventures!</p>
-            <p>🌿 Version 0.0.4 - Bringing the Charm of Animal Crossing to Cryptocurrency</p>
-            <p>🍃 Welcome to Nintondo Wallet! 🍃</p>
-            <p>
-              We're thrilled to introduce Nintondo Wallet, your newest companion in the whimsical
-              world of Bells cryptocurrency. Inspired by the beloved universe of Animal Crossing,
-              our wallet is more than just a tool; it's a delightful journey into the heart of a
-              community where fun meets finance.
-            </p>
-            <br />
-            <p>🌸 Key Features:</p>
-            <ul className={'list-disc'}>
-              <li>
-                <p>
-                  Village Marketplace: Just like your favorite Animal Crossing marketplace, trade
-                  and manage your Bells with ease and charm.
-                </p>
-              </li>
-              <li>
-                <p>
-                  Tom Nook's Security: Top-notch security measures, ensuring your Bells is as safe
-                  as a bell in Tom Nook's vault.
-                </p>
-              </li>
-              <li>
-                <p>
-                  Island Backup: Never lose your data with our Island Backup system, safeguarding
-                  your wallet like the serene islands of Animal Crossing.
-                </p>
-              </li>
-              <li>
-                <p>
-                  Nook Miles Rewards: Earn Nook Miles for every transaction, adding an exciting
-                  twist to your cryptocurrency journey.
-                </p>
-              </li>
-              <li>
-                <p>
-                  Customizable Interface: Personalize your wallet with themes and characters from
-                  Animal Crossing, making finance fun!
-                </p>
-              </li>
-            </ul>
-            <br />
-            <p>🍂 What's New in 0.0.4:</p>
-            <ul className={'list-disc'}>
-              <li>
-                <p>
-                  Launch of Nintondo Wallet: A fresh start with a familiar feel for all Bells
-                  enthusiasts and Animal Crossing fans.
-                </p>
-              </li>
-              <li>
-                <p>
-                  Enhanced UI: Navigate with ease through a user-friendly interface, adorned with
-                  charming Animal Crossing aesthetics.
-                </p>
-              </li>
-              <li>
-                <p>
-                  Improved Transaction Speed: Swift as a balloon gift floating across the sky, our
-                  enhanced transaction system ensures quick and efficient processing.
-                </p>
-              </li>
-              <li>
-                <p>
-                  Community Events: Participate in special events and challenges, bringing together
-                  the community spirit of Animal Crossing.
-                </p>
-              </li>
-            </ul>
-            <br />
-            <p>🌟 Join Our Community:</p>
-            <p>
-              Step into a world where your financial journey is intertwined with the charm and
-              simplicity of Animal Crossing. Join our community, share tips, and make new friends,
-              all while managing your Bells cryptocurrency. Let's create a community as heartwarming
-              and supportive as the townsfolk of Animal Crossing!
-            </p>
-            {/*list-disc pl-4*/}
-            <br />
-            <p className={'font-bold'}>📥 Download Now:</p> <br />
-            <p>
-              <a
-                className={'underline'}
-                href='https://github.com/Nintondo/extension/releases/download/0.0.7/chrome-0.0.7.zip'
-              >
-                Chrome Extension
-              </a>
-            </p>
-            <br /> <br />
-            <p>
-              <a
-                className={'underline'}
-                href={
-                  'https://github.com/Nintondo/extension/releases/download/0.0.7/firefox-0.0.7.xpi'
-                }
-              >
-                Firefox Extension
-              </a>
-            </p>
-            <br /> <br />
-            <p>
-              Ready to embark on this enchanting crypto adventure? Download Nintondo Wallet for
-              Bells and turn your cryptocurrency experience into an idyllic escapade. Let's make our
-              financial journey not just profitable, but also delightful!
-            </p>
-            <p>
-              Note: Nintondo Wallet is not affiliated with Nintendo or the Animal Crossing
-              franchise. Bells is a meme cryptocurrency and should be enjoyed as part of a balanced
-              financial portfolio.
-            </p>
-            <br />
-            <p>Happy Bell Hunting! 🛎️</p>
-          </div>
-
-          <div
-            className='w-full mx-auto text-lg text-white'
             id={'markets'}
+            className={'text-white'}
           >
             <h2 className='text-4xl font-bold mb-4'>Markets</h2>
             <div className={'mb-[73px]'}>
@@ -184,9 +71,8 @@ const App = () => {
               ))}
             </div>
           </div>
-
           {/*<Footer />*/}
-          <div style={{ width: '100%', height: '100%', border: '1px white solid' }}></div>
+          <div className='w-full h-full border border-white'></div>
           <div className='text-center text-white text-4xl pt-[50px] pb-[73px] font-extrabold break-words'>
             NINTONDO.IO
           </div>
