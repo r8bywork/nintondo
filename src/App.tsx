@@ -35,7 +35,7 @@ const App = () => {
                 text={button.text}
                 SvgIcon={button.svg}
                 url={button.url}
-                className={'md:[&:not(:last-child)]:mr-[76px] max-md:m-[10px]'}
+                className={'md:[&:not(:last-child)]:mr-[76px] max-md:m-[15px]'}
               />
             ))}
           </div>
