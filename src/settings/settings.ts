@@ -139,3 +139,10 @@ export const contentData = [
     title: 'Happy Bell Hunting! 🛎️',
   },
 ];
+
+export const HeaderLinks = [
+  { name: 'POOL', url: '/' },
+  { name: 'wallet', url: '#wallet' },
+  { name: 'markets', url: '#markets' },
+  { name: 'explorer', url: 'https://bells.quark.blue/' },
+];
