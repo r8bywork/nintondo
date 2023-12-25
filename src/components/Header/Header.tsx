@@ -27,7 +27,11 @@ const Header = () => {
           <span></span>
         </div>
       </div>
-      <nav className={cn({ hidden: !isMenuOpen }, 'md:flex')}>
+      <nav
+        className={cn('max-md:absolute max-md:bg-[#061D3C] max-md:pb-[20px] md:flex', {
+          hidden: !isMenuOpen,
+        })}
+      >
         {HeaderLinks.map((link) => (
           <Link
             key={link.name}

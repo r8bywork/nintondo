@@ -20,16 +20,11 @@
 
 .main_screen {
   min-height:100vh;
-  margin-top: -100px;
+  /*margin-top: -100px;*/
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-}
-
-.buttons-container {
-  display: flex;
-  justify-content: space-between;
 }
 
 #root {

@@ -7,15 +7,17 @@ const Text = () => {
         {/*<div className='absolute right-0 bottom-0 w-4 h-14 bg-yellow-500'></div>*/}
       </div>
 
-      <div className='text-[20px] items-center flex flex-col'>
-        <span className={'bg-black mb-[2px]'}>
-          Mine <span className='text-yellow-500'>Bells</span> with a special
+      <div className='text-[20px] md:flex md:justify-center md:flex-col items-center'>
+        <div className='inline bg-black px-[5px] mb-[5px]'>
+          Mine <span className='bg-black text-yellow-500'>Bells</span> with a special
           <span className='text-regal-blue'> wallet</span>,
           <span className='text-regal-blue'> exchange</span> them for other
-        </span>
-        <span className={'bg-black'}>
-          cryptocurrencies and track them with <span className='text-regal-blue'>explorer</span>.
-        </span>
+        </div>
+        <div className='inline bg-black px-[5px]'>
+          <span className={''}>
+            cryptocurrencies and track them with <span className='text-regal-blue'>explorer</span>.
+          </span>
+        </div>
       </div>
     </div>
   );
