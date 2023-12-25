@@ -28,14 +28,14 @@ const App = () => {
             <Text />
           </div>
 
-          <div className='flex justify-center py-1'>
+          <div className='flex justify-center py-1 flex-wrap'>
             {buttons.map((button, index) => (
               <Button
                 key={index}
                 text={button.text}
                 SvgIcon={button.svg}
                 url={button.url}
-                className={'[&:not(:last-child)]:mr-[76px]'}
+                className={'md:[&:not(:last-child)]:mr-[76px] max-md:m-[10px]'}
               />
             ))}
           </div>
