@@ -1,17 +1,35 @@
 import Link from '../Link/Link';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './Header.css';
 import { HeaderLinks } from '../../settings/settings.ts';
 import cn from 'classnames';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   return (
-    <div className={cn('header max-md:relative', { 'menu-open': isMenuOpen })}>
+    <div
+      ref={headerRef}
+      className={cn('header max-md:relative', { 'menu-open': isMenuOpen })}
+    >
       <div className='flex justify-between w-[100%] items-center'>
         <Link
           href='/'
@@ -38,6 +56,7 @@ const Header = () => {
             text={link.name}
             href={link.url}
             className='md:[&:not(:last-child)]:mr-28 text-white'
+            onClick={toggleMenu}
           />
         ))}
       </nav>
