@@ -46,7 +46,7 @@ const App = () => {
         <div className={'wallet_info flex flex-wrap'}>
           <div
             className='w-[1080px] mx-auto py-[30px]'
-            id={'walletScreens'}
+            id={'wallet'}
           >
             <WalletInfo />
           </div>
