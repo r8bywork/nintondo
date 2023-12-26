@@ -1,11 +1,12 @@
 import './App.css';
-import Button from './components/Button/Button';
+// import Button from './components/Button/Button';
 import Header from './components/Header/Header';
 import Text from './components/Text/Text';
 // import Footer from './components/Footer/Footer.tsx';
 import { buttons, linksData } from './settings/settings.ts';
 import { Fragment, useEffect, useState } from 'react';
 import WalletInfo from './components/WalletInfo/WalletInfo.tsx';
+import DownloadLink from './components/DownloadLink/DownloadLink.tsx';
 
 const App = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -28,14 +29,13 @@ const App = () => {
             <Text />
           </div>
 
-          <div className='flex justify-center py-1 flex-wrap'>
+          <div className='flex text-white gap-[24px] flex-wrap justify-center'>
             {buttons.map((button, index) => (
-              <Button
+              <DownloadLink
                 key={index}
                 text={button.text}
-                SvgIcon={button.svg}
-                url={button.url}
-                className={'md:[&:not(:last-child)]:mr-[76px] max-md:m-[15px]'}
+                Icon={button.svg}
+                href={button.url}
               />
             ))}
           </div>

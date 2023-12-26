@@ -154,7 +154,7 @@ const WalletInfo = () => {
         ))}
       </div>
       {modalImage && (
-        <div className='fixed inset-0 flex items-center z-50'>
+        <div className='fixed inset-0 flex items-center z-50 bg-black bg-opacity-50 backdrop-blur-md'>
           <div className='p-5 relative rounded-lg max-w-lg mx-auto'>
             <button
               className='absolute top-1/2 left-1 bg-white rounded-full p-[5px]'
