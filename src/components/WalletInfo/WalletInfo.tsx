@@ -1,6 +1,14 @@
+import wallet1 from '../../assets/walletScreens/wallet1.jpg';
+import wallet2 from '../../assets/walletScreens/wallet2.jpg';
+import wallet3 from '../../assets/walletScreens/wallet3.jpg';
+import wallet4 from '../../assets/walletScreens/wallet4.jpg';
+import wallet5 from '../../assets/walletScreens/wallet5.jpg';
+import wallet6 from '../../assets/walletScreens/wallet6.jpg';
 const WalletInfo = () => {
+  const walletImages = [wallet1, wallet2, wallet3, wallet4, wallet5, wallet6];
+
   return (
-    <div className='w-full list-disc pl-4 mx-auto text-lg text-white'>
+    <div className='w-full mx-auto text-lg text-white'>
       <h2 className='text-4xl font-bold mb-4'>Wallet</h2>
       <p>Nintondo Wallet for Bells - A New Horizon for Your Crypto Adventures!</p>
       <p>🌿 Version 0.0.4 - Bringing the Charm of Animal Crossing to Cryptocurrency</p>
@@ -13,7 +21,7 @@ const WalletInfo = () => {
       </p>
       <br />
       <p>🌸 Key Features:</p>
-      <ul className={'list-disc'}>
+      <ul className={'pl-4 list-disc'}>
         <li>
           <p>
             Village Marketplace: Just like your favorite Animal Crossing marketplace, trade and
@@ -47,7 +55,7 @@ const WalletInfo = () => {
       </ul>
       <br />
       <p>🍂 What's New in 0.0.4:</p>
-      <ul className={'list-disc'}>
+      <ul className={'pl-4 list-disc'}>
         <li>
           <p>
             Launch of Nintondo Wallet: A fresh start with a familiar feel for all Bells enthusiasts
@@ -101,7 +109,7 @@ const WalletInfo = () => {
           Firefox Extension
         </a>
       </p>
-      <br /> <br />
+      <br />
       <p>
         Ready to embark on this enchanting crypto adventure? Download Nintondo Wallet for Bells and
         turn your cryptocurrency experience into an idyllic escapade. Let's make our financial
@@ -113,7 +121,17 @@ const WalletInfo = () => {
         portfolio.
       </p>
       <br />
-      <p>Happy Bell Hunting! 🛎️</p>
+      <p className={'mb-[20px]'}>Happy Bell Hunting! 🛎️</p>
+      <div className='grid grid-cols-3 gap-4'>
+        {walletImages.map((image, index) => (
+          <img
+            key={index}
+            className='w-full h-auto'
+            src={image}
+            alt={`Image ${index + 1}`}
+          />
+        ))}
+      </div>
     </div>
   );
 };

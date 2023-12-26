@@ -45,14 +45,13 @@ const App = () => {
       <div className={'bg-black px-[15px] h-full indent-[20px] '}>
         <div className={'wallet_info flex flex-wrap'}>
           <div
-            className='w-[1080px] mx-auto'
-            id={'wallet'}
+            className='w-[1080px] mx-auto py-[30px]'
+            id={'walletScreens'}
           >
             <WalletInfo />
           </div>
         </div>
-
-        <div className={'pt-[30px] flex-wrap flex'}>
+        <div className={'flex-wrap flex'}>
           <div className={'w-[1080px] mx-auto'}>
             <div
               id={'markets'}
@@ -71,6 +70,7 @@ const App = () => {
                             href={link.link}
                             target='_blank'
                             className='underline'
+                            rel='noreferrer'
                           >
                             {link.name}
                           </a>
@@ -83,7 +83,7 @@ const App = () => {
                 ))}
               </div>
             </div>
-            {/*<Footer />*/}
+            {/* <Footer />*/}
             <div className='w-full border border-white'></div>
             <div className='text-center text-white text-4xl pt-[50px] pb-[73px] font-extrabold break-words'>
               NINTONDO.IO
