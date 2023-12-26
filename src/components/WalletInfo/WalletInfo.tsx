@@ -4,8 +4,29 @@ import wallet3 from '../../assets/walletScreens/wallet3.jpg';
 import wallet4 from '../../assets/walletScreens/wallet4.jpg';
 import wallet5 from '../../assets/walletScreens/wallet5.jpg';
 import wallet6 from '../../assets/walletScreens/wallet6.jpg';
+import Exit from '../../assets/exit.svg?react';
+import ArrowRight from '../../assets/arrowright.svg?react';
+import ArrowLeft from '../../assets/arrowleft.svg?react';
+import { useState } from 'react';
 const WalletInfo = () => {
   const walletImages = [wallet1, wallet2, wallet3, wallet4, wallet5, wallet6];
+  const [modalImage, setModalImage] = useState<string>('');
+
+  const changeImage = (direction: string) => {
+    const currentImageIndex = walletImages.indexOf(modalImage);
+    const totalImages = walletImages.length;
+    const newIndex =
+      (currentImageIndex + (direction === 'next' ? 1 : totalImages - 1)) % totalImages;
+    setModalImage(walletImages[newIndex]);
+  };
+
+  const handleImageClick = (image: string) => {
+    setModalImage(image);
+  };
+
+  const closeModal = () => {
+    setModalImage('');
+  };
 
   return (
     <div className='w-full mx-auto text-lg text-white'>
@@ -89,7 +110,6 @@ const WalletInfo = () => {
         your Bells cryptocurrency. Let's create a community as heartwarming and supportive as the
         townsfolk of Animal Crossing!
       </p>
-      {/*list-disc pl-4*/}
       <br />
       <p className={'font-bold'}>📥 Download Now:</p> <br />
       <p>
@@ -112,7 +132,7 @@ const WalletInfo = () => {
       <br />
       <p>
         Ready to embark on this enchanting crypto adventure? Download Nintondo Wallet for Bells and
-        turn your cryptocurrency experience into an idyllic escapade. Let's make our financial
+        turn your cryptocurrency experience into an idyllic escapade. Let`s make our financial
         journey not just profitable, but also delightful!
       </p>
       <p>
@@ -126,12 +146,42 @@ const WalletInfo = () => {
         {walletImages.map((image, index) => (
           <img
             key={index}
-            className='w-full h-auto'
+            className='w-full h-auto cursor-pointer'
             src={image}
             alt={`Image ${index + 1}`}
+            onClick={() => handleImageClick(image)}
           />
         ))}
       </div>
+      {modalImage && (
+        <div className='fixed inset-0 flex items-center z-50'>
+          <div className='p-5 relative rounded-lg max-w-lg mx-auto'>
+            <button
+              className='absolute top-1/2 left-1 bg-white rounded-full p-[5px]'
+              onClick={() => changeImage('previous')}
+            >
+              <ArrowLeft />
+            </button>
+            <img
+              className='w-full h-auto'
+              src={modalImage}
+              alt='Modal'
+            />
+            <button
+              className='absolute top-1/2 right-1 bg-white rounded-full p-[5px]'
+              onClick={() => changeImage('next')}
+            >
+              <ArrowRight />
+            </button>
+            <button
+              className='absolute top-0 right-0 m-2 bg-white rounded-full p-[5px]'
+              onClick={closeModal}
+            >
+              <Exit />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

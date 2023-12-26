@@ -20,7 +20,7 @@ const App = () => {
     <div className='App'>
       <div
         className={'app-container'}
-        style={{ backgroundPosition: `center -${scrollY + 10}px` }}
+        style={{ backgroundPosition: `center -${scrollY}px` }}
       >
         <Header />
         <div className='main_screen'>
