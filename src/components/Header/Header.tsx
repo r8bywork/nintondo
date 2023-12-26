@@ -11,7 +11,7 @@ const Header = () => {
   };
 
   return (
-    <div className={cn('header', { 'menu-open': isMenuOpen })}>
+    <div className={cn('header max-md:relative', { 'menu-open': isMenuOpen })}>
       <div className='flex justify-between w-[100%] items-center'>
         <Link
           href='/'

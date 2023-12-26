@@ -42,50 +42,52 @@ const App = () => {
         </div>
       </div>
 
-      <div className={'wallet_info bg-black pt-[30px] h-full indent-[20px]'}>
-        <div
-          className='w-[1080px] mx-auto'
-          id={'wallet'}
-        >
-          <WalletInfo />
-        </div>
-      </div>
-
-      <div className={'bg-black pt-[30px] h-full'}>
-        <div className={'w-[1080px] mx-auto'}>
+      <div className={'bg-black px-[15px] h-full indent-[20px] '}>
+        <div className={'wallet_info flex flex-wrap'}>
           <div
-            id={'markets'}
-            className={'text-white'}
+            className='w-[1080px] mx-auto'
+            id={'wallet'}
           >
-            <h2 className='text-4xl font-bold mb-4'>Markets</h2>
-            <div className={'mb-[73px]'}>
-              <p>Where to buy $BEL?</p> <br />
-              {linksData.map((section, index) => (
-                <Fragment key={index}>
-                  <p>{section.type}:</p> <br />
-                  <ul className='list-disc pl-4'>
-                    {section.links.map((link, linkIndex) => (
-                      <li key={linkIndex}>
-                        <a
-                          href={link.link}
-                          target='_blank'
-                          className='underline'
-                        >
-                          {link.name}
-                        </a>
-                        <br />
-                        <br />
-                      </li>
-                    ))}
-                  </ul>
-                </Fragment>
-              ))}
-            </div>
+            <WalletInfo />
           </div>
-          {/*<Footer />*/}
-          <div className='w-full h-full border border-white'></div>
-          <div className='text-center text-white text-4xl pt-[50px] pb-[73px] font-extrabold break-words'>
-            NINTONDO.IO
+        </div>
+
+        <div className={'pt-[30px] flex-wrap flex'}>
+          <div className={'w-[1080px] mx-auto'}>
+            <div
+              id={'markets'}
+              className={'text-white'}
+            >
+              <h2 className='text-4xl font-bold mb-4'>Markets</h2>
+              <div className={'mb-[73px]'}>
+                <p>Where to buy $BEL?</p> <br />
+                {linksData.map((section, index) => (
+                  <Fragment key={index}>
+                    <p>{section.type}:</p> <br />
+                    <ul className='list-disc pl-4'>
+                      {section.links.map((link, linkIndex) => (
+                        <li key={linkIndex}>
+                          <a
+                            href={link.link}
+                            target='_blank'
+                            className='underline'
+                          >
+                            {link.name}
+                          </a>
+                          <br />
+                          <br />
+                        </li>
+                      ))}
+                    </ul>
+                  </Fragment>
+                ))}
+              </div>
+            </div>
+            {/*<Footer />*/}
+            <div className='w-full border border-white'></div>
+            <div className='text-center text-white text-4xl pt-[50px] pb-[73px] font-extrabold break-words'>
+              NINTONDO.IO
+            </div>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 const WalletInfo = () => {
   return (
-    <div className='w-full mx-auto text-lg text-white'>
+    <div className='w-full list-disc pl-4 mx-auto text-lg text-white'>
       <h2 className='text-4xl font-bold mb-4'>Wallet</h2>
       <p>Nintondo Wallet for Bells - A New Horizon for Your Crypto Adventures!</p>
       <p>🌿 Version 0.0.4 - Bringing the Charm of Animal Crossing to Cryptocurrency</p>

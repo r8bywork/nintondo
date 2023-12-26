@@ -16,9 +16,8 @@
   z-index: -1;
 }
 
-
-
 .main_screen {
+  padding: 0 15px;
   min-height:100vh;
   /*margin-top: -100px;*/
   display: flex;
