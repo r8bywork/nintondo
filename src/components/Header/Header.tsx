@@ -28,7 +28,7 @@ const Header = () => {
   return (
     <div
       ref={headerRef}
-      className={cn('header max-md:relative', { 'menu-open': isMenuOpen })}
+      className={cn('header', { 'menu-open': isMenuOpen })}
     >
       <div className='flex justify-between w-[100%] items-center'>
         <Link
@@ -46,7 +46,9 @@ const Header = () => {
         </div>
       </div>
       <nav
-        className={cn('max-md:absolute max-md:bg-[#061D3C] max-md:pb-[20px] md:flex', {
+        className={cn('max-md:pb-[20px] md:flex', {
+          // max-md:absolute
+          // max-md:bg-[#061D3C]
           hidden: !isMenuOpen,
         })}
       >

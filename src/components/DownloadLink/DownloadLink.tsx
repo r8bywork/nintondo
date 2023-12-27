@@ -10,9 +10,9 @@ const DownloadLink = ({ text, Icon, href }: IProps) => {
   return (
     <a
       href={href}
-      className='bg-black text-white h-[80px] p-[8px] rounded-[12px] text-[18px] flex justify-center items-center'
+      className='bg-black text-white p-[8px] rounded-[30px] text-[20px] flex justify-center items-center border border-white hover:bg-gray-900'
     >
-      <span className='mr-[8px]'>
+      <span className='mr-2'>
         <Icon />
       </span>
       {text}

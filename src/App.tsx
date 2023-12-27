@@ -58,7 +58,7 @@ const App = () => {
               className={'text-white'}
             >
               <h2 className='text-4xl font-bold mb-4'>Markets</h2>
-              <div className={'mb-[73px]'}>
+              <div>
                 <p>Where to buy $BEL?</p> <br />
                 {linksData.map((section, index) => (
                   <Fragment key={index}>
@@ -83,6 +83,15 @@ const App = () => {
                 ))}
               </div>
             </div>
+            <span className={'text-white inline-block mb-[40px]'}>
+              We want to clarify that the information provided about cryptocurrencies and the links
+              to various exchanges on our website are for informational purposes only. We do not
+              endorse, verify, or vouch for the reliability of these exchanges. Cryptocurrency
+              investments carry inherent risks, and we strongly advise you to exercise due
+              diligence, use your best judgment, and consult with financial experts if necessary
+              before engaging in any transactions. Remember to carefully assess your risk tolerance
+              and invest responsibly.
+            </span>
             {/* <Footer />*/}
             <div className='w-full border border-white'></div>
             <div className='text-center text-white text-4xl pt-[50px] pb-[73px] font-extrabold break-words'>

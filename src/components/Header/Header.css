@@ -40,12 +40,16 @@
 
 @media (max-width: 768px) {
     .header {
+        position: fixed;
         padding: 1.5rem;
         flex-direction: column;
+        /*background-color: #061D3C;*/
+        backdrop-filter: blur(10px);
     }
 
     .header.menu-open {
-        background-color: #061D3C;
+        /*background-color: #061D3C;*/
+        backdrop-filter: blur(50px);
     }
 
     nav {

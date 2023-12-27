@@ -73,10 +73,10 @@ export const linksData = [
   {
     type: 'DEX',
     links: [
-      {
-        link: 'https://belswap.org/',
-        name: 'Belswap',
-      },
+      // {
+      //   link: 'https://belswap.org/',
+      //   name: 'Belswap',
+      // },
       {
         link: 'https://opensea.io/collection/bells-curated',
         name: 'OpenSea',
@@ -90,7 +90,7 @@ export const linksData = [
 ];
 
 export const HeaderLinks = [
-  { name: 'POOL', url: '/' },
+  // { name: 'POOL', url: '/' },
   { name: 'wallet', url: '#wallet' },
   { name: 'markets', url: '#markets' },
   { name: 'explorer', url: 'https://bells.quark.blue/' },
