@@ -41,7 +41,7 @@ const App = () => {
         </div>
       </div>
 
-      <div className={'bg-black px-[15px] h-full indent-[20px] '}>
+      <div className={'bg-black text-justify px-[15px] h-full indent-[20px] '}>
         <div className={'wallet_info flex flex-wrap'}>
           <div
             className='w-[1080px] mx-auto py-[30px]'
