@@ -32,7 +32,7 @@ const WalletInfo = () => {
     <div className='w-full mx-auto text-lg text-white'>
       <h2 className='text-4xl font-bold mb-4'>Wallet</h2>
       <p>Nintondo Wallet for Bells - A New Horizon for Your Crypto Adventures!</p>
-      <p>🌿 Version 0.0.4 - Bringing the Charm of Animal Crossing to Cryptocurrency</p>
+      <p>🌿 Version 0.1.1 - Bringing the Charm of Animal Crossing to Cryptocurrency</p>
       <p>🍃 Welcome to Nintondo Wallet! 🍃</p>
       <p>
         We're thrilled to introduce Nintondo Wallet, your newest companion in the whimsical world of
@@ -75,31 +75,22 @@ const WalletInfo = () => {
         </li>
       </ul>
       <br />
-      <p>🍂 What's New in 0.0.4:</p>
+      <p>🍂 What's New in 0.1.1:</p>
       <ul className={'pl-4 list-disc'}>
         <li>
-          <p>
-            Launch of Nintondo Wallet: A fresh start with a familiar feel for all Bells enthusiasts
-            and Animal Crossing fans.
-          </p>
+          <p>Removed tidecoin leftovers</p>
         </li>
         <li>
-          <p>
-            Enhanced UI: Navigate with ease through a user-friendly interface, adorned with charming
-            Animal Crossing aesthetics.
-          </p>
+          <p>Removed host permission from manifest</p>
         </li>
         <li>
-          <p>
-            Improved Transaction Speed: Swift as a balloon gift floating across the sky, our
-            enhanced transaction system ensures quick and efficient processing.
-          </p>
+          <p>Changed api provider to receive last bells price</p>
         </li>
         <li>
-          <p>
-            Community Events: Participate in special events and challenges, bringing together the
-            community spirit of Animal Crossing.
-          </p>
+          <p>Added error handling for pushing txs</p>
+        </li>
+        <li>
+          <p>Fixed keyring's bugs</p>
         </li>
       </ul>
       <br />
