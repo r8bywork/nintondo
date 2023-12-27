@@ -106,7 +106,7 @@ const WalletInfo = () => {
       <p>
         <a
           className={'underline'}
-          href='https://github.com/Nintondo/extension/releases/download/0.0.7/chrome-0.0.7.zip'
+          href='https://github.com/Nintondo/extension/releases/download/0.1.1/chrome-0.1.1.zip'
         >
           Chrome Extension
         </a>
@@ -115,7 +115,7 @@ const WalletInfo = () => {
       <p>
         <a
           className={'underline'}
-          href={'https://github.com/Nintondo/extension/releases/download/0.0.7/firefox-0.0.7.xpi'}
+          href={'https://github.com/Nintondo/extension/releases/download/0.1.1/firefox-0.1.1.xpi'}
         >
           Firefox Extension
         </a>
