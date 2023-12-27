@@ -1,5 +1,5 @@
 import ChromeIcon from '../assets/ChromeIcon.svg?react';
-import FirefoxIcon from '../assets/firefox.svg?react';
+import FirefoxIcon from '../assets/firefox2019.svg?react';
 export const footerContent = [
   {
     title: 'LEARN',

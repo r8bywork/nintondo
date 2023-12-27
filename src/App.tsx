@@ -1,5 +1,4 @@
 import './App.css';
-// import Button from './components/Button/Button';
 import Header from './components/Header/Header';
 import Text from './components/Text/Text';
 // import Footer from './components/Footer/Footer.tsx';
@@ -83,7 +82,7 @@ const App = () => {
                 ))}
               </div>
             </div>
-            <span className={'text-white inline-block mb-[40px]'}>
+            <span className={'text-white text-[18px] inline-block mb-[40px]'}>
               We want to clarify that the information provided about cryptocurrencies and the links
               to various exchanges on our website are for informational purposes only. We do not
               endorse, verify, or vouch for the reliability of these exchanges. Cryptocurrency
