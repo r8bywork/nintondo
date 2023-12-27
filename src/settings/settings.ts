@@ -1,6 +1,3 @@
-// import NewWalletIcon from '../assets/newwallet.svg?react';
-// import Market from '../assets/market.svg?react';
-// import Explorer from '../assets/explorer.svg?react';
 import ChromeIcon from '../assets/ChromeIcon.svg?react';
 import FirefoxIcon from '../assets/firefox.svg?react';
 export const footerContent = [
@@ -46,14 +43,13 @@ export const buttons = [
   {
     text: 'Chrome extension',
     svg: ChromeIcon,
-    url: 'https://github.com/Nintondo/extension/releases/download/0.1.0/chrome-0.1.0.zip',
+    url: 'https://github.com/Nintondo/extension/releases/download/0.1.1/chrome-0.1.1.zip',
   },
   {
     text: 'Firefox extension',
     svg: FirefoxIcon,
-    url: 'https://github.com/Nintondo/extension/releases/download/0.1.0/firefox-0.1.0.xpi',
+    url: 'https://github.com/Nintondo/extension/releases/download/0.1.1/firefox-0.1.1.xpi',
   },
-  // { text: 'Explorer', svg: Explorer, url: 'https://bells.quark.blue/' },
 ];
 
 export const linksData = [
@@ -73,10 +69,6 @@ export const linksData = [
   {
     type: 'DEX',
     links: [
-      // {
-      //   link: 'https://belswap.org/',
-      //   name: 'Belswap',
-      // },
       {
         link: 'https://opensea.io/collection/bells-curated',
         name: 'OpenSea',
@@ -90,7 +82,6 @@ export const linksData = [
 ];
 
 export const HeaderLinks = [
-  // { name: 'POOL', url: '/' },
   { name: 'wallet', url: '#wallet' },
   { name: 'markets', url: '#markets' },
   { name: 'explorer', url: 'https://bells.quark.blue/' },
