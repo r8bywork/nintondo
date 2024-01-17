@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { BlockConfig, BlockData, TransactionConfig, TransactionData } from '../settings/fields';
-import TxPage from './TxPage';
+import BlockPage from './BlockPage';
 import Search from './components/Search/Search';
 import Skeleton from './components/Skeleton/Skeleton';
 import TabSelect from './components/TabSelect/TabSelect';
@@ -173,8 +173,8 @@ const Explorer = () => {
         <div className='text-white max-w-[1080px]'>
           <Routes>
             <Route
-              path='/tx/:hash'
-              element={<TxPage />}
+              path='/block/:hash'
+              element={<BlockPage />}
             />
             <Route
               path='/'

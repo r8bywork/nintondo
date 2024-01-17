@@ -37,6 +37,12 @@ export interface TxApiResponse {
   version: number;
 }
 
+export interface BlockStatus {
+  height: number;
+  is_best_chain: true;
+  next_best: string;
+}
+
 export interface BlockData {
   id: string;
   height: number;
@@ -51,6 +57,7 @@ export interface BlockData {
   nonce: number;
   bits: number;
   difficulty: number;
+  in_best_chain: boolean;
 }
 
 export interface TransactionData {
@@ -80,7 +87,11 @@ export const BlockConfig: Field<BlockData>[] = [
   {
     value: 'height',
     name: 'Height',
-    render: (value) => <p className='text-[#53DCFF]'>{value}</p>,
+    render: (value, data: BlockData) => (
+      <Link to={`/explorer/block/${data.id}`}>
+        <p className='text-[#53DCFF]'>{value}</p>
+      </Link>
+    ),
   },
   {
     value: 'timestamp',
@@ -105,11 +116,7 @@ export const TransactionConfig: Field<TransactionData>[] = [
   {
     value: 'txid',
     name: 'Transaction ID',
-    render: (value) => (
-      <Link to={`/explorer/tx/${value}`}>
-        <p className='text-[#53DCFF]'>{value}</p>
-      </Link>
-    ),
+    render: (value) => <p className='text-[#53DCFF]'>{value}</p>,
   },
   {
     value: 'fee',
@@ -125,14 +132,55 @@ export const TransactionConfig: Field<TransactionData>[] = [
   },
 ];
 
-export const txFields: Field<TxApiResponse>[] = [
+export const AdditionalBlockFields: Field<BlockData>[] = [
   {
-    value: 'txid',
-    name: 'Transaction ID',
+    value: 'height',
+    name: 'Height',
     render: (value) => <p className='text-[#53DCFF]'>{value}</p>,
+  },
+  {
+    value: 'in_best_chain',
+    name: 'Status',
+    render: (value) => <p>{value ? 'In best chain' : 'false'}</p>,
+  },
+  {
+    value: 'timestamp',
+    name: 'Timestamp',
+    render: (value) => <p>{formatDate(value)}</p>,
   },
   {
     value: 'size',
     name: 'Size',
+    render: (value) => <p>{(value / 1024).toFixed(3)} KB</p>,
+  },
+  {
+    value: 'size',
+    name: 'Virtual Size',
+    render: (value) => <p>{Math.ceil(value / 1024).toFixed(3)} vKB</p>,
+  },
+  {
+    value: 'weight',
+    name: 'Weight Units',
+    render: (value) => <p>{(value / 1000).toFixed(2)} KWU</p>,
+  },
+  {
+    value: 'version',
+    name: 'Version',
+  },
+  {
+    value: 'merkle_root',
+    name: 'Merkle root',
+  },
+  {
+    value: 'bits',
+    name: 'Bits',
+  },
+  {
+    value: 'difficulty',
+    name: 'Difficulty',
+  },
+  {
+    value: 'nonce',
+    name: 'Nonce',
   },
 ];
