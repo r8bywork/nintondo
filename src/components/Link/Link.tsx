@@ -8,6 +8,7 @@ interface LinkProps {
 const Link = ({ href, text, className, onClick }: LinkProps) => {
   return (
     <a
+      // to={href}
       href={href}
       target={href.startsWith('#') ? '_self' : '_target'}
       onClick={onClick}

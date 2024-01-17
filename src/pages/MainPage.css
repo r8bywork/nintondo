@@ -1,0 +1,32 @@
+.app-container {
+  position: relative;
+  background-image: url('../assets/background/newbgwith.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.app-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000 46%);
+  z-index: -1;
+}
+
+.main_screen {
+  padding: 0 15px;
+  min-height: 100vh;
+  /*margin-top: -100px;*/
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#root {
+  margin: 0 auto;
+  padding: 0;
+}
