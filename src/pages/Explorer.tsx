@@ -1,12 +1,14 @@
 import axios from 'axios';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import { BlockConfig, BlockData, TransactionConfig, TransactionData } from '../settings/fields';
+import TxPage from './TxPage';
 import Search from './components/Search/Search';
 import Skeleton from './components/Skeleton/Skeleton';
 import TabSelect from './components/TabSelect/TabSelect';
 import Table from './components/Table/Table';
-import s from './styles.module.scss';
+import s from './styles/styles.module.scss';
 interface tableData {
   latestBlock: BlockData[];
   latestTransactions: TransactionData[];
@@ -44,7 +46,7 @@ const SwitchTables = ({
               View more blocks &#8594;
             </button>
           </div>
-          <div className='pb-[60px]'>
+          <div>
             <Table
               data={tableData?.latestTransactions.slice(0, 5)}
               fields={TransactionConfig}
@@ -95,7 +97,6 @@ const SwitchTables = ({
           data={tableData?.latestTransactions}
           fields={TransactionConfig}
           title='Latest Transactions'
-          className='pb-[150px]'
         />
       );
 
@@ -122,6 +123,7 @@ const Explorer = () => {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [tableData, setTableData] = useState<tableData>();
   const [loading, setLoading] = useState<boolean>(false);
+  // const [tx, setTx] = useState<TxData>();
 
   const onHandleChange = (id: string) => {
     setActiveTab(id);
@@ -137,6 +139,7 @@ const Explorer = () => {
   const getLatestBlock = async (height?: number | null) => {
     setLoading(true);
     const response = await axios.get(`https://bells.quark.blue/api/blocks/${height ?? ''}`);
+    // const asd = await getTx('7e1d595bafc677e1ecf83b9e625d39e510c9d8032e5e90c1cd1952d4726d980e');
     setLoading(false);
     return response.data;
   };
@@ -157,12 +160,9 @@ const Explorer = () => {
   };
 
   return (
-    <div className={classNames(s.explorer, 'pt-[180px] max-md:pt-[100px]')}>
-      {/* <div className='pb-[200px]'>
-        <Header />
-      </div> */}
+    <div className={classNames(s.explorer, 'pt-[180px] max-md:pt-[100px] px-[5px]')}>
       <div className='max-w-[1000px] mx-auto'>
-        <div className='mb-[70px] flex w-full max-md:flex-col items-center justify-between'>
+        <div className='pb-[70px] flex w-full max-md:flex-col items-center justify-between'>
           <TabSelect
             fields={TabSelectFields}
             activeTab={activeTab}
@@ -171,17 +171,45 @@ const Explorer = () => {
           <Search />
         </div>
         <div className='text-white max-w-[1080px]'>
-          {tableData?.latestBlock && tableData?.latestTransactions ? (
-            <SwitchTables
-              activeTab={activeTab}
-              tableData={tableData}
-              setActiveTab={setActiveTab}
-              onHandleSizeBlockChange={onHandleSizeBlockChange}
-              isLoading={loading}
+          <Routes>
+            {/* {tableData?.latestBlock && tableData?.latestTransactions ? (
+              <SwitchTables
+                activeTab={activeTab}
+                tableData={tableData}
+                setActiveTab={setActiveTab}
+                onHandleSizeBlockChange={onHandleSizeBlockChange}
+                isLoading={loading}
+              />
+            ) : (
+              <Skeleton />
+            )} */}
+            <Route
+              path='/tx/:hash'
+              element={
+                // tableData?.latestBlock && tableData?.latestTransactions ? (
+                <TxPage />
+                // ) : (
+                // <p>404 not found</p>
+                // )
+              }
             />
-          ) : (
-            <Skeleton />
-          )}
+            <Route
+              path='/'
+              element={
+                tableData?.latestBlock && tableData?.latestTransactions ? (
+                  <SwitchTables
+                    activeTab={activeTab}
+                    tableData={tableData}
+                    setActiveTab={setActiveTab}
+                    onHandleSizeBlockChange={onHandleSizeBlockChange}
+                    isLoading={loading}
+                  />
+                ) : (
+                  <Skeleton />
+                )
+              }
+            />
+          </Routes>
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ const Skeleton = () => {
   return (
     <div
       className={cn(
-        'w-full max-w-7xl flex items-center h-[490px] border border-opacity-60 rounded-[12px] border-white bg-black/10 backdrop-blur-md relative',
+        'w-full max-w-7xl flex items-center h-[480px] border border-opacity-60 rounded-[12px] border-white bg-black/10 backdrop-blur-md relative',
       )}
     >
       <div className={'rounded-full mx-auto animate-bounce'}>

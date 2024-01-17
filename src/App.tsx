@@ -14,7 +14,7 @@ const App = () => {
           element={<MainPage />}
         />
         <Route
-          path='/explorer'
+          path='/explorer/*'
           element={<Explorer />}
         />
       </Routes>

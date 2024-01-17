@@ -8,6 +8,34 @@ type Field<T extends object> = {
   };
 }[keyof T];
 
+// interface TransactionInput {
+//   txid: string;
+//   vout: number;
+//   prevout: {
+//     scriptpubkey: string;
+//     scriptpubkey_asm: string;
+//     scriptpubkey_type: string;
+//     scriptpubkey_address: string;
+//     value: number;
+//   };
+// }
+
+// interface TransactionOutput {
+//   scriptpubkey: string;
+//   scriptpubkey_asm: string;
+//   scriptpubkey_type: string;
+//   scriptpubkey_address: string;
+//   value: number;
+// }
+
+export interface TxApiResponse {
+  fee: number;
+  txid: string;
+  locktime: number;
+  size: number;
+  version: number;
+}
+
 export interface BlockData {
   id: string;
   height: number;
@@ -89,5 +117,17 @@ export const TransactionConfig: Field<TransactionData>[] = [
   {
     value: 'value',
     name: 'Value',
+  },
+];
+
+export const txFields: Field<TxApiResponse>[] = [
+  {
+    value: 'txid',
+    name: 'Transaction ID',
+    render: (value) => <p className='text-[#53DCFF]'>{value}</p>,
+  },
+  {
+    value: 'size',
+    name: 'Size',
   },
 ];

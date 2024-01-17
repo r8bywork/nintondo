@@ -3,7 +3,7 @@ import DownloadLink from '../components/DownloadLink/DownloadLink';
 import Text from '../components/Text/Text';
 import WalletInfo from '../components/WalletInfo/WalletInfo';
 import { buttons, linksData } from '../settings/settings';
-import './MainPage.css';
+import './styles/MainPage.css';
 
 const MainPage = () => {
   const [scrollY, setScrollY] = useState(0);
