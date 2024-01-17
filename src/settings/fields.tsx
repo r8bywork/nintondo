@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 
 type Field<T extends object> = {
   [K in keyof T]: {
@@ -104,7 +105,11 @@ export const TransactionConfig: Field<TransactionData>[] = [
   {
     value: 'txid',
     name: 'Transaction ID',
-    render: (value) => <p className='text-[#53DCFF]'>{value}</p>,
+    render: (value) => (
+      <Link to={`/explorer/tx/${value}`}>
+        <p className='text-[#53DCFF]'>{value}</p>
+      </Link>
+    ),
   },
   {
     value: 'fee',

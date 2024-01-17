@@ -33,7 +33,6 @@ const TxPage = () => {
         <Table
           data={tx}
           fields={txFields}
-          title='Latest Transactions'
         />
       ) : (
         <Skeleton />

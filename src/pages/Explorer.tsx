@@ -1,7 +1,7 @@
 import axios from 'axios';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { BlockConfig, BlockData, TransactionConfig, TransactionData } from '../settings/fields';
 import TxPage from './TxPage';
 import Search from './components/Search/Search';
@@ -123,10 +123,11 @@ const Explorer = () => {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [tableData, setTableData] = useState<tableData>();
   const [loading, setLoading] = useState<boolean>(false);
-  // const [tx, setTx] = useState<TxData>();
+  const navigate = useNavigate();
 
   const onHandleChange = (id: string) => {
     setActiveTab(id);
+    navigate('/explorer');
   };
 
   const getLatestTransactions = async () => {
@@ -139,7 +140,6 @@ const Explorer = () => {
   const getLatestBlock = async (height?: number | null) => {
     setLoading(true);
     const response = await axios.get(`https://bells.quark.blue/api/blocks/${height ?? ''}`);
-    // const asd = await getTx('7e1d595bafc677e1ecf83b9e625d39e510c9d8032e5e90c1cd1952d4726d980e');
     setLoading(false);
     return response.data;
   };
@@ -172,26 +172,9 @@ const Explorer = () => {
         </div>
         <div className='text-white max-w-[1080px]'>
           <Routes>
-            {/* {tableData?.latestBlock && tableData?.latestTransactions ? (
-              <SwitchTables
-                activeTab={activeTab}
-                tableData={tableData}
-                setActiveTab={setActiveTab}
-                onHandleSizeBlockChange={onHandleSizeBlockChange}
-                isLoading={loading}
-              />
-            ) : (
-              <Skeleton />
-            )} */}
             <Route
               path='/tx/:hash'
-              element={
-                // tableData?.latestBlock && tableData?.latestTransactions ? (
-                <TxPage />
-                // ) : (
-                // <p>404 not found</p>
-                // )
-              }
+              element={<TxPage />}
             />
             <Route
               path='/'
