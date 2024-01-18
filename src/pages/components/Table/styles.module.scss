@@ -1,5 +1,5 @@
 .container {
-  @apply max-xl:overflow-x-auto w-full flex;
+  @apply overflow-x-auto  w-full flex;
 }
 
 .table {
@@ -9,11 +9,11 @@
   }
   tr {
     th {
-      @apply py-2 px-4 xl:px-2 first:rounded-l-[42px] last:rounded-r-[42px] bg-[#FB0];
+      @apply py-2 px-4 xl:px-2 first:rounded-l-[42px] last:rounded-r-[42px];
     }
 
     td {
-      @apply py-[6px] max-xl:px-4 text-center first:rounded-l-[42px] last:rounded-r-[42px];
+      @apply py-[6px] max-xl:px-4 first:rounded-l-[42px] last:rounded-r-[42px];
     }
 
     :has(td) {

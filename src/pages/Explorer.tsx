@@ -1,7 +1,7 @@
 import axios from 'axios';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { BlockConfig, BlockData, TransactionConfig, TransactionData } from '../settings/fields';
 import BlockPage from './BlockPage';
 import Search from './components/Search/Search';
@@ -124,6 +124,7 @@ const Explorer = () => {
   const [tableData, setTableData] = useState<tableData>();
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const onHandleChange = (id: string) => {
     setActiveTab(id);
@@ -145,10 +146,12 @@ const Explorer = () => {
   };
 
   useEffect(() => {
-    Promise.all([getLatestBlock(), getLatestTransactions()]).then((res) =>
-      setTableData({ latestBlock: res[0], latestTransactions: res[1] }),
-    );
-  }, []);
+    if (location.pathname === '/explorer') {
+      Promise.all([getLatestBlock(), getLatestTransactions()]).then((res) =>
+        setTableData({ latestBlock: res[0], latestTransactions: res[1] }),
+      );
+    }
+  }, [location.pathname]);
 
   const onHandleSizeBlockChange = async (height: number) => {
     getLatestBlock(height).then((res) =>

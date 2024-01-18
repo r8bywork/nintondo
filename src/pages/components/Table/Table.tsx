@@ -15,9 +15,10 @@ interface Props<T extends object> {
   fields: Field<T>[];
   className?: string;
   title?: string;
+  additional?: boolean;
 }
 
-const Table = <T extends object>({ data, fields, className, title }: Props<T>) => {
+const Table = <T extends object>({ data, fields, className, title, additional }: Props<T>) => {
   return (
     <div className={'w-full max-w-7xl' + className}>
       {title && (
@@ -36,29 +37,68 @@ const Table = <T extends object>({ data, fields, className, title }: Props<T>) =
             className={s.table}
             id='explorerTable'
           >
-            <thead>
-              <tr>
-                {fields.map((i, idx) => (
-                  <th key={`table-header_${idx}`}>{i.name}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((i, idx) => (
-                <tr
-                  className={'bg-black'}
-                  key={`table-row_${idx}`}
-                >
-                  {fields.map((f, fdx) => (
-                    <td
-                      key={`table-row_${idx}-value_${fdx}`}
-                      className={'whitespace-nowrap w-fit'}
+            {!additional && (
+              <thead>
+                <tr>
+                  {fields.map((i, idx) => (
+                    <th
+                      key={`table-header_${idx}`}
+                      className='bg-[#FB0]'
                     >
-                      {f.render ? f.render(i[f.value], i) : (i[f.value] as ReactNode)}
-                    </td>
+                      {i.name}
+                    </th>
                   ))}
                 </tr>
-              ))}
+              </thead>
+            )}
+            <tbody>
+              {additional ? (
+                <>
+                  {data.map((i, idx) => (
+                    <>
+                      {fields.map((f, fdx) => (
+                        <tr
+                          className={'bg-black'}
+                          key={`table-row_${idx}`}
+                        >
+                          {additional && (
+                            <th
+                              key={`table-col_${idx}-value_${fdx}`}
+                              className='bg-black text-left border-r-2 text-[#FFBB00]'
+                            >
+                              {f.name?.toString().toUpperCase()}
+                            </th>
+                          )}
+                          <td
+                            key={`table-row_${idx}-value_${fdx}`}
+                            className={'whitespace-nowrap w-fit text-right'}
+                          >
+                            {f.render ? f.render(i[f.value], i) : (i[f.value] as ReactNode)}
+                          </td>
+                        </tr>
+                      ))}
+                    </>
+                  ))}
+                </>
+              ) : (
+                <>
+                  {data.map((i, idx) => (
+                    <tr
+                      className={'bg-black'}
+                      key={`table-row_${idx}`}
+                    >
+                      {fields.map((f, fdx) => (
+                        <td
+                          key={`table-row_${idx}-value_${fdx}`}
+                          className={'whitespace-nowrap w-fit text-center '}
+                        >
+                          {f.render ? f.render(i[f.value], i) : (i[f.value] as ReactNode)}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </>
+              )}
             </tbody>
           </table>
         </div>
