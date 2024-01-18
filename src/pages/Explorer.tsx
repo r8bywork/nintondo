@@ -20,6 +20,7 @@ interface SwitchProps {
   setActiveTab: (tab: string) => void;
   onHandleSizeBlockChange: (height: number) => Promise<void>;
   isLoading: boolean;
+  isMobile: boolean;
 }
 
 const SwitchTables = ({
@@ -28,6 +29,7 @@ const SwitchTables = ({
   setActiveTab,
   onHandleSizeBlockChange,
   isLoading,
+  isMobile,
 }: SwitchProps) => {
   switch (activeTab) {
     case 'dashboard':
@@ -35,7 +37,7 @@ const SwitchTables = ({
         <div>
           <div className='pb-[60px]'>
             <Table
-              data={tableData?.latestBlock.slice(0, 5)}
+              data={tableData?.latestBlock.slice(0, isMobile ? 2 : 5)}
               fields={BlockConfig}
               title='Latest Blocks'
             />
@@ -48,7 +50,7 @@ const SwitchTables = ({
           </div>
           <div className='pb-[50px]'>
             <Table
-              data={tableData?.latestTransactions.slice(0, 5)}
+              data={tableData?.latestTransactions.slice(0, isMobile ? 2 : 5)}
               fields={TransactionConfig}
               title='Latest Transactions'
             />
@@ -74,18 +76,15 @@ const SwitchTables = ({
           ) : (
             <Skeleton />
           )}
-          <div className='flex]'>
+          <div className='flex'>
             <button
-              className='text-[#53DCFF] font-bold text-[14px] mr-[10px]'
-              onClick={() => onHandleSizeBlockChange(tableData.latestBlock[length].height + 10)}
-            >
-              &#8592; Prev
-            </button>
-            <button
-              className='text-[#53DCFF] font-bold text-[14px]'
+              style={{ background: 'linear-gradient(90deg, #FFF 0%, #FB0 99.07%)' }}
+              className={
+                'px-10 max-md:px-5 rounded-[17px] text-[20px] font-bold text-black max-md:my-[20px]'
+              }
               onClick={() => onHandleSizeBlockChange(tableData.latestBlock[length].height - 10)}
             >
-              Next &#8594;
+              {'Load more'.toUpperCase()}
             </button>
           </div>
         </div>
@@ -97,6 +96,7 @@ const SwitchTables = ({
           data={tableData?.latestTransactions}
           fields={TransactionConfig}
           title='Latest Transactions'
+          className='pb-[50px]'
         />
       );
 
@@ -125,6 +125,17 @@ const Explorer = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const onHandleChange = (id: string) => {
     setActiveTab(id);
@@ -154,12 +165,12 @@ const Explorer = () => {
   }, [location.pathname]);
 
   const onHandleSizeBlockChange = async (height: number) => {
-    getLatestBlock(height).then((res) =>
-      setTableData({
-        latestTransactions: tableData!.latestTransactions,
-        latestBlock: res,
-      }),
-    );
+    getLatestBlock(height).then((res) => {
+      setTableData((prevData) => ({
+        latestTransactions: prevData!.latestTransactions,
+        latestBlock: [...prevData!.latestBlock, ...res],
+      }));
+    });
   };
 
   return (
@@ -189,6 +200,7 @@ const Explorer = () => {
                     setActiveTab={setActiveTab}
                     onHandleSizeBlockChange={onHandleSizeBlockChange}
                     isLoading={loading}
+                    isMobile={isMobile}
                   />
                 ) : (
                   <Skeleton />

@@ -19,13 +19,60 @@ interface Props<T extends object> {
 }
 
 const Table = <T extends object>({ data, fields, className, title, additional }: Props<T>) => {
+  const isMobile = window.innerWidth < 768;
+
+  if (isMobile) {
+    return (
+      <div className={'w-full max-w-7xl' + className}>
+        {title && (
+          <div
+            style={{ background: 'var(--GRD, linear-gradient(90deg, #FFF 0%, #FB0 99.07%))' }}
+            className={
+              'bg-[#FB0] relative top-1 ml-[20px] rounded-t-[15px] px-4 text-[24px] font-bold text-black w-fit'
+            }
+          >
+            {title}
+          </div>
+        )}
+        <div className={cn('rounded-[12px]', className)}>
+          {data.map((item, idx) => (
+            <div
+              key={`card_${idx}`}
+              className='border border-black rounded-[17px] overflow-hidden bg-black'
+              style={{
+                border: '1px solid #FB0',
+                background: 'rgba(0, 0, 0, 0.60)',
+                backdropFilter: 'blur(12.5px)',
+                marginBottom: '10px',
+              }}
+            >
+              {fields.map((field, fdx) => (
+                <div
+                  key={`card_${idx}_field_${fdx}`}
+                  className='my-2 flex justify-between bg-black px-4'
+                >
+                  <div className='text-[#FFBB00]'>{field.name?.toString().toUpperCase()}</div>
+                  <div className='whitespace-nowrap text-right'>
+                    {field.render
+                      ? field.render(item[field.value], item)
+                      : (item[field.value] as ReactNode)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={'w-full max-w-7xl' + className}>
       {title && (
         <div
           style={{ background: 'var(--GRD, linear-gradient(90deg, #FFF 0%, #FB0 99.07%))' }}
           className={
-            'bg-[#FB0] relative top-1 ml-[20px] rounded-t-[15px] px-4 text-[24px] font-bold text-black w-fit'
+            'bg-[#FB0] relative top-1  ml-[20px] rounded-t-[15px] px-4 text-[24px] font-bold text-black w-fit'
           }
         >
           {title}
