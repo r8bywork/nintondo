@@ -39,6 +39,7 @@ export interface BlockData {
   bits: number;
   difficulty: number;
   in_best_chain: boolean;
+  next_best: string;
 }
 
 export interface TransactionData {

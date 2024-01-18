@@ -25,26 +25,22 @@ const Table = <T extends object>({ data, fields, className, title, additional }:
     return (
       <div className={'w-full max-w-7xl' + className}>
         {title && (
-          <div
-            style={{ background: 'var(--GRD, linear-gradient(90deg, #FFF 0%, #FB0 99.07%))' }}
-            className={
-              'bg-[#FB0] relative top-1 ml-[20px] rounded-t-[15px] px-4 text-[24px] font-bold text-black w-fit'
-            }
-          >
-            {title}
+          <div className='text-center'>
+            <div
+              style={{ background: 'var(--GRD, linear-gradient(90deg, #FFF 0%, #FB0 99.07%))' }}
+              className={
+                'bg-[#FB0] relative top-1 inline-block rounded-t-[15px] px-4 text-[24px] font-bold text-black'
+              }
+            >
+              {title}
+            </div>
           </div>
         )}
         <div className={cn('rounded-[12px]', className)}>
           {data.map((item, idx) => (
             <div
               key={`card_${idx}`}
-              className='border border-black rounded-[17px] overflow-hidden bg-black'
-              style={{
-                border: '1px solid #FB0',
-                background: 'rgba(0, 0, 0, 0.60)',
-                backdropFilter: 'blur(12.5px)',
-                marginBottom: '10px',
-              }}
+              className='border border-[#FB0] rounded-[17px] overflow-hidden bg-black/60 backdrop-blur-md'
             >
               {fields.map((field, fdx) => (
                 <div
@@ -111,7 +107,7 @@ const Table = <T extends object>({ data, fields, className, title, additional }:
                           {additional && (
                             <th
                               key={`table-col_${idx}-value_${fdx}`}
-                              className='bg-black text-left border-r-2 text-[#FFBB00]'
+                              className='bg-black text-left  text-[#FFBB00]'
                             >
                               {f.name?.toString().toUpperCase()}
                             </th>

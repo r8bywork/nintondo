@@ -176,7 +176,7 @@ const Explorer = () => {
   return (
     <div className={classNames(s.explorer, 'pt-[180px] max-md:pt-[100px] px-[5px] min-h-screen')}>
       <div className='max-w-[1000px] mx-auto'>
-        <div className='pb-[70px] flex w-full max-md:flex-col-reverse items-center justify-between'>
+        <div className='pb-[70px] max-md:pb-[32px] flex w-full max-md:flex-col-reverse items-center justify-between'>
           <TabSelect
             fields={TabSelectFields}
             activeTab={activeTab}
