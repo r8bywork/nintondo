@@ -114,6 +114,10 @@ const Table = <T extends object>({ data, fields, className, title, additional }:
                           )}
                           <td
                             key={`table-row_${idx + 1}-value_${fdx + 1}`}
+                            style={{
+                              borderImage:
+                                'linear-gradient(transparent 30%, white 0% 70%, transparent 0%) 0 0 0 1 / 1px',
+                            }}
                             className={'whitespace-nowrap w-fit text-right'}
                           >
                             {f.render ? f.render(i[f.value], i) : (i[f.value] as ReactNode)}

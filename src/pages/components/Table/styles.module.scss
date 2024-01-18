@@ -14,7 +14,6 @@
 
     td {
       @apply py-[6px] px-4 first:rounded-l-[42px] last:rounded-r-[42px];
-      border-image: linear-gradient(transparent 30%, white 0% 70%, transparent 0%) 0 0 0 1 / 1px;
     }
 
     :has(td) {
