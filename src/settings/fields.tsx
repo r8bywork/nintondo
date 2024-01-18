@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
+import { truncate } from './utils';
 
 type Field<T extends object> = {
   [K in keyof T]: {
@@ -8,26 +9,6 @@ type Field<T extends object> = {
     render?: (value: T[K], data: T) => ReactNode;
   };
 }[keyof T];
-
-// interface TransactionInput {
-//   txid: string;
-//   vout: number;
-//   prevout: {
-//     scriptpubkey: string;
-//     scriptpubkey_asm: string;
-//     scriptpubkey_type: string;
-//     scriptpubkey_address: string;
-//     value: number;
-//   };
-// }
-
-// interface TransactionOutput {
-//   scriptpubkey: string;
-//   scriptpubkey_asm: string;
-//   scriptpubkey_type: string;
-//   scriptpubkey_address: string;
-//   value: number;
-// }
 
 export interface TxApiResponse {
   fee: number;
@@ -116,7 +97,17 @@ export const TransactionConfig: Field<TransactionData>[] = [
   {
     value: 'txid',
     name: 'Transaction ID',
-    render: (value) => <p className='text-[#53DCFF]'>{value}</p>,
+    render: (value) => (
+      <>
+        <p className={'max-md:hidden text-[#53DCFF]'}>{value}</p>
+        <p className={'md:hidden text-[#53DCFF]'}>
+          {truncate(value, {
+            nPrefix: 4,
+            nSuffix: 4,
+          })}
+        </p>
+      </>
+    ),
   },
   {
     value: 'fee',
@@ -170,6 +161,17 @@ export const AdditionalBlockFields: Field<BlockData>[] = [
   {
     value: 'merkle_root',
     name: 'Merkle root',
+    render: (value) => (
+      <>
+        <p className={'max-md:hidden text-[#53DCFF]'}>{value}</p>
+        <p className={'md:hidden text-[#53DCFF]'}>
+          {truncate(value, {
+            nPrefix: 6,
+            nSuffix: 6,
+          })}
+        </p>
+      </>
+    ),
   },
   {
     value: 'bits',

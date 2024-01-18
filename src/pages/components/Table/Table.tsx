@@ -1,7 +1,7 @@
 import cn from 'classnames';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import s from './styles.module.scss';
-
 type Field<T extends object> = {
   [K in keyof T]: {
     name: string | ReactNode;
@@ -55,11 +55,11 @@ const Table = <T extends object>({ data, fields, className, title, additional }:
               {additional ? (
                 <>
                   {data.map((i, idx) => (
-                    <>
+                    <React.Fragment key={`table_${uuidv4()}`}>
                       {fields.map((f, fdx) => (
                         <tr
                           className={'bg-black'}
-                          key={`table-row_${idx}`}
+                          key={`table-row_${uuidv4()}`}
                         >
                           {additional && (
                             <th
@@ -70,18 +70,18 @@ const Table = <T extends object>({ data, fields, className, title, additional }:
                             </th>
                           )}
                           <td
-                            key={`table-row_${idx}-value_${fdx}`}
+                            key={`table-row_${idx + 1}-value_${fdx + 1}`}
                             className={'whitespace-nowrap w-fit text-right'}
                           >
                             {f.render ? f.render(i[f.value], i) : (i[f.value] as ReactNode)}
                           </td>
                         </tr>
                       ))}
-                    </>
+                    </React.Fragment>
                   ))}
                 </>
               ) : (
-                <>
+                <React.Fragment key={`table_${uuidv4()}`}>
                   {data.map((i, idx) => (
                     <tr
                       className={'bg-black'}
@@ -97,7 +97,7 @@ const Table = <T extends object>({ data, fields, className, title, additional }:
                       ))}
                     </tr>
                   ))}
-                </>
+                </React.Fragment>
               )}
             </tbody>
           </table>

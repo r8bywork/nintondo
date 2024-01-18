@@ -46,7 +46,7 @@ const SwitchTables = ({
               View more blocks &#8594;
             </button>
           </div>
-          <div>
+          <div className='pb-[50px]'>
             <Table
               data={tableData?.latestTransactions.slice(0, 5)}
               fields={TransactionConfig}
@@ -163,9 +163,9 @@ const Explorer = () => {
   };
 
   return (
-    <div className={classNames(s.explorer, 'pt-[180px] max-md:pt-[100px] px-[5px]')}>
+    <div className={classNames(s.explorer, 'pt-[180px] max-md:pt-[100px] px-[5px] min-h-screen')}>
       <div className='max-w-[1000px] mx-auto'>
-        <div className='pb-[70px] flex w-full max-md:flex-col items-center justify-between'>
+        <div className='pb-[70px] flex w-full max-md:flex-col-reverse items-center justify-between'>
           <TabSelect
             fields={TabSelectFields}
             activeTab={activeTab}

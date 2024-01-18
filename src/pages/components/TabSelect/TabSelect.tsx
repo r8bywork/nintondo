@@ -10,7 +10,7 @@ interface TabSelectProps {
 }
 const TabSelect = ({ fields, onHandleChange, activeTab }: TabSelectProps) => {
   return (
-    <div className={'flex max-[420px]:flex-col'}>
+    <div className={'flex'}>
       {fields.map((item) => {
         return (
           <button
@@ -20,7 +20,7 @@ const TabSelect = ({ fields, onHandleChange, activeTab }: TabSelectProps) => {
                 : {}
             }
             className={classNames(
-              'px-5 md:mr-[12px] max-md:mr-[5px] rounded-[30px] text-[20px] font-bold text-black max-md:mb-[10px]',
+              'px-5 max-md:px-3 md:mr-[12px] max-md:mr-[5px] rounded-[30px] text-[20px] font-bold text-black max-md:mt-[10px]',
               {
                 'bg-white': activeTab !== item.value,
               },
