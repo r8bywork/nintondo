@@ -143,24 +143,22 @@ const Explorer = () => {
   };
 
   const getLatestTransactions = async () => {
-    setLoading(true);
     const response = await axios.get('https://bells.quark.blue/api/mempool/recent');
-    setLoading(false);
     return response.data;
   };
 
   const getLatestBlock = async (height?: number | null) => {
-    setLoading(true);
     const response = await axios.get(`https://bells.quark.blue/api/blocks/${height ?? ''}`);
-    setLoading(false);
     return response.data;
   };
 
   useEffect(() => {
     if (location.pathname === '/explorer') {
+      setLoading(true);
       Promise.all([getLatestBlock(), getLatestTransactions()]).then((res) =>
         setTableData({ latestBlock: res[0], latestTransactions: res[1] }),
       );
+      setLoading(false);
     }
   }, [location.pathname]);
 

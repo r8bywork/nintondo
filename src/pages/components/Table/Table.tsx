@@ -40,7 +40,7 @@ const Table = <T extends object>({ data, fields, className, title, additional }:
           {data.map((item, idx) => (
             <div
               key={`card_${idx}`}
-              className='border border-[#FB0] rounded-[17px] overflow-hidden bg-black/60 backdrop-blur-md'
+              className='border border-[#FB0] rounded-[17px] overflow-hidden bg-black/60 backdrop-blur-md mb-[10px]'
             >
               {fields.map((field, fdx) => (
                 <div
