@@ -4,22 +4,26 @@ import { useParams } from 'react-router-dom';
 import CubeSvg from '../assets/Cube.svg?react';
 import LeftArrow from '../assets/arrowleft.svg?react';
 import RightArrow from '../assets/arrowright.svg?react';
-import { AdditionalBlockFields, BlockData } from '../settings/fields';
+import { AdditionalBlockFields, BlockData, Transaction } from '../settings/fields';
 import InfoBlock from './components/InfoBlock/InfoBlock';
 import Skeleton from './components/Skeleton/Skeleton';
 import Table from './components/Table/Table';
+import Transactions from './components/Transactions/Transactions';
 
 const BlockPage = () => {
   const [block, setBlock] = useState<BlockData[]>();
+  const [transactions, setTransactions] = useState<Transaction[]>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const getBlock = async (block: string) => {
     const response = await axios.get(`https://bells.quark.blue/api/block/${block}`);
     const blockStatus = await axios.get(`https://bells.quark.blue/api/block/${block}/status`);
-    const combinedData = {
-      ...response.data,
-      ...blockStatus.data,
-    };
-    return [combinedData];
+    return [{ ...response.data, ...blockStatus.data }];
+  };
+
+  const getTransactions = async (block: string) => {
+    const response = await axios.get(`https://bells.quark.blue/api/block/${block}/txs/0`);
+    return response.data;
   };
   const { hash } = useParams();
 
@@ -28,6 +32,10 @@ const BlockPage = () => {
     hash &&
       getBlock(hash)
         .then((res) => setBlock(res))
+        .finally(() => setIsLoading(false));
+    hash &&
+      getTransactions(hash)
+        .then((res) => setTransactions(res))
         .finally(() => setIsLoading(false));
   }, [hash]);
 
@@ -47,6 +55,14 @@ const BlockPage = () => {
         .finally(() => setIsLoading(false));
   };
 
+  // const LoadTransactions = () => {
+  //   setIsLoading(true);
+  //   block &&
+  //     getBlock(block[0].next_best)
+  //       .then((res) => setBlock(res))
+  //       .finally(() => setIsLoading(false));
+  // };
+
   return (
     <>
       {!isLoading && block ? (
@@ -65,7 +81,7 @@ const BlockPage = () => {
       ) : (
         <Skeleton classNames='h-[449px]' />
       )}
-      <div className='flex justify-between mt-[15px]'>
+      <div className='flex justify-between my-[15px]'>
         <button
           className='bg-[#FFBB00] px-[20px] rounded-[17px]'
           onClick={handlePrevBlock}
@@ -73,7 +89,7 @@ const BlockPage = () => {
           <LeftArrow />
         </button>
 
-        {block && block[0].next_best !== null && (
+        {block?.[0]?.next_best && (
           <button
             className='bg-[#FFBB00] px-[20px] rounded-[17px]'
             onClick={handleNextBlock}
@@ -82,6 +98,7 @@ const BlockPage = () => {
           </button>
         )}
       </div>
+      {transactions ? <Transactions data={transactions} /> : <Skeleton />}
     </>
   );
 };

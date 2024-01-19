@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { truncate } from './utils';
 
-type Field<T extends object> = {
+export type Field<T extends object> = {
   [K in keyof T]: {
     name: string | ReactNode;
     value: K;
@@ -40,6 +40,51 @@ export interface BlockData {
   difficulty: number;
   in_best_chain: boolean;
   next_best: string;
+}
+
+export interface Transaction {
+  txid: string;
+  version: number;
+  locktime: number;
+  vin: Vin[];
+  vout: Vout[];
+  size: number;
+  weight: number;
+  fee: number;
+  status: TransactionStatus;
+}
+
+export interface Vin {
+  txid: string;
+  vout: number;
+  prevout: Prevout;
+  scriptsig: string;
+  scriptsig_asm: string;
+  is_coinbase: boolean;
+  sequence: number;
+}
+
+interface Prevout {
+  scriptpubkey: string;
+  scriptpubkey_asm: string;
+  scriptpubkey_type: string;
+  scriptpubkey_address: string;
+  value: number;
+}
+
+export interface Vout {
+  scriptpubkey: string;
+  scriptpubkey_asm: string;
+  scriptpubkey_type: string;
+  scriptpubkey_address: string;
+  value: number;
+}
+
+interface TransactionStatus {
+  confirmed: boolean;
+  block_height: number;
+  block_hash: string;
+  block_time: number;
 }
 
 export interface TransactionData {
@@ -186,4 +231,55 @@ export const AdditionalBlockFields: Field<BlockData>[] = [
     value: 'nonce',
     name: 'Nonce',
   },
+];
+
+export const VinFields: Field<Vin>[] = [
+  {
+    value: 'scriptsig_asm',
+    name: 'Scriptsig (asm)',
+  },
+  {
+    value: 'scriptsig',
+    name: 'Scriptsig (HEX)',
+  },
+  {
+    value: 'sequence',
+    name: 'Nsequence',
+  },
+  {
+    value: 'scriptpubkey_asm',
+    name: 'Scriptsig (asm)',
+  },
+  {
+    value: 'scriptpubkey_address',
+    name: 'PREVIOUS OUTPUT ADDRESS',
+  },
+  // {
+  //   value: 'scriptpubkey_address',
+  //   name: 'PREVIOUS OUTPUT ADDRESS',
+  //   render: (value) => <p className='text-[#A8A8A8]'>{value}</p>,
+  // },
+];
+
+export const VoutFields: Field<Vout>[] = [
+  {
+    value: 'scriptpubkey_type',
+    name: 'Type',
+  },
+  {
+    value: 'scriptpubkey_asm',
+    name: 'Scriptpubkey (ASM)',
+  },
+  {
+    value: 'scriptpubkey',
+    name: 'Scriptpubkey (HEX)',
+  },
+  // {
+  //   value: 'scriptpubkey_asm',
+  //   name: 'Scriptsig (asm)',
+  // },
+  // {
+  //   value: 'scriptpubkey_address',
+  //   name: 'PREVIOUS OUTPUT ADDRESS',
+  // },
 ];

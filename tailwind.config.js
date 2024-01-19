@@ -4,6 +4,9 @@ export default {
   // darkMode: false,
   theme: {
     extend: {
+      rotate: {
+        90: '90deg',
+      },
       colors: {
         'regal-blue': '#53DCFF',
         'regal-yellow': '#FFBB00',
