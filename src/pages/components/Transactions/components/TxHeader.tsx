@@ -16,10 +16,14 @@ interface TxProps<T extends object> {
 }
 const TxHeader = <T extends object>({ amount, vin, fields, isOpen, data }: TxProps<T>) => {
   const transactions = vin ? data?.vin : data?.vout;
+  const expandedTransactions = transactions?.map((item) =>
+    vin && item.prevout ? { ...item, ...item.prevout } : item,
+  );
+
   return (
     <div>
       {data &&
-        transactions.map((item, idx: number) => (
+        expandedTransactions.map((item, idx: number) => (
           <div
             key={v4()}
             className='max-md:flex-col'
@@ -65,46 +69,6 @@ const TxHeader = <T extends object>({ amount, vin, fields, isOpen, data }: TxPro
             )}
           </div>
         ))}
-      {/* {vout &&
-        vout.map((item, idx) => (
-          <>
-            <div
-              key={v4()}
-              className='bg-black w-[450px] mb-[10px] justify-between items-center break-all px-[20px] py-[10px] flex rounded-[38px]'
-            >
-              <p className='border-r-[2px] min-w-fit pr-[15px]'>#{idx}</p>
-              <p className='text-[#53DCFF] pl-[15px] pr-[15px]'>{item.scriptpubkey_address}</p>
-              <p className='pl-[15px] min-w-fit border-l-[2px]'>{amount}</p>
-            </div>
-            {isOpen && (
-              <table
-                key={v4()}
-                className={classNames(
-                  s.table,
-                  'overflow-hidden border-separate border-spacing-y-[20px] max-sm:min-w-max my-[10px]',
-                )}
-              >
-                <tbody>
-                  {fields.map((field, fdx) => (
-                    <tr key={`card_${idx}_field_${fdx}`}>
-                      <th
-                        key={`table-col_${idx}-value_${fdx}`}
-                        className='bg-black text-left text-[#A8A8A8] block w-max'
-                      >
-                        {field.name?.toString().toUpperCase()}
-                      </th>
-                      <td className='break-all'>
-                        {field.render
-                          ? field.render(item[field.value], item)
-                          : (item[field.value] as ReactNode)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </>
-        ))} */}
     </div>
   );
 };

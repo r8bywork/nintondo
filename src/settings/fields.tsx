@@ -62,6 +62,8 @@ export interface Vin {
   scriptsig_asm: string;
   is_coinbase: boolean;
   sequence: number;
+  scriptpubkey_asm: string;
+  scriptpubkey_address: string;
 }
 
 interface Prevout {
@@ -249,16 +251,16 @@ export const VinFields: Field<Vin>[] = [
   {
     value: 'scriptpubkey_asm',
     name: 'Scriptsig (asm)',
+    render: (value, data) => (
+      <p>
+        {value} ({data.prevout.scriptpubkey_type})
+      </p>
+    ),
   },
   {
     value: 'scriptpubkey_address',
     name: 'PREVIOUS OUTPUT ADDRESS',
   },
-  // {
-  //   value: 'scriptpubkey_address',
-  //   name: 'PREVIOUS OUTPUT ADDRESS',
-  //   render: (value) => <p className='text-[#A8A8A8]'>{value}</p>,
-  // },
 ];
 
 export const VoutFields: Field<Vout>[] = [

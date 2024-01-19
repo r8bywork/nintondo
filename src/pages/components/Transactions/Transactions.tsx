@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import BigArrowRight from '../../../assets/BigArrowRight.svg?react';
@@ -11,16 +12,29 @@ interface TransactionsProps {
 
 const Transactions = ({ data }: TransactionsProps) => {
   const [isOpenMap, setIsOpenMap] = useState<{ [key: string]: boolean }>({});
+  const [transaction, setTransactions] = useState([]);
 
-  const toggleDetails = (txid: string) => {
+  // const toggleDetails = (txid: string) => {
+  //   setIsOpenMap((prevMap) => ({
+  //     ...prevMap,
+  //     [txid]: !prevMap[txid],
+  //   }));
+  // };
+  const toggleDetails = async (txid: string) => {
     setIsOpenMap((prevMap) => ({
       ...prevMap,
       [txid]: !prevMap[txid],
     }));
+
+    if (!isOpenMap[txid]) {
+      const response = await axios.get(`https://bells.quark.blue/api/tx/${txid}/outspends`);
+      console.log(response.data);
+    }
   };
   const totalValues = data.map(
     (elem) => elem.vout.reduce((sum, voutElem) => sum + voutElem.value, 0) / 100000000,
   );
+
   return (
     <>
       {data.map((elem, idx) => (
@@ -49,7 +63,7 @@ const Transactions = ({ data }: TransactionsProps) => {
               {isOpenMap[elem.txid] ? 'DETAILS-' : 'DETAILS+'}
             </button>
           </div>
-          <div className='flex text-[10px] max-md:flex-col justify-between items-center'>
+          <div className='flex text-[14px] max-md:flex-col justify-between items-center'>
             <TxHeader
               amount={elem.vin[0]?.prevout?.value}
               coin='BEL'
