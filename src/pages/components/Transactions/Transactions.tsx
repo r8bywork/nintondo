@@ -70,7 +70,7 @@ const Transactions = ({ data }: TransactionsProps) => {
               vin
               isOpen={isOpenMap[elem.txid]}
             />
-            <BigArrowRight className='transform max-md:rotate-90' />
+            <BigArrowRight className='transform max-md:rotate-90 mx-[10px]' />
             {transaction && (
               <TxHeader
                 data={elem}

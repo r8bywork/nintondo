@@ -30,7 +30,7 @@ const TxHeader = <T extends object>({ vin, fields, isOpen, data, transaction }: 
       case window.innerWidth < 950:
         return 20;
       default:
-        return 50;
+        return 25;
     }
   };
 
@@ -42,28 +42,15 @@ const TxHeader = <T extends object>({ vin, fields, isOpen, data, transaction }: 
             key={v4()}
             className='max-md:flex-col'
           >
-            {/*<div*/}
-            {/*  key={v4()}*/}
-            {/*  className='bg-black max-w-[450px] items-center break-all px-[20px] py-[10px] my-[10px] flex rounded-[38px]'*/}
-            {/*>*/}
-            {/*  <p className='border-r-[2px] min-w-fit pr-[15px]'>#{idx}</p>*/}
-            {/*  <p className='text-[#53DCFF] pl-[15px] w-full pr-[15px]'>*/}
-            {/*    {item.is_coinbase ? 'Coinbase' : item?.txid || item?.scriptpubkey_address}*/}
-            {/*  </p>*/}
-            {/*  <p className='pl-[15px] border-l-[2px] min-w-fit'>*/}
-            {/*    {item.is_coinbase ? '' : item?.value / 100000000}*/}
-            {/*  </p>*/}
-            {/*</div>*/}
             <table
               key={v4()}
-              className='bg-black items-center break-all px-[20px] py-[10px] my-[10px] flex rounded-[38px]'
+              className='bg-black items-center max-w-[450px] break-all px-[20px] py-[10px] my-[10px] flex rounded-[38px]'
             >
               <tbody>
                 <tr className={'flex items-center'}>
                   <td className='border-r-[2px] min-w-fit pr-[15px]'>#{idx}</td>
                   <td className='text-[#53DCFF] pl-[15px] pr-[15px]'>
-                    <p className={'text-[#53DCFF]'}>
-                      {/*{item.is_coinbase ? 'Coinbase' : item?.txid || item?.scriptpubkey_address}*/}
+                    <p>
                       {truncate(
                         item.is_coinbase ? 'Coinbase' : item?.txid || item?.scriptpubkey_address,
                         {
