@@ -57,19 +57,12 @@ export interface Transaction {
 export interface Vin {
   txid: string;
   vout: number;
-  prevout: Prevout;
+  prevout: Vout;
   scriptsig: string;
   scriptsig_asm: string;
   is_coinbase: boolean;
   sequence: number;
   scriptpubkey_asm: string;
-  scriptpubkey_address: string;
-}
-
-interface Prevout {
-  scriptpubkey: string;
-  scriptpubkey_asm: string;
-  scriptpubkey_type: string;
   scriptpubkey_address: string;
   value: number;
 }
@@ -78,8 +71,22 @@ export interface Vout {
   scriptpubkey: string;
   scriptpubkey_asm: string;
   scriptpubkey_type: string;
+  txid: string;
   scriptpubkey_address: string;
   value: number;
+  transaction: additionalFields;
+}
+
+export interface additionalFields {
+  spent: boolean;
+  txid: string;
+  vin: 0;
+  status: {
+    confirmed: boolean;
+    block_height: number;
+    block_hash: string;
+    block_time: number;
+  };
 }
 
 interface TransactionStatus {
@@ -276,12 +283,21 @@ export const VoutFields: Field<Vout>[] = [
     value: 'scriptpubkey',
     name: 'Scriptpubkey (HEX)',
   },
-  // {
-  //   value: 'scriptpubkey_asm',
-  //   name: 'Scriptsig (asm)',
-  // },
-  // {
-  //   value: 'scriptpubkey_address',
-  //   name: 'PREVIOUS OUTPUT ADDRESS',
-  // },
+  {
+    value: 'transaction',
+    name: 'Spending Tx',
+    render: (value, data: Vout) =>
+      value && data?.transaction?.spent ? (
+        <span>
+          Spent by <span className='text-[#53DCFF]'>{data.transaction.txid}</span> in block{' '}
+          <span className='text-[#53DCFF]'>
+            {data.transaction.status.block_height
+              ? `#${data.transaction.status.block_height}`
+              : 'uncomfirmed'}
+          </span>
+        </span>
+      ) : (
+        <p>Unspent</p>
+      ),
+  },
 ];

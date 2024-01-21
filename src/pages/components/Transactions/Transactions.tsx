@@ -3,23 +3,17 @@ import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import BigArrowRight from '../../../assets/BigArrowRight.svg?react';
 import CopySvg from '../../../assets/copy.svg?react';
-import { Transaction, VinFields, VoutFields } from '../../../settings/fields';
+import { Transaction, VinFields, VoutFields, additionalFields } from '../../../settings/fields';
 import { truncate } from '../../../settings/utils';
-import TxHeader from './components/Txheader';
+import TxHeader from './components/TxHeader';
 interface TransactionsProps {
   data: Transaction[];
 }
 
 const Transactions = ({ data }: TransactionsProps) => {
   const [isOpenMap, setIsOpenMap] = useState<{ [key: string]: boolean }>({});
-  const [transaction, setTransactions] = useState([]);
+  const [transaction, setTransaction] = useState<Record<string, additionalFields[]>>({});
 
-  // const toggleDetails = (txid: string) => {
-  //   setIsOpenMap((prevMap) => ({
-  //     ...prevMap,
-  //     [txid]: !prevMap[txid],
-  //   }));
-  // };
   const toggleDetails = async (txid: string) => {
     setIsOpenMap((prevMap) => ({
       ...prevMap,
@@ -28,7 +22,10 @@ const Transactions = ({ data }: TransactionsProps) => {
 
     if (!isOpenMap[txid]) {
       const response = await axios.get(`https://bells.quark.blue/api/tx/${txid}/outspends`);
-      console.log(response.data);
+      setTransaction((prevTransactions) => ({
+        ...prevTransactions,
+        [txid]: response.data,
+      }));
     }
   };
   const totalValues = data.map(
@@ -65,20 +62,22 @@ const Transactions = ({ data }: TransactionsProps) => {
           </div>
           <div className='flex text-[14px] max-md:flex-col justify-between items-center'>
             <TxHeader
-              amount={elem.vin[0]?.prevout?.value}
-              coin='BEL'
+              // amount={elem.vin[0]?.prevout?.value}
               data={elem}
               fields={VinFields}
               vin
               isOpen={isOpenMap[elem.txid]}
             />
             <BigArrowRight className='transform max-md:rotate-90' />
-            <TxHeader
-              coin='BEL'
-              data={elem}
-              fields={VoutFields}
-              isOpen={isOpenMap[elem.txid]}
-            />
+            {transaction && (
+              <TxHeader
+                // amount={elem.value / 100000000}
+                data={elem}
+                transaction={transaction[elem.txid]}
+                fields={VoutFields}
+                isOpen={isOpenMap[elem.txid]}
+              />
+            )}
           </div>
           <div className='flex justify-end max-md:justify-center'>
             <p className='text-[#FB0] font-bold md:mr-[10px] max-md:mr-[30px]'>41 CONFIRMATIONS</p>

@@ -1,29 +1,39 @@
 import classNames from 'classnames';
+import { get } from 'lodash';
 import { ReactNode } from 'react';
 import { v4 } from 'uuid';
-import { Field, Transaction } from '../../../../settings/fields';
+import { Field, additionalFields, Transaction } from '../../../../settings/fields';
 import s from './TxHeader.module.scss';
+
 interface TxProps<T extends object> {
-  id?: number;
-  amount?: number;
-  coin?: string;
-  open?: boolean;
+  // amount?: number;
   vin?: boolean;
-  vout?: boolean;
-  data?: T[] | Transaction;
+  data?: Transaction;
   fields: Field<T>[];
   isOpen?: boolean;
+  transaction?: additionalFields[];
 }
-const TxHeader = <T extends object>({ amount, vin, fields, isOpen, data }: TxProps<T>) => {
+
+const TxHeader = <T extends object>({
+  // amount,
+  vin,
+  fields,
+  isOpen,
+  data,
+  transaction,
+}: TxProps<T>) => {
   const transactions = vin ? data?.vin : data?.vout;
-  const expandedTransactions = transactions?.map((item) =>
-    vin && item.prevout ? { ...item, ...item.prevout } : item,
+
+  const expandedTransactions = transactions?.map((item, index: number) =>
+    vin && 'prevout' in item
+      ? { ...item, ...item.prevout }
+      : { ...item, transaction: transaction?.[index] },
   );
 
   return (
     <div>
       {data &&
-        expandedTransactions.map((item, idx: number) => (
+        expandedTransactions?.map((item: any, idx: number) => (
           <div
             key={v4()}
             className='max-md:flex-col'
@@ -34,11 +44,9 @@ const TxHeader = <T extends object>({ amount, vin, fields, isOpen, data }: TxPro
             >
               <p className='border-r-[2px] min-w-fit pr-[15px]'>#{idx}</p>
               <p className='text-[#53DCFF] pl-[15px] w-full pr-[15px]'>
-                {item.txid || item.scriptpubkey_address}
+                {item?.txid || item.scriptpubkey_address}
               </p>
-              <p className='pl-[15px] border-l-[2px] min-w-fit'>
-                {amount / 100000000 || item?.value / 100000000}
-              </p>
+              <p className='pl-[15px] border-l-[2px] min-w-fit'>{item?.value / 100000000}</p>
             </div>
             {isOpen && (
               <table
@@ -59,8 +67,8 @@ const TxHeader = <T extends object>({ amount, vin, fields, isOpen, data }: TxPro
                       </th>
                       <td className='break-all'>
                         {field.render
-                          ? field.render(item[field.value], item)
-                          : (item[field.value] as ReactNode)}
+                          ? field.render(get(item, field.value), item)
+                          : (get(item, field.value) as ReactNode)}
                       </td>
                     </tr>
                   ))}
