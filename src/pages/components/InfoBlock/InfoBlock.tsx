@@ -25,8 +25,8 @@ const InfoBlock = ({ title, classNames, hash, SvgIcon }: InfoBlockProps) => {
         </p>
         <p className={'md:hidden bg-black text-[#53DCFF] text-[14px] mr-[5px]'}>
           {truncate(hash ?? '', {
-            nPrefix: 20,
-            nSuffix: 20,
+            nPrefix: 15,
+            nSuffix: 15,
           })}
         </p>
 

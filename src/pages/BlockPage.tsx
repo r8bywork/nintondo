@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import CubeSvg from '../assets/Cube.svg?react';
 import LeftArrow from '../assets/arrowleft.svg?react';
 import RightArrow from '../assets/arrowright.svg?react';
@@ -12,8 +12,10 @@ import Transactions from './components/Transactions/Transactions';
 
 const BlockPage = () => {
   const [block, setBlock] = useState<BlockData[]>();
-  const [transactions, setTransactions] = useState<Transaction[]>();
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [transLoading, setTransLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const getBlock = async (block: string) => {
     const response = await axios.get(`https://bells.quark.blue/api/block/${block}`);
@@ -21,47 +23,36 @@ const BlockPage = () => {
     return [{ ...response.data, ...blockStatus.data }];
   };
 
-  const getTransactions = async (block: string) => {
-    const response = await axios.get(`https://bells.quark.blue/api/block/${block}/txs/0`);
+  const getTransactions = async (block: string, length?: number) => {
+    const response = await axios.get(
+      `https://bells.quark.blue/api/block/${block}/txs/${length || 0}`,
+    );
     return response.data;
   };
   const { hash } = useParams();
 
   useEffect(() => {
-    setIsLoading(true);
-    hash &&
-      getBlock(hash)
-        .then((res) => setBlock(res))
-        .finally(() => setIsLoading(false));
-    hash &&
-      getTransactions(hash)
-        .then((res) => setTransactions(res))
-        .finally(() => setIsLoading(false));
+    if (hash) {
+      setIsLoading(true);
+      setTransLoading(true);
+      Promise.all([getBlock(hash), getTransactions(hash)])
+        .then(([blockRes, transactionsRes]) => {
+          setBlock(blockRes);
+          setTransactions(transactionsRes);
+        })
+        .finally(() => {
+          setIsLoading(false);
+          setTransLoading(false);
+        });
+    }
   }, [hash]);
 
-  const handlePrevBlock = async () => {
-    setIsLoading(true);
-    block &&
-      getBlock(block[0].previousblockhash)
-        .then((res) => setBlock(res))
-        .finally(() => setIsLoading(false));
+  const loadMore = async () => {
+    if (hash && transactions) {
+      const newTransactions = await getTransactions(hash, transactions.length + 25);
+      setTransactions((prevTransactions) => [...prevTransactions, ...newTransactions]);
+    }
   };
-
-  const handleNextBlock = () => {
-    setIsLoading(true);
-    block &&
-      getBlock(block[0].next_best)
-        .then((res) => setBlock(res))
-        .finally(() => setIsLoading(false));
-  };
-
-  // const LoadTransactions = () => {
-  //   setIsLoading(true);
-  //   block &&
-  //     getBlock(block[0].next_best)
-  //       .then((res) => setBlock(res))
-  //       .finally(() => setIsLoading(false));
-  // };
 
   return (
     <>
@@ -84,7 +75,9 @@ const BlockPage = () => {
       <div className='flex justify-between my-[15px]'>
         <button
           className='bg-[#FFBB00] px-[20px] rounded-[17px]'
-          onClick={handlePrevBlock}
+          onClick={() => {
+            block && navigate(`/explorer/block/${block[0].previousblockhash}`);
+          }}
         >
           <LeftArrow />
         </button>
@@ -92,13 +85,24 @@ const BlockPage = () => {
         {block?.[0]?.next_best && (
           <button
             className='bg-[#FFBB00] px-[20px] rounded-[17px]'
-            onClick={handleNextBlock}
+            onClick={() => {
+              block && navigate(`/explorer/block/${block[0].next_best}`);
+            }}
           >
             <RightArrow />
           </button>
         )}
       </div>
-      {transactions ? <Transactions data={transactions} /> : <Skeleton />}
+      {transactions && !transLoading ? <Transactions data={transactions} /> : <Skeleton />}
+      <div className={'pb-[20px]  flex justify-center'}>
+        <button
+          onClick={() => loadMore()}
+          className={'px-[25px] rounded-[17px] text-[20px] bg-[#FB0] text-black font-bold'}
+          style={{ background: 'linear-gradient(90deg, #FFF 0%, #FB0 99.07%)' }}
+        >
+          Load more
+        </button>
+      </div>
     </>
   );
 };

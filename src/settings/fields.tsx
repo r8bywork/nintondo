@@ -267,6 +267,7 @@ export const VinFields: Field<Vin>[] = [
   {
     value: 'scriptpubkey_address',
     name: 'PREVIOUS OUTPUT ADDRESS',
+    render: (value) => <p className='text-[#53DCFF]'>{value}</p>,
   },
 ];
 

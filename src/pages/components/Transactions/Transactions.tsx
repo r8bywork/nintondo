@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import BigArrowRight from '../../../assets/BigArrowRight.svg?react';
-import CopySvg from '../../../assets/copy.svg?react';
+import CopySvg from '../../../assets/copyOrange.svg?react';
 import { Transaction, VinFields, VoutFields, additionalFields } from '../../../settings/fields';
 import { truncate } from '../../../settings/utils';
 import TxHeader from './components/TxHeader';
@@ -39,9 +39,9 @@ const Transactions = ({ data }: TransactionsProps) => {
           key={uuidv4()}
           className='p-[20px] mb-[20px] rounded-3xl border-[1px] border-white bg-black/20 backdrop-blur-[12px]'
         >
-          <div className='flex justify-between pb-[15px]'>
+          <div className='flex justify-between text-[14px] pb-[15px]'>
             <div className='flex items-center'>
-              <div className={'break-all bg-black text-[#FB0] text-[14px] mr-[5px]'}>
+              <div className={'break-all bg-black text-[#FB0] mr-[5px]'}>
                 <p className='md:hidden'>
                   {truncate(elem.txid, {
                     nPrefix: 11,
@@ -50,7 +50,10 @@ const Transactions = ({ data }: TransactionsProps) => {
                 </p>
                 <p className='max-md:hidden'>{elem.txid}</p>
               </div>
-              <CopySvg onClick={() => navigator.clipboard.writeText(data[0].txid ?? '')} />
+              <CopySvg
+                className={''}
+                onClick={() => navigator.clipboard.writeText(data[0].txid ?? '')}
+              />
             </div>
 
             <button
@@ -60,9 +63,8 @@ const Transactions = ({ data }: TransactionsProps) => {
               {isOpenMap[elem.txid] ? 'DETAILS-' : 'DETAILS+'}
             </button>
           </div>
-          <div className='flex text-[14px] max-md:flex-col justify-between items-center'>
+          <div className='flex text-[10px] max-md:flex-col justify-between items-center'>
             <TxHeader
-              // amount={elem.vin[0]?.prevout?.value}
               data={elem}
               fields={VinFields}
               vin
@@ -71,7 +73,6 @@ const Transactions = ({ data }: TransactionsProps) => {
             <BigArrowRight className='transform max-md:rotate-90' />
             {transaction && (
               <TxHeader
-                // amount={elem.value / 100000000}
                 data={elem}
                 transaction={transaction[elem.txid]}
                 fields={VoutFields}
@@ -79,9 +80,9 @@ const Transactions = ({ data }: TransactionsProps) => {
               />
             )}
           </div>
-          <div className='flex justify-end max-md:justify-center'>
-            <p className='text-[#FB0] font-bold md:mr-[10px] max-md:mr-[30px]'>41 CONFIRMATIONS</p>
-            <p className='text-[#FB0] font-bold'>{totalValues[idx]} BEL</p>
+          <div className='flex justify-end font-bold text-[#FB0] text-[10px] max-md:justify-center'>
+            <p className='md:mr-[10px] max-md:mr-[30px]'>41 CONFIRMATIONS</p>
+            <p>{totalValues[idx]} BEL</p>
           </div>
         </div>
       ))}
