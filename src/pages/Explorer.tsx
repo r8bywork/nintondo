@@ -108,7 +108,7 @@ const SwitchTables = ({
 const TabSelectFields = [
   {
     value: 'dashboard',
-    title: 'bashboard',
+    title: 'dashboard',
   },
   {
     value: 'blocks',
