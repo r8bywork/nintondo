@@ -40,7 +40,7 @@ const Table = <T extends object>({
                 'bg-[#FB0] relative top-0 inline-block rounded-t-[15px] px-4 text-[24px] font-bold text-black'
               }
             >
-              {title}
+              <button onClick={onClick}>{title}</button>
             </div>
           </div>
         )}
