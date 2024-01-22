@@ -82,9 +82,13 @@ const SwitchTables = ({
             <button
               style={{ background: 'linear-gradient(90deg, #FFF 0%, #FB0 99.07%)' }}
               className={
-                'px-10 max-md:px-5 rounded-[17px] text-[20px] font-bold text-black max-md:my-[20px]'
+                'px-10 max-md:px-5 rounded-[17px] text-[20px] font-bold text-black mb-[15px]'
               }
-              onClick={() => onHandleSizeBlockChange(tableData.latestBlock[length].height - 10)}
+              onClick={() =>
+                onHandleSizeBlockChange(
+                  tableData.latestBlock[tableData.latestBlock.length - 1].height - 1,
+                )
+              }
             >
               {'Load more'.toUpperCase()}
             </button>
