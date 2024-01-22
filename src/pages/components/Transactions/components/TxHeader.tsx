@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { get } from 'lodash';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { v4 } from 'uuid';
 import { Field, additionalFields, Transaction } from '../../../../settings/fields';
 import s from './TxHeader.module.scss';
@@ -16,6 +16,7 @@ interface TxProps<T extends object> {
 
 const TxHeader = <T extends object>({ vin, fields, isOpen, data, transaction }: TxProps<T>) => {
   const transactions = vin ? data?.vin : data?.vout;
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const expandedTransactions = transactions?.map((item, index: number) =>
     vin && 'prevout' in item
@@ -23,11 +24,23 @@ const TxHeader = <T extends object>({ vin, fields, isOpen, data, transaction }: 
       : { ...item, transaction: transaction?.[index] },
   );
 
+  const handleResize = () => {
+    setWindowWidth(window.innerWidth);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   const getTruncated = () => {
     switch (true) {
-      case window.innerWidth <= 800:
+      case windowWidth <= 800:
         return 15;
-      case window.innerWidth < 950:
+      case windowWidth < 950:
         return 20;
       default:
         return 25;
@@ -35,38 +48,37 @@ const TxHeader = <T extends object>({ vin, fields, isOpen, data, transaction }: 
   };
 
   return (
-    <div>
+    <div className={'md:w-full'}>
       {data &&
         expandedTransactions?.map((item: any, idx: number) => (
           <div
             key={v4()}
             className='max-md:flex-col'
           >
-            <table
+            <div
               key={v4()}
-              className='bg-black items-center max-w-[450px] break-all px-[20px] py-[10px] my-[10px] flex rounded-[38px]'
+              className='bg-black max-w-[450px] items-center break-all px-[20px] py-[10px] my-[10px] flex rounded-[38px]'
             >
-              <tbody>
-                <tr className={'flex items-center'}>
-                  <td className='border-r-[2px] min-w-fit pr-[15px]'>#{idx}</td>
-                  <td className='text-[#53DCFF] pl-[15px] pr-[15px]'>
-                    <p>
-                      {truncate(
-                        item.is_coinbase ? 'Coinbase' : item?.txid || item?.scriptpubkey_address,
-                        {
-                          nPrefix: getTruncated(),
-                          nSuffix: getTruncated(),
-                        },
-                      )}
-                    </p>
-                  </td>
-                  <td className='pl-[15px] border-l-[2px] min-w-fit'>
-                    {item.is_coinbase ? '' : item?.value / 100000000}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
+              <p className='border-r-[2px] min-w-fit pr-[15px]'>#{idx}</p>
+              <p className='text-[#53DCFF] pl-[15px] pr-[15px]'>
+                {truncate(
+                  item.is_coinbase
+                    ? 'Coinbase'
+                    : item?.txid ||
+                        '' ||
+                        item?.scriptpubkey_address ||
+                        '' ||
+                        item?.scriptpubkey_type,
+                  {
+                    nPrefix: getTruncated(),
+                    nSuffix: getTruncated(),
+                  },
+                )}
+              </p>
+              <p className='pl-[15px] border-l-[2px] min-w-[80px] ml-auto'>
+                {item.is_coinbase ? '' : item?.value / 100000000}
+              </p>
+            </div>
             {isOpen && (
               <table
                 key={v4()}
