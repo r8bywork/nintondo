@@ -68,87 +68,86 @@ const Table = <T extends object>({ data, fields, className, title, additional }:
         <div
           style={{ background: 'var(--GRD, linear-gradient(90deg, #FFF 0%, #FB0 99.07%))' }}
           className={
-            'bg-[#FB0] relative top-1  ml-[20px] rounded-t-[15px] px-4 text-[24px] font-bold text-black w-fit'
+            'bg-[#FB0] relative top-0 ml-[20px] rounded-t-[15px] px-4 text-[24px] font-bold text-black w-fit'
           }
         >
           {title}
         </div>
       )}
-      <div className={cn('rounded-[12px]', className)}>
-        <div className={cn(s.container)}>
-          <table
-            className={s.table}
-            id='explorerTable'
-          >
-            {!additional && (
-              <thead>
-                <tr>
-                  {fields.map((i, idx) => (
-                    <th
-                      key={`table-header_${idx}`}
-                      className='bg-[#FB0]'
-                    >
-                      {i.name}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-            )}
-            <tbody>
-              {additional ? (
-                <>
-                  {data.map((i, idx) => (
-                    <React.Fragment key={`table_${uuidv4()}`}>
-                      {fields.map((f, fdx) => (
-                        <tr
-                          className={'bg-black'}
-                          key={`table-row_${uuidv4()}`}
-                        >
-                          {additional && (
-                            <th
-                              key={`table-col_${idx}-value_${fdx}`}
-                              className='bg-black text-left  text-[#FFBB00]'
-                            >
-                              {f.name?.toString().toUpperCase()}
-                            </th>
-                          )}
-                          <td
-                            key={`table-row_${idx + 1}-value_${fdx + 1}`}
-                            style={{
-                              borderImage:
-                                'linear-gradient(transparent 30%, white 0% 70%, transparent 0%) 0 0 0 1 / 1px',
-                            }}
-                            className={'whitespace-nowrap w-fit text-right'}
+
+      <div className={cn('mb-[20px]', s.container)}>
+        <table
+          className={cn({
+            [s.table]: !additional,
+            [s.AdditionalTable]: additional,
+          })}
+          id='explorerTable'
+        >
+          {!additional && (
+            <thead>
+              <tr>
+                {fields.map((i, idx) => (
+                  <th
+                    key={`table-header_${idx}`}
+                    className='bg-[#FB0]'
+                  >
+                    {i.name}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+          )}
+          <tbody>
+            {additional ? (
+              <>
+                {data.map((i, idx) => (
+                  <React.Fragment key={`table_${uuidv4()}`}>
+                    {fields.map((f, fdx) => (
+                      <tr key={`table-row_${uuidv4()}`}>
+                        {additional && (
+                          <th
+                            key={`table-col_${idx}-value_${fdx}`}
+                            className='text-left text-[#FFBB00]'
                           >
-                            {f.render ? f.render(i[f.value], i) : (i[f.value] as ReactNode)}
-                          </td>
-                        </tr>
-                      ))}
-                    </React.Fragment>
-                  ))}
-                </>
-              ) : (
-                <React.Fragment key={`table_${uuidv4()}`}>
-                  {data.map((i, idx) => (
-                    <tr
-                      className={'bg-black'}
-                      key={`table-row_${idx}`}
-                    >
-                      {fields.map((f, fdx) => (
+                            {f.name?.toString().toUpperCase()}
+                          </th>
+                        )}
                         <td
-                          key={`table-row_${idx}-value_${fdx}`}
-                          className={'whitespace-nowrap w-fit text-center '}
+                          key={`table-row_${idx + 1}-value_${fdx + 1}`}
+                          style={{
+                            borderImage:
+                              'linear-gradient(transparent 30%, white 0% 70%, transparent 0%) 0 0 0 1 / 1px',
+                          }}
+                          className={'whitespace-nowrap'}
                         >
                           {f.render ? f.render(i[f.value], i) : (i[f.value] as ReactNode)}
                         </td>
-                      ))}
-                    </tr>
-                  ))}
-                </React.Fragment>
-              )}
-            </tbody>
-          </table>
-        </div>
+                      </tr>
+                    ))}
+                  </React.Fragment>
+                ))}
+              </>
+            ) : (
+              <React.Fragment key={`table_${uuidv4()}`}>
+                {data.map((i, idx) => (
+                  <tr
+                    className={'bg-black'}
+                    key={`table-row_${idx}`}
+                  >
+                    {fields.map((f, fdx) => (
+                      <td
+                        key={`table-row_${idx}-value_${fdx}`}
+                        className={'whitespace-nowrap w-fit text-center '}
+                      >
+                        {f.render ? f.render(i[f.value], i) : (i[f.value] as ReactNode)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </React.Fragment>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );

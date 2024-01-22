@@ -93,16 +93,22 @@ const BlockPage = () => {
           </button>
         )}
       </div>
-      {transactions && !transLoading ? <Transactions data={transactions} /> : <Skeleton />}
-      <div className={'pb-[20px]  flex justify-center'}>
-        <button
-          onClick={() => loadMore()}
-          className={'px-[25px] rounded-[17px] text-[20px] bg-[#FB0] text-black font-bold'}
-          style={{ background: 'linear-gradient(90deg, #FFF 0%, #FB0 99.07%)' }}
-        >
-          Load more
-        </button>
-      </div>
+      {transactions && !transLoading ? (
+        <>
+          <Transactions data={transactions} />
+          <div className={'pb-[20px]  flex justify-center'}>
+            <button
+              onClick={() => loadMore()}
+              className={'px-[25px] rounded-[17px] text-[20px] bg-[#FB0] text-black font-bold'}
+              style={{ background: 'linear-gradient(90deg, #FFF 0%, #FB0 99.07%)' }}
+            >
+              Load more
+            </button>
+          </div>
+        </>
+      ) : (
+        <Skeleton />
+      )}
     </>
   );
 };
