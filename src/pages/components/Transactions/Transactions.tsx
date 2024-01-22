@@ -6,6 +6,7 @@ import CopySvg from '../../../assets/copyOrange.svg?react';
 import { Transaction, VinFields, VoutFields, additionalFields } from '../../../settings/fields';
 import { truncate } from '../../../settings/utils';
 import TxHeader from './components/TxHeader';
+import Copy from '../../../components/Copy/Copy.tsx';
 interface TransactionsProps {
   data: Transaction[];
 }
@@ -41,7 +42,7 @@ const Transactions = ({ data }: TransactionsProps) => {
         >
           <div className='flex justify-between text-[14px] pb-[15px]'>
             <div className='flex items-center'>
-              <div className={'break-all bg-black text-[#FB0] mr-[5px]'}>
+              <div className={'break-all px-[10px] rounded-[10px] bg-black text-[#FB0] mr-[5px]'}>
                 <p className='md:hidden'>
                   {truncate(elem.txid, {
                     nPrefix: 11,
@@ -50,9 +51,9 @@ const Transactions = ({ data }: TransactionsProps) => {
                 </p>
                 <p className='max-md:hidden'>{elem.txid}</p>
               </div>
-              <CopySvg
-                className={''}
-                onClick={() => navigator.clipboard.writeText(data[0].txid ?? '')}
+              <Copy
+                text={data[0].txid}
+                SvgIcon={CopySvg}
               />
             </div>
 
@@ -63,7 +64,7 @@ const Transactions = ({ data }: TransactionsProps) => {
               {isOpenMap[elem.txid] ? 'DETAILS-' : 'DETAILS+'}
             </button>
           </div>
-          <div className='flex text-[10px] max-md:flex-col justify-between items-center'>
+          <div className='flex text-[14px] max-md:flex-col justify-between items-center'>
             <TxHeader
               data={elem}
               fields={VinFields}
@@ -80,7 +81,7 @@ const Transactions = ({ data }: TransactionsProps) => {
               />
             )}
           </div>
-          <div className='flex justify-end font-bold text-[#FB0] text-[10px] max-md:justify-center'>
+          <div className='flex justify-end font-bold text-[#FB0] text-[14px] max-md:justify-center'>
             <p className='md:mr-[10px] max-md:mr-[30px]'>41 CONFIRMATIONS</p>
             <p>{totalValues[idx]} BEL</p>
           </div>

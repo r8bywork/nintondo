@@ -40,9 +40,10 @@ const SwitchTables = ({
               data={tableData?.latestBlock.slice(0, isMobile ? 2 : 5)}
               fields={BlockConfig}
               title='Latest Blocks'
+              onClick={() => setActiveTab('blocks')}
             />
             <button
-              className='text-[#53DCFF] font-bold text-[14px] float-right'
+              className='text-[#53DCFF] font-bold text-[18px] float-right'
               onClick={() => setActiveTab('blocks')}
             >
               View more blocks &#8594;
@@ -53,9 +54,10 @@ const SwitchTables = ({
               data={tableData?.latestTransactions.slice(0, isMobile ? 2 : 5)}
               fields={TransactionConfig}
               title='Latest Transactions'
+              onClick={() => setActiveTab('transactions')}
             />
             <button
-              className='text-[#53DCFF] font-bold text-[14px] float-right'
+              className='text-[#53DCFF] font-bold text-[18px] float-right'
               onClick={() => setActiveTab('transactions')}
             >
               View more transactions &#8594;

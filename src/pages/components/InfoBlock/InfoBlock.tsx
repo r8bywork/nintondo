@@ -1,11 +1,14 @@
 import cn from 'classnames';
 import CopySvg from '../../../assets/copy.svg?react';
 import { truncate } from '../../../settings/utils';
+import Copy from '../../../components/Copy/Copy.tsx';
+import { ComponentType, SVGProps } from 'react';
+
 interface InfoBlockProps {
   title?: string;
   classNames?: string;
   hash?: string;
-  SvgIcon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  SvgIcon: ComponentType<SVGProps<SVGSVGElement>>;
 }
 
 const InfoBlock = ({ title, classNames, hash, SvgIcon }: InfoBlockProps) => {
@@ -20,17 +23,28 @@ const InfoBlock = ({ title, classNames, hash, SvgIcon }: InfoBlockProps) => {
       </div>
 
       <div className={'flex items-center mb-[16px]'}>
-        <p className={'max-md:hidden break-all bg-black text-[#53DCFF] text-[14px] mr-[5px]'}>
+        <p
+          className={
+            'max-md:hidden px-[10px] rounded-[10px] break-all bg-black text-[#53DCFF] text-[14px] mr-[5px]'
+          }
+        >
           {hash}
         </p>
-        <p className={'md:hidden bg-black text-[#53DCFF] text-[14px] mr-[5px]'}>
+        <p
+          className={
+            'md:hidden px-[5px] rounded-[10px] bg-black text-[#53DCFF] text-[14px] mr-[5px]'
+          }
+        >
           {truncate(hash ?? '', {
             nPrefix: 15,
             nSuffix: 15,
           })}
         </p>
 
-        <CopySvg onClick={() => navigator.clipboard.writeText(hash ?? '')} />
+        <Copy
+          text={hash}
+          SvgIcon={CopySvg}
+        />
       </div>
     </div>
   );

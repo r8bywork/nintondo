@@ -16,9 +16,17 @@ interface Props<T extends object> {
   className?: string;
   title?: string;
   additional?: boolean;
+  onClick?: () => void;
 }
 
-const Table = <T extends object>({ data, fields, className, title, additional }: Props<T>) => {
+const Table = <T extends object>({
+  data,
+  fields,
+  className,
+  title,
+  additional,
+  onClick,
+}: Props<T>) => {
   const isMobile = window.innerWidth < 768;
 
   if (isMobile) {
@@ -29,7 +37,7 @@ const Table = <T extends object>({ data, fields, className, title, additional }:
             <div
               style={{ background: 'var(--GRD, linear-gradient(90deg, #FFF 0%, #FB0 99.07%))' }}
               className={
-                'bg-[#FB0] relative top-1 inline-block rounded-t-[15px] px-4 text-[24px] font-bold text-black'
+                'bg-[#FB0] relative top-0 inline-block rounded-t-[15px] px-4 text-[24px] font-bold text-black'
               }
             >
               {title}
@@ -71,11 +79,17 @@ const Table = <T extends object>({ data, fields, className, title, additional }:
             'bg-[#FB0] relative top-0 ml-[20px] rounded-t-[15px] px-4 text-[24px] font-bold text-black w-fit'
           }
         >
-          {title}
+          <button onClick={onClick}>{title}</button>
         </div>
       )}
 
-      <div className={cn('mb-[20px]', s.container)}>
+      <div
+        className={cn(
+          'mb-[20px]',
+          { ['border border-[#FB0] rounded-3xl']: additional },
+          s.container,
+        )}
+      >
         <table
           className={cn({
             [s.table]: !additional,

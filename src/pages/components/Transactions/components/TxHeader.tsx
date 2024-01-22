@@ -39,11 +39,11 @@ const TxHeader = <T extends object>({ vin, fields, isOpen, data, transaction }: 
   const getTruncated = () => {
     switch (true) {
       case windowWidth <= 800:
-        return 15;
+        return 9;
       case windowWidth < 950:
-        return 20;
+        return 12;
       default:
-        return 25;
+        return 17;
     }
   };
 
@@ -76,7 +76,7 @@ const TxHeader = <T extends object>({ vin, fields, isOpen, data, transaction }: 
                 )}
               </p>
               <p className='pl-[15px] border-l-[2px] min-w-[80px] ml-auto'>
-                {item.is_coinbase ? '' : item?.value / 100000000}
+                {item.is_coinbase ? '' : (item?.value / 100000000).toFixed(3)}
               </p>
             </div>
             {isOpen && (
