@@ -9,7 +9,7 @@ import TxHeader from './components/TxHeader';
 import Copy from '../../../components/Copy/Copy.tsx';
 interface TransactionsProps {
   data: Transaction[];
-  height: number;
+  height?: number;
 }
 
 const Transactions = ({ data, height }: TransactionsProps) => {
@@ -83,8 +83,13 @@ const Transactions = ({ data, height }: TransactionsProps) => {
           </div>
           <div className='flex justify-end font-bold text-[#FB0] text-[14px] max-md:justify-center'>
             <p className='md:mr-[10px] max-md:mr-[30px]'>
-              {height === elem.status.block_height ? 1 : height - elem.status.block_height + 1}{' '}
-              CONFIRMATIONS
+              {height
+                ? height === elem.status.block_height
+                  ? '1 CONFIRMATION'
+                  : `${height - elem.status.block_height + 1} CONFIRMATIONS`
+                : elem.status.confirmed
+                  ? 'Confirmed'
+                  : 'Unconfirmed'}
             </p>
             <p>{totalValues[idx]} BEL</p>
           </div>

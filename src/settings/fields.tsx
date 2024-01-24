@@ -52,6 +52,7 @@ export interface Transaction {
   weight: number;
   fee: number;
   status: TransactionStatus;
+  vsize: number;
 }
 
 export interface Vin {
@@ -153,7 +154,7 @@ export const BlockConfig: Field<BlockData>[] = [
     name: 'Size (KB)',
     render: (value, data: BlockData) => (
       <Link to={`/explorer/block/${data.id}`}>
-        <p className='text-[#FFFFFF]'>{value}</p>
+        <p className='text-[#FFFFFF]'>{value / 1000}</p>
       </Link>
     ),
   },
@@ -162,7 +163,7 @@ export const BlockConfig: Field<BlockData>[] = [
     name: 'Weight (KWU)',
     render: (value, data: BlockData) => (
       <Link to={`/explorer/block/${data.id}`}>
-        <p className='text-[#FFFFFF]'>{value}</p>
+        <p className='text-[#FFFFFF]'>{value / 1000}</p>
       </Link>
     ),
   },
@@ -172,9 +173,8 @@ export const TransactionConfig: Field<TransactionData>[] = [
   {
     value: 'txid',
     name: 'Transaction ID',
-    render: (value) => (
-      <>
-        {/*53DCFF*/}
+    render: (value, data) => (
+      <Link to={`/explorer/tx/${data.txid}`}>
         <p className={'max-md:hidden text-[#FFFFFF]'}>{value}</p>
         <p className={'md:hidden text-[#FFFFFF]'}>
           {truncate(value, {
@@ -182,20 +182,23 @@ export const TransactionConfig: Field<TransactionData>[] = [
             nSuffix: 4,
           })}
         </p>
-      </>
+      </Link>
     ),
-  },
-  {
-    value: 'fee',
-    name: 'Fee',
-  },
-  {
-    value: 'vsize',
-    name: 'Virtual Size',
   },
   {
     value: 'value',
     name: 'Value',
+    render: (value) => <p>{(value / 100000000).toFixed(3)} BEL</p>,
+  },
+  {
+    value: 'fee',
+    name: 'Fee',
+    render: (value, data) => <p>{Math.ceil(value / data.vsize).toFixed(3)} sat/vB</p>,
+  },
+  {
+    value: 'vsize',
+    name: 'Size',
+    render: (value) => <p>{value} vB</p>,
   },
 ];
 
@@ -325,5 +328,40 @@ export const VoutFields: Field<Vout>[] = [
       ) : (
         <p>Unspent</p>
       ),
+  },
+];
+
+export const TxFieldsTable: Field<Transaction>[] = [
+  {
+    value: 'status',
+    name: 'Status',
+    render: (value) => <p>{value.confirmed ? 'Confirmed' : 'Unconfirmed'}</p>,
+  },
+  {
+    value: 'vsize',
+    name: 'eta',
+  },
+  {
+    value: 'size',
+    name: 'size',
+    render: (value) => <p>{`${value} B`}</p>,
+  },
+  {
+    value: 'size',
+    name: 'virtual size',
+    render: (value) => <p>{`${value} vB`}</p>,
+  },
+  {
+    value: 'weight',
+    name: 'weight units',
+    render: (value) => <p>{`${value} WU`}</p>,
+  },
+  {
+    value: 'version',
+    name: 'Version',
+  },
+  {
+    value: 'locktime',
+    name: 'locktime',
   },
 ];
