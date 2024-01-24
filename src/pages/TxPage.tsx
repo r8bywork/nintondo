@@ -14,9 +14,9 @@ const TxPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getBlock = async (hash: string) => {
-    const response = await axios.get(`https://bells.quark.blue/api/tx/${hash}`);
     const memPool = await axios.get('https://bells.quark.blue/api/mempool');
     const feeEstimates = await axios.get('https://bells.quark.blue/api/fee-estimates');
+    const response = await axios.get(`https://api.nintondo.io/api/tx/${hash}`);
     return [{ ...response.data, ...memPool.data, fee: { ...feeEstimates.data } }];
   };
 

@@ -337,10 +337,10 @@ export const TxFieldsTable: Field<Transaction>[] = [
     name: 'Status',
     render: (value) => <p>{value.confirmed ? 'Confirmed' : 'Unconfirmed'}</p>,
   },
-  {
-    value: 'vsize',
-    name: 'eta',
-  },
+  // {
+  //   value: 'vsize',
+  //   name: 'eta',
+  // },
   {
     value: 'size',
     name: 'size',
