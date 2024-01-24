@@ -5,6 +5,7 @@ import { v4 } from 'uuid';
 import { Field, additionalFields, Transaction } from '../../../../settings/fields';
 import s from './TxHeader.module.scss';
 import { truncate } from '../../../../settings/utils.ts';
+import { Link } from 'react-router-dom';
 
 interface TxProps<T extends object> {
   vin?: boolean;
@@ -60,21 +61,29 @@ const TxHeader = <T extends object>({ vin, fields, isOpen, data, transaction }: 
               className='bg-black max-w-[450px] items-center break-all px-[20px] py-[10px] my-[10px] flex rounded-[38px]'
             >
               <p className='border-r-[2px] min-w-fit pr-[15px]'>#{idx}</p>
-              <p className='text-[#53DCFF] pl-[15px] pr-[15px]'>
-                {truncate(
-                  item.is_coinbase
-                    ? 'Coinbase'
-                    : item?.txid ||
-                        '' ||
-                        item?.scriptpubkey_address ||
-                        '' ||
-                        item?.scriptpubkey_type,
-                  {
-                    nPrefix: getTruncated(),
-                    nSuffix: getTruncated(),
-                  },
-                )}
-              </p>
+              <Link
+                to={
+                  item.txid
+                    ? `/explorer/tx/${item?.txid}`
+                    : `/explorer/address/${item?.scriptpubkey_address}`
+                }
+              >
+                <p className='text-[#53DCFF] pl-[15px] pr-[15px]'>
+                  {truncate(
+                    item.is_coinbase
+                      ? 'Coinbase'
+                      : item?.txid ||
+                          '' ||
+                          item?.scriptpubkey_address ||
+                          '' ||
+                          item?.scriptpubkey_type,
+                    {
+                      nPrefix: getTruncated(),
+                      nSuffix: getTruncated(),
+                    },
+                  )}
+                </p>
+              </Link>
               <p className='pl-[15px] border-l-[2px] min-w-[80px] ml-auto'>
                 {item.is_coinbase ? '' : (item?.value / 100000000).toFixed(3)}
               </p>
