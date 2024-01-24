@@ -10,18 +10,22 @@ export type Field<T extends object> = {
   };
 }[keyof T];
 
-export interface TxApiResponse {
-  fee: number;
-  txid: string;
-  locktime: number;
-  size: number;
-  version: number;
-}
-
-export interface BlockStatus {
-  height: number;
-  is_best_chain: true;
-  next_best: string;
+export interface AddressStats {
+  address: string;
+  chain_stats: {
+    funded_txo_count: number;
+    funded_txo_sum: number;
+    spent_txo_count: number;
+    spent_txo_sum: number;
+    tx_count: number;
+  };
+  mempool_stats: {
+    funded_txo_count: number;
+    funded_txo_sum: number;
+    spent_txo_count: number;
+    spent_txo_sum: number;
+    tx_count: number;
+  };
 }
 
 export interface BlockData {
@@ -363,5 +367,89 @@ export const TxFieldsTable: Field<Transaction>[] = [
   {
     value: 'locktime',
     name: 'locktime',
+  },
+];
+
+export const AddressFields: Field<AddressStats>[] = [
+  {
+    value: 'chain_stats',
+    name: 'TOTAL TX COUNT',
+    render: (value, data) => <p>{value.tx_count + data.mempool_stats.tx_count}</p>,
+  },
+  {
+    value: 'chain_stats',
+    name: 'conf. tx count',
+    render: (value) => <p>{value.tx_count}</p>,
+  },
+  {
+    value: 'chain_stats',
+    name: 'conf. received',
+    render: (value) => (
+      <p>
+        {value.funded_txo_count} outputs ({(value.funded_txo_sum / 100000000).toFixed(3)} BEL)
+      </p>
+    ),
+  },
+  {
+    value: 'chain_stats',
+    name: 'conf. spent',
+    render: (value) => (
+      <p>
+        {value.spent_txo_count} outputs ({(value.spent_txo_sum / 100000000).toFixed(3)} BEL)
+      </p>
+    ),
+  },
+  {
+    value: 'chain_stats',
+    name: 'conf. unspent',
+    render: (value) => (
+      <p>
+        {value.funded_txo_count - value.spent_txo_count} outputs (
+        {((value.funded_txo_sum - value.spent_txo_sum) / 100000000).toFixed(3)} BEL)
+      </p>
+    ),
+  },
+  {
+    value: 'mempool_stats',
+    name: 'unconf. tx count',
+    render: (value) => <p>{value.tx_count}</p>,
+  },
+  {
+    value: 'mempool_stats',
+    name: 'unconf. received',
+    render: (value) => (
+      <p>
+        {value.funded_txo_count} outputs ({(value.funded_txo_sum / 100000000).toFixed(3)} BEL)
+      </p>
+    ),
+  },
+  {
+    value: 'mempool_stats',
+    name: 'unconf. spent',
+    render: (value) => (
+      <p>
+        {value.spent_txo_count} outputs ({(value.spent_txo_sum / 100000000).toFixed(3)} BEL)
+      </p>
+    ),
+  },
+  {
+    value: 'mempool_stats',
+    name: 'total unspent',
+    render: (value, data) => (
+      <p>
+        {data.chain_stats.funded_txo_count -
+          data.chain_stats.spent_txo_count +
+          (value.funded_txo_count - value.spent_txo_count)}{' '}
+        outputs (
+        {(
+          (value.funded_txo_sum -
+            value.spent_txo_sum +
+            data.chain_stats.funded_txo_sum -
+            data.chain_stats.spent_txo_sum) /
+          100000000
+        ).toFixed(3)}
+        BEL)
+      </p>
+    ),
   },
 ];

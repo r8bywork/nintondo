@@ -10,6 +10,7 @@ import TabSelect from './components/TabSelect/TabSelect';
 import Table from './components/Table/Table';
 import s from './styles/styles.module.scss';
 import TxPage from './TxPage.tsx';
+import AddressPage from './AddressPage.tsx';
 interface tableData {
   latestBlock: BlockData[];
   latestTransactions: TransactionData[];
@@ -198,6 +199,10 @@ const Explorer = () => {
             <Route
               path='/tx/:hash'
               element={<TxPage />}
+            />
+            <Route
+              path='/address/:hash'
+              element={<AddressPage />}
             />
             <Route
               path='/'
