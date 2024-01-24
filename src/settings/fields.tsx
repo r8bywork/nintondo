@@ -125,7 +125,7 @@ export const BlockConfig: Field<BlockData>[] = [
     name: 'Height',
     render: (value, data: BlockData) => (
       <Link to={`/explorer/block/${data.id}`}>
-        <p className='text-[#53DCFF]'>{value}</p>
+        <p className='text-[#FFFFFF]'>{value}</p>
       </Link>
     ),
   },
@@ -154,8 +154,9 @@ export const TransactionConfig: Field<TransactionData>[] = [
     name: 'Transaction ID',
     render: (value) => (
       <>
-        <p className={'max-md:hidden text-[#53DCFF]'}>{value}</p>
-        <p className={'md:hidden text-[#53DCFF]'}>
+        {/*53DCFF*/}
+        <p className={'max-md:hidden text-[#FFFFFF]'}>{value}</p>
+        <p className={'md:hidden text-[#FFFFFF]'}>
           {truncate(value, {
             nPrefix: 4,
             nSuffix: 4,

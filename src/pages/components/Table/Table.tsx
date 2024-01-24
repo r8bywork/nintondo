@@ -44,6 +44,28 @@ const Table = <T extends object>({
             </div>
           </div>
         )}
+        {/*<div className={cn('rounded-[12px]', className)}>*/}
+        {/*  {data.map((item, idx) => (*/}
+        {/*    <div*/}
+        {/*      key={`card_${idx}`}*/}
+        {/*      className='border border-[#FB0] rounded-[17px] overflow-hidden bg-black/60 backdrop-blur-md mb-[10px]'*/}
+        {/*    >*/}
+        {/*      {fields.map((field, fdx) => (*/}
+        {/*        <div*/}
+        {/*          key={`card_${idx}_field_${fdx}`}*/}
+        {/*          className='my-2 flex justify-between bg-black px-4'*/}
+        {/*        >*/}
+        {/*          <div className='text-[#FFBB00]'>{field.name?.toString().toUpperCase()}</div>*/}
+        {/*          <div className='whitespace-nowrap text-right'>*/}
+        {/*            {field.render*/}
+        {/*              ? field.render(item[field.value], item)*/}
+        {/*              : (item[field.value] as ReactNode)}*/}
+        {/*          </div>*/}
+        {/*        </div>*/}
+        {/*      ))}*/}
+        {/*    </div>*/}
+        {/*  ))}*/}
+        {/*</div>*/}
         <div className={cn('rounded-[12px]', className)}>
           {data.map((item, idx) => (
             <div
@@ -53,10 +75,12 @@ const Table = <T extends object>({
               {fields.map((field, fdx) => (
                 <div
                   key={`card_${idx}_field_${fdx}`}
-                  className='my-2 flex justify-between bg-black px-4'
+                  className='my-2 flex bg-black px-4'
                 >
-                  <div className='text-[#FFBB00]'>{field.name?.toString().toUpperCase()}</div>
-                  <div className='whitespace-nowrap text-right'>
+                  <div className='text-[#FFBB00] w-full max-w-[140px]'>
+                    {field.name?.toString().toUpperCase()}
+                  </div>
+                  <div className='whitespace-nowrap text-left'>
                     {field.render
                       ? field.render(item[field.value], item)
                       : (item[field.value] as ReactNode)}
@@ -74,7 +98,7 @@ const Table = <T extends object>({
     <div className={'w-full max-w-7xl' + className}>
       {title && (
         <div
-          style={{ background: 'var(--GRD, linear-gradient(90deg, #FFF 0%, #FB0 99.07%))' }}
+          // style={{ background: 'var(--GRD, linear-gradient(90deg, #FFF 0%, #FB0 99.07%))' }}
           className={
             'bg-[#FB0] relative top-0 ml-[20px] rounded-t-[15px] px-4 text-[24px] font-bold text-black w-fit'
           }
@@ -145,7 +169,9 @@ const Table = <T extends object>({
               <React.Fragment key={`table_${uuidv4()}`}>
                 {data.map((i, idx) => (
                   <tr
-                    className={'bg-black'}
+                    className={
+                      idx % 2 === 0 ? 'bg-[#161A20] cursor-pointer' : 'bg-[#020912] cursor-pointer'
+                    }
                     key={`table-row_${idx}`}
                   >
                     {fields.map((f, fdx) => (

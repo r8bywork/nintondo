@@ -43,7 +43,7 @@ const SwitchTables = ({
               onClick={() => setActiveTab('blocks')}
             />
             <button
-              className='text-[#53DCFF] font-bold text-[18px] float-right'
+              className='text-[#FFFFF] px-[5px] bg-black/50 backdrop-blur-[15px] rounded-md font-bold text-[18px] float-right'
               onClick={() => setActiveTab('blocks')}
             >
               View more blocks &#8594;
@@ -57,7 +57,7 @@ const SwitchTables = ({
               onClick={() => setActiveTab('transactions')}
             />
             <button
-              className='text-[#53DCFF] font-bold text-[18px] float-right'
+              className='text-[#FFFFF] px-[5px] bg-black/50 backdrop-blur-[15px] rounded-md font-bold text-[18px] float-right'
               onClick={() => setActiveTab('transactions')}
             >
               View more transactions &#8594;
