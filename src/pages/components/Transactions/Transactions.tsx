@@ -9,12 +9,12 @@ import TxHeader from './components/TxHeader';
 import Copy from '../../../components/Copy/Copy.tsx';
 interface TransactionsProps {
   data: Transaction[];
+  height: number;
 }
 
-const Transactions = ({ data }: TransactionsProps) => {
+const Transactions = ({ data, height }: TransactionsProps) => {
   const [isOpenMap, setIsOpenMap] = useState<{ [key: string]: boolean }>({});
   const [transaction, setTransaction] = useState<Record<string, additionalFields[]>>({});
-
   const toggleDetails = async (txid: string) => {
     setIsOpenMap((prevMap) => ({
       ...prevMap,
@@ -82,7 +82,10 @@ const Transactions = ({ data }: TransactionsProps) => {
             )}
           </div>
           <div className='flex justify-end font-bold text-[#FB0] text-[14px] max-md:justify-center'>
-            <p className='md:mr-[10px] max-md:mr-[30px]'>41 CONFIRMATIONS</p>
+            <p className='md:mr-[10px] max-md:mr-[30px]'>
+              {height === elem.status.block_height ? 1 : height - elem.status.block_height + 1}{' '}
+              CONFIRMATIONS
+            </p>
             <p>{totalValues[idx]} BEL</p>
           </div>
         </div>

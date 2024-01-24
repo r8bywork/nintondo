@@ -132,19 +132,39 @@ export const BlockConfig: Field<BlockData>[] = [
   {
     value: 'timestamp',
     name: 'Timestamp',
-    render: (value) => <p>{formatDate(value)}</p>,
+    render: (value, data: BlockData) => (
+      <Link to={`/explorer/block/${data.id}`}>
+        <p className='text-[#FFFFFF]'>{formatDate(value)}</p>
+      </Link>
+    ),
+    // render: (value) => <p>{formatDate(value)}</p>,
   },
   {
     value: 'tx_count',
     name: 'Transactions',
+    render: (value, data: BlockData) => (
+      <Link to={`/explorer/block/${data.id}`}>
+        <p className='text-[#FFFFFF]'>{value}</p>
+      </Link>
+    ),
   },
   {
     value: 'size',
     name: 'Size (KB)',
+    render: (value, data: BlockData) => (
+      <Link to={`/explorer/block/${data.id}`}>
+        <p className='text-[#FFFFFF]'>{value}</p>
+      </Link>
+    ),
   },
   {
     value: 'weight',
     name: 'Weight (KWU)',
+    render: (value, data: BlockData) => (
+      <Link to={`/explorer/block/${data.id}`}>
+        <p className='text-[#FFFFFF]'>{value}</p>
+      </Link>
+    ),
   },
 ];
 
@@ -213,6 +233,7 @@ export const AdditionalBlockFields: Field<BlockData>[] = [
   {
     value: 'version',
     name: 'Version',
+    render: (value) => <p>{'0x' + value.toString(16)}</p>,
   },
   {
     value: 'merkle_root',
@@ -232,6 +253,7 @@ export const AdditionalBlockFields: Field<BlockData>[] = [
   {
     value: 'bits',
     name: 'Bits',
+    render: (value) => <p>{'0x' + value.toString(16)}</p>,
   },
   {
     value: 'difficulty',
@@ -240,6 +262,7 @@ export const AdditionalBlockFields: Field<BlockData>[] = [
   {
     value: 'nonce',
     name: 'Nonce',
+    render: (value) => <p>{'0x' + value.toString(16)}</p>,
   },
 ];
 
@@ -255,10 +278,11 @@ export const VinFields: Field<Vin>[] = [
   {
     value: 'sequence',
     name: 'Nsequence',
+    render: (value) => <p>{'0x' + value.toString(16)}</p>,
   },
   {
     value: 'scriptpubkey_asm',
-    name: 'Scriptsig (asm)',
+    name: 'PREVIOUS OUTPUT SCRIPT',
     render: (value, data) => (
       <p>
         {value} ({data.prevout.scriptpubkey_type})

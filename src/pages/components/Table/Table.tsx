@@ -44,28 +44,6 @@ const Table = <T extends object>({
             </div>
           </div>
         )}
-        {/*<div className={cn('rounded-[12px]', className)}>*/}
-        {/*  {data.map((item, idx) => (*/}
-        {/*    <div*/}
-        {/*      key={`card_${idx}`}*/}
-        {/*      className='border border-[#FB0] rounded-[17px] overflow-hidden bg-black/60 backdrop-blur-md mb-[10px]'*/}
-        {/*    >*/}
-        {/*      {fields.map((field, fdx) => (*/}
-        {/*        <div*/}
-        {/*          key={`card_${idx}_field_${fdx}`}*/}
-        {/*          className='my-2 flex justify-between bg-black px-4'*/}
-        {/*        >*/}
-        {/*          <div className='text-[#FFBB00]'>{field.name?.toString().toUpperCase()}</div>*/}
-        {/*          <div className='whitespace-nowrap text-right'>*/}
-        {/*            {field.render*/}
-        {/*              ? field.render(item[field.value], item)*/}
-        {/*              : (item[field.value] as ReactNode)}*/}
-        {/*          </div>*/}
-        {/*        </div>*/}
-        {/*      ))}*/}
-        {/*    </div>*/}
-        {/*  ))}*/}
-        {/*</div>*/}
         <div className={cn('rounded-[12px]', className)}>
           {data.map((item, idx) => (
             <div
@@ -152,10 +130,10 @@ const Table = <T extends object>({
                         )}
                         <td
                           key={`table-row_${idx + 1}-value_${fdx + 1}`}
-                          style={{
-                            borderImage:
-                              'linear-gradient(transparent 30%, white 0% 70%, transparent 0%) 0 0 0 1 / 1px',
-                          }}
+                          // style={{
+                          //   borderImage:
+                          //     'linear-gradient(transparent 30%, white 0% 70%, transparent 0%) 0 0 0 1 / 1px',
+                          // }}
                           className={'whitespace-nowrap'}
                         >
                           {f.render ? f.render(i[f.value], i) : (i[f.value] as ReactNode)}

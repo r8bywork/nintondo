@@ -28,6 +28,7 @@ const Header = () => {
   return (
     <div
       ref={headerRef}
+      style={{ background: 'linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.00) 100%)' }}
       className={cn('header', { 'menu-open': isMenuOpen })}
     >
       <div className='flex justify-between w-[100%] items-center'>

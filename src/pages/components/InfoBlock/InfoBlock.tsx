@@ -25,7 +25,7 @@ const InfoBlock = ({ title, classNames, hash, SvgIcon }: InfoBlockProps) => {
       <div className={'flex items-center mb-[16px]'}>
         <p
           className={
-            'max-md:hidden px-[10px] rounded-[10px] break-all bg-black text-[#53DCFF] text-[14px] mr-[5px]'
+            'max-md:hidden px-[10px] rounded-[10px] break-all bg-black text-[#53DCFF] text-[16px] mr-[5px]'
           }
         >
           {hash}

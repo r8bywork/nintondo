@@ -10,7 +10,7 @@ import Skeleton from './components/Skeleton/Skeleton';
 import Table from './components/Table/Table';
 import Transactions from './components/Transactions/Transactions';
 
-const BlockPage = () => {
+const TxPage = () => {
   const [block, setBlock] = useState<BlockData[]>();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -123,4 +123,4 @@ const BlockPage = () => {
     </>
   );
 };
-export default BlockPage;
+export default TxPage;

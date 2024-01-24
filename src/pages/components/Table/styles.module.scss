@@ -31,11 +31,15 @@
   @apply w-full bg-black rounded-3xl max-sm:min-w-max;
 
   tr {
+    th:not(:last-child),
+    td {
+      @apply border border-[#FB0] border-opacity-40;
+    }
     th {
-      @apply py-2 px-4 ;
+      @apply py-2 px-4 min-w-[150px];
     }
     td {
-      @apply py-[6px] px-4 float-left;
+      @apply py-2 px-4 w-full;
     }
   }
 }
