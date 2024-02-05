@@ -78,8 +78,8 @@ const TxHeader = <T extends object>({ vin, fields, isOpen, data, transaction }: 
                           '' ||
                           item?.scriptpubkey_type,
                     {
-                      nPrefix: getTruncated(),
-                      nSuffix: getTruncated(),
+                      nPrefix: vin ? getTruncated() : 50,
+                      nSuffix: vin ? getTruncated() : 50,
                     },
                   )}
                 </p>

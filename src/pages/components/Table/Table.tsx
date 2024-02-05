@@ -87,7 +87,7 @@ const Table = <T extends object>({
 
       <div
         className={cn(
-          'mb-[20px]',
+          'mb-[20px] rounded-[20px]',
           { ['border border-[#FB0] rounded-3xl']: additional },
           s.container,
         )}

@@ -38,7 +38,7 @@ const Transactions = ({ data, height }: TransactionsProps) => {
       {data.map((elem, idx) => (
         <div
           key={uuidv4()}
-          className='p-[20px] mb-[20px] rounded-3xl border-[1px] border-white bg-black/20 backdrop-blur-[12px]'
+          className='p-[20px] mb-[20px] rounded-3xl border-[1px] border-white bg-black/60 backdrop-blur-[12px]'
         >
           <div className='flex justify-between text-[14px] pb-[15px]'>
             <div className='flex items-center'>
