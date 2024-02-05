@@ -1,12 +1,33 @@
-import { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import DownloadLink from '../components/DownloadLink/DownloadLink';
 import Text from '../components/Text/Text';
 import WalletInfo from '../components/WalletInfo/WalletInfo';
 import { buttons, linksData } from '../settings/settings';
 import './styles/MainPage.css';
-
+import { useParams } from 'react-router-dom';
 const MainPage = () => {
   const [scrollY, setScrollY] = useState(0);
+  const params = useParams();
+  type Blocks = {
+    [key: string]: React.MutableRefObject<HTMLElement | null>;
+  };
+
+  const blocks: Blocks = {
+    wallet: React.createRef(),
+    markets: React.createRef(),
+  };
+
+  const scrollToBlock = (block = '') => {
+    const currentRef = blocks[block]?.current;
+
+    if (currentRef && 'scrollIntoView' in currentRef) {
+      currentRef.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
+    scrollToBlock(params.anchor);
+  }, [params]);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -42,6 +63,7 @@ const MainPage = () => {
       <div className={'bg-black text-justify px-[15px] h-full indent-[20px] '}>
         <div className={'wallet_info flex flex-wrap'}>
           <div
+            ref={blocks.wallet as React.RefObject<HTMLDivElement>}
             className='w-[1080px] mx-auto py-[30px]'
             id={'wallet'}
           >
@@ -53,6 +75,7 @@ const MainPage = () => {
             <div
               id={'markets'}
               className={'text-white'}
+              ref={blocks.markets as React.RefObject<HTMLDivElement>}
             >
               <h2 className='text-4xl font-bold mb-4'>Markets</h2>
               <div>

@@ -82,7 +82,7 @@ export const linksData = [
 ];
 
 export const HeaderLinks = [
-  { name: 'wallet', url: '#wallet' },
-  { name: 'markets', url: '#markets' },
+  { name: 'wallet', url: '/wallet' },
+  { name: 'markets', url: '/markets' },
   { name: 'explorer', url: '/explorer' },
 ];

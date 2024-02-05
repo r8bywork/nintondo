@@ -10,7 +10,7 @@ const App = () => {
       <Header />
       <Routes>
         <Route
-          path='/'
+          path='/:anchor?'
           element={<MainPage />}
         />
         <Route
