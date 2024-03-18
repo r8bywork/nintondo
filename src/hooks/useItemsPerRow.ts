@@ -1,53 +1,3 @@
-// import { useEffect, useRef, useState } from 'react';
-//
-// const useItemsPerRow = (elementsWithText: string[]) => {
-//   const containerRef = useRef<HTMLDivElement>(null);
-//   const [itemsPerRow, setItemsPerRow] = useState<number>(1);
-//
-//   useEffect(() => {
-//     const handleResize = () => {
-//       if (containerRef.current && elementsWithText.length > 0) {
-//         const containerWidth = containerRef.current.clientWidth;
-//         const hiddenElements = elementsWithText.map((text) => {
-//           const hiddenElement = document.createElement('div');
-//           hiddenElement.style.position = 'absolute';
-//           hiddenElement.style.visibility = 'hidden';
-//           hiddenElement.style.whiteSpace = 'nowrap';
-//           hiddenElement.style.fontSize = '16px';
-//           hiddenElement.style.paddingLeft = '10px';
-//           hiddenElement.style.paddingRight = '10px';
-//           hiddenElement.style.marginRight = '12px';
-//           hiddenElement.style.fontFamily = 'Inconsolata, sans-serif';
-//           hiddenElement.innerText = text;
-//           document.body.appendChild(hiddenElement);
-//           return hiddenElement;
-//         });
-//
-//         const itemWidths = hiddenElements.map((element) => element.offsetWidth);
-//         const maxItemWidth = Math.max(...itemWidths);
-//
-//         const newItemsPerRow = Math.floor(containerWidth / maxItemWidth);
-//         setItemsPerRow(newItemsPerRow);
-//
-//         hiddenElements.forEach((element) => {
-//           document.body.removeChild(element);
-//         });
-//       }
-//     };
-//
-//     handleResize();
-//     window.addEventListener('resize', handleResize);
-//
-//     return () => {
-//       window.removeEventListener('resize', handleResize);
-//     };
-//   }, [elementsWithText]);
-//
-//   return { containerRef, itemsPerRow };
-// };
-//
-// export default useItemsPerRow;
-
 import { useEffect, useRef, useState } from 'react';
 
 interface HiddenElementStyles {
@@ -70,7 +20,7 @@ const useItemsPerRow = (
   hiddenElementStyles: HiddenElementStyles = {},
 ) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [itemsPerRow, setItemsPerRow] = useState<number>(1);
+  const [itemsPerRow, setItemsPerRow] = useState<number[]>([]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -84,11 +34,31 @@ const useItemsPerRow = (
           return hiddenElement;
         });
 
-        const itemWidths = hiddenElements.map((element) => element.offsetWidth);
-        const maxItemWidth = Math.max(...itemWidths);
+        const itemWidths = hiddenElements.map((element) => element.offsetWidth + 12);
 
-        const newItemsPerRow = Math.floor(containerWidth / maxItemWidth);
-        setItemsPerRow(newItemsPerRow);
+        if (containerRef.current) {
+          let currentRowWidth = 0;
+          let currentRowCount = 0;
+          let newRowItems: number[] = [];
+
+          itemWidths.forEach((width, index) => {
+            currentRowWidth += width;
+            currentRowCount++;
+
+            if (currentRowWidth >= containerWidth) {
+              newRowItems.push(currentRowCount - 1);
+              currentRowWidth = width;
+              currentRowCount = 1;
+            } else if (index === itemWidths.length) {
+              newRowItems.push(currentRowCount);
+            }
+          });
+          if (currentRowCount > 0) {
+            newRowItems.push(currentRowCount);
+          }
+
+          setItemsPerRow(newRowItems);
+        }
 
         hiddenElements.forEach((element) => {
           document.body.removeChild(element);
@@ -102,8 +72,7 @@ const useItemsPerRow = (
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [elementsWithText, hiddenElementStyles]);
-
+  }, []);
   return { containerRef, itemsPerRow };
 };
 

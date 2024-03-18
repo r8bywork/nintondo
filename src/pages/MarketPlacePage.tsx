@@ -40,7 +40,7 @@ const MarketPlacePage = () => {
         </div>
 
         <div className='flex-grow overflow-y-auto'>
-          <div className='max-w-[1250px] mx-auto grid grid-cols-1 gap-[10px] sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6'>
+          <div className='max-w-[1250px] mx-auto flex flex-wrap gap-[10px]'>
             {cardConfig.map((card, index) => (
               <Card
                 key={index}

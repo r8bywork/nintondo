@@ -115,7 +115,7 @@ export const cardConfig = [
     text: '1,234',
     date: '30 days ago',
     tags: [
-      { tagText: 'PNG', active: false },
+      { tagText: 'PNG', active: true },
       { tagText: '4.5K', SvgIcon: TrendingSvg },
       { tagText: '345', SvgIcon: CommentSvg },
     ],
@@ -142,7 +142,7 @@ export const cardConfig = [
     text: '333',
     date: '5 days ago',
     tags: [
-      { tagText: 'GIF', active: false },
+      { tagText: 'GIF', active: true },
       { tagText: '2.1K', SvgIcon: TrendingSvg },
       { tagText: '59', SvgIcon: CommentSvg },
     ],
@@ -160,7 +160,7 @@ export const cardConfig = [
     text: '987',
     date: '15 days ago',
     tags: [
-      { tagText: 'BMP', active: false },
+      { tagText: 'BMP', active: true },
       { tagText: '4.2K', SvgIcon: TrendingSvg },
       { tagText: '231', SvgIcon: CommentSvg },
     ],
@@ -187,7 +187,7 @@ export const cardConfig = [
     text: '999',
     date: '60 days ago',
     tags: [
-      { tagText: 'ICO', active: false },
+      { tagText: 'ICO', active: true },
       { tagText: '3.9K', SvgIcon: TrendingSvg },
       { tagText: '456', SvgIcon: CommentSvg },
     ],
@@ -205,7 +205,7 @@ export const cardConfig = [
     text: '678',
     date: '45 days ago',
     tags: [
-      { tagText: 'ICO', active: false },
+      { tagText: 'ICO', active: true },
       { tagText: '2.8K', SvgIcon: TrendingSvg },
       { tagText: '123', SvgIcon: CommentSvg },
     ],
@@ -232,7 +232,7 @@ export const cardConfig = [
     text: '5,432',
     date: '25 days ago',
     tags: [
-      { tagText: 'JPEG', active: false },
+      { tagText: 'JPEG', active: true },
       { tagText: '1.2K', SvgIcon: TrendingSvg },
       { tagText: '87', SvgIcon: CommentSvg },
     ],
@@ -250,7 +250,7 @@ export const cardConfig = [
     text: '999,999',
     date: '200 days ago',
     tags: [
-      { tagText: 'TIFF', active: false },
+      { tagText: 'TIFF', active: true },
       { tagText: '10.1K', SvgIcon: TrendingSvg },
       { tagText: '5.6K', SvgIcon: CommentSvg },
     ],
