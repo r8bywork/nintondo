@@ -1,7 +1,7 @@
 import cn from 'classnames';
-import CopySvg from '../../../assets/copy.svg?react';
-import { truncate } from '../../../settings/utils';
-import Copy from '../../../components/Copy/Copy.tsx';
+import CopySvg from '../../assets/copy.svg?react';
+import { truncate } from '../../settings/utils.ts';
+import Copy from '../Copy/Copy.tsx';
 import { ComponentType, SVGProps } from 'react';
 
 interface InfoBlockProps {

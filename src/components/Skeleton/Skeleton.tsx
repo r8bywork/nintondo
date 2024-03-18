@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import Logo from '../../../assets/bells.svg?react';
+import Logo from '../../assets/bells.svg?react';
 interface SkeletonProps {
   classNames?: string;
 }

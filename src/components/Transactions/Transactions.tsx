@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import BigArrowRight from '../../../assets/BigArrowRight.svg?react';
-import CopySvg from '../../../assets/copyOrange.svg?react';
-import { Transaction, VinFields, VoutFields, additionalFields } from '../../../settings/fields';
-import { truncate } from '../../../settings/utils';
-import TxHeader from './components/TxHeader';
-import Copy from '../../../components/Copy/Copy.tsx';
+import BigArrowRight from '../../assets/BigArrowRight.svg?react';
+import CopySvg from '../../assets/copyOrange.svg?react';
+import { Transaction, VinFields, VoutFields, additionalFields } from '../../settings/fields.tsx';
+import { truncate } from '../../settings/utils.ts';
+import TxHeader from './components/TxHeader.tsx';
+import Copy from '../Copy/Copy.tsx';
 interface TransactionsProps {
   data: Transaction[];
   height?: number;

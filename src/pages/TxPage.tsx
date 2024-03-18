@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import CubeSvg from '../assets/Cube.svg?react';
 import { Transaction, TxFieldsTable } from '../settings/fields';
-import InfoBlock from './components/InfoBlock/InfoBlock';
-import Skeleton from './components/Skeleton/Skeleton';
-import Table from './components/Table/Table';
-import Transactions from './components/Transactions/Transactions.tsx';
+import InfoBlock from '../components/InfoBlock/InfoBlock';
+import Skeleton from '../components/Skeleton/Skeleton';
+import Table from '../components/Table/Table';
+import Transactions from '../components/Transactions/Transactions.tsx';
 
 const TxPage = () => {
   const [tx, setTx] = useState<Transaction[]>();
