@@ -1,12 +1,23 @@
 import Link from '../Link/Link';
 import { useState, useEffect, useRef } from 'react';
 import './Header.css';
-import { HeaderLinks } from '../../settings/settings.ts';
+import { Header, HeaderLinks, HeaderLinksMarketPlace } from '../../settings/settings.ts';
 import cn from 'classnames';
+import { useNintondoManagerContext } from '../../utils/bell-provider.tsx';
+import { useLocation } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const headerRef = useRef<HTMLDivElement | null>(null);
+  const { nintondoExists, address, connectWallet } = useNintondoManagerContext();
+  const [config, setConfig] = useState<Header[]>(HeaderLinks);
+  const location = useLocation();
+
+  useEffect(() => {
+    location.pathname === '/marketplace'
+      ? setConfig(HeaderLinksMarketPlace)
+      : setConfig(HeaderLinks);
+  }, [location]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -20,6 +31,10 @@ const Header = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  if (nintondoExists === undefined) return <div className='text-white'>Loading</div>;
+
+  if (!nintondoExists) return <div className='text-white'>Install nintondo extension</div>;
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -53,7 +68,7 @@ const Header = () => {
           hidden: !isMenuOpen,
         })}
       >
-        {HeaderLinks.map((link) => (
+        {config.map((link) => (
           <Link
             key={link.name}
             text={link.name}
@@ -62,6 +77,16 @@ const Header = () => {
             onClick={toggleMenu}
           />
         ))}
+        {!address ? (
+          <div className='text-white text-base font-bold leading-normal hover:text-yellow-500 transition-all duration-300 ease-in-out'>
+            <button
+              className='btn'
+              onClick={connectWallet}
+            >
+              CONNECT
+            </button>
+          </div>
+        ) : null}
       </nav>
     </div>
   );

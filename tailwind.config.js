@@ -10,6 +10,7 @@ export default {
       colors: {
         'regal-blue': '#53DCFF',
         'regal-yellow': '#FFBB00',
+        'regal-purple': '#B75BFF',
       },
     },
   },

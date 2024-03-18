@@ -1,9 +1,13 @@
 import axios from 'axios';
-import { FC, FormEvent, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ButtonSvg from '../../../assets/Button.svg?react';
 
-const Search: FC = () => {
+interface SearchProps {
+  placeholder?: string;
+}
+
+const Search = ({ placeholder }: SearchProps) => {
   const navigate = useNavigate();
   const [query, setQuery] = useState<string>('');
 
@@ -59,7 +63,9 @@ const Search: FC = () => {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         className='w-full rounded-full py-2 bg-black/80 border-2 text-white placeholder-white/60 px-5 outline-none focus:border-orange-500 transition-colors'
-        placeholder='Search for blocks height, hash, transactions, or address.'
+        placeholder={
+          placeholder ? placeholder : 'Search for blocks height, hash, transactions, or address.'
+        }
         type='text'
       />
       <button
