@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ButtonSvg from '../../assets/Button.svg?react';
+import ButtonSvg from '../../../assets/Button.svg?react';
 
 interface SearchProps {
   placeholder?: string;

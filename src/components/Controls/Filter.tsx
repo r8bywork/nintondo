@@ -1,4 +1,4 @@
-import FilterTag from '../FIlterTag/FilterTag.tsx';
+import FilterTag from './components/FIlterTag/FilterTag.tsx';
 import { FC, useEffect, useState } from 'react';
 import { filterConfig, FilterConfig } from '../../settings/settings.ts';
 import useItemsPerRow from '../../hooks/useItemsPerRow.ts';

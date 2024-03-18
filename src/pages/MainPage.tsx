@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import DownloadLink from '../components/DownloadLink/DownloadLink';
-import Text from '../components/Text/Text';
-import WalletInfo from '../components/WalletInfo/WalletInfo';
+import DownloadLink from '../components/Buttons/DownloadLink.tsx';
+import Text from '../components/LandingTextBlocks/Text.tsx';
+import WalletInfo from '../components/LandingTextBlocks/WalletInfo.tsx';
 import { buttons, linksData } from '../settings/settings';
 import './styles/MainPage.css';
 import { useParams } from 'react-router-dom';

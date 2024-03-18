@@ -6,7 +6,7 @@ import CopySvg from '../../assets/copyOrange.svg?react';
 import { Transaction, VinFields, VoutFields, additionalFields } from '../../settings/fields.tsx';
 import { truncate } from '../../settings/utils.ts';
 import TxHeader from './components/TxHeader.tsx';
-import Copy from '../Copy/Copy.tsx';
+import Copy from '../Buttons/Copy.tsx';
 interface TransactionsProps {
   data: Transaction[];
   height?: number;

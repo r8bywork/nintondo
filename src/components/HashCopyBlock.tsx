@@ -1,17 +1,17 @@
 import cn from 'classnames';
-import CopySvg from '../../assets/copy.svg?react';
-import { truncate } from '../../settings/utils.ts';
-import Copy from '../Copy/Copy.tsx';
+import CopySvg from '../assets/copy.svg?react';
+import { truncate } from '../settings/utils.ts';
+import Copy from './Buttons/Copy.tsx';
 import { ComponentType, SVGProps } from 'react';
 
-interface InfoBlockProps {
+interface HashCopyProps {
   title?: string;
   classNames?: string;
   hash?: string;
   SvgIcon: ComponentType<SVGProps<SVGSVGElement>>;
 }
 
-const InfoBlock = ({ title, classNames, hash, SvgIcon }: InfoBlockProps) => {
+const HashCopyBlock = ({ title, classNames, hash, SvgIcon }: HashCopyProps) => {
   return (
     <div className={cn(classNames, 'text-black')}>
       <div
@@ -50,4 +50,4 @@ const InfoBlock = ({ title, classNames, hash, SvgIcon }: InfoBlockProps) => {
   );
 };
 
-export default InfoBlock;
+export default HashCopyBlock;

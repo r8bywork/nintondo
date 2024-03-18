@@ -1,6 +1,6 @@
 import Column from './Column.tsx';
 import './Footer.css';
-import { footerContent } from '../../settings/settings.ts';
+import { footerContent } from '../../../settings/settings.ts';
 const Footer = () => {
   return (
     <div className={'Footer'}>

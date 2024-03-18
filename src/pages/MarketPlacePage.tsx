@@ -5,8 +5,8 @@ import {
   filterTimeConfig,
   filterTypeConfig,
 } from '../settings/settings.ts';
-import Search from '../components/Search/Search.tsx';
-import Filter from '../components/Filter/Filter.tsx';
+import Search from './components/Search/Search.tsx';
+import Filter from '../components/Controls/Filter.tsx';
 import Svg from '../assets/filters/Plus.tsx';
 import TimeSvg from '../assets/filters/Time.tsx';
 const MarketPlacePage = () => {

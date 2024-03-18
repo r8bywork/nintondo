@@ -1,9 +1,9 @@
-import Link from '../Link/Link';
+import Link from '../../../components/Buttons/Link.tsx';
 import { useState, useEffect, useRef } from 'react';
 import './Header.css';
-import { Header, HeaderLinks, HeaderLinksMarketPlace } from '../../settings/settings.ts';
+import { Header, HeaderLinks, HeaderLinksMarketPlace } from '../../../settings/settings.ts';
 import cn from 'classnames';
-import { useNintondoManagerContext } from '../../utils/bell-provider.tsx';
+import { useNintondoManagerContext } from '../../../utils/bell-provider.tsx';
 import { useLocation } from 'react-router-dom';
 
 const Header = () => {
@@ -48,7 +48,7 @@ const Header = () => {
     >
       <div className='flex justify-between w-[100%] items-center'>
         <Link
-          href='/'
+          href='/public'
           text='NINTONDO.IO'
           className='text-yellow-500 text-2xl font-bold leading-normal text-shadow-md'
         />
