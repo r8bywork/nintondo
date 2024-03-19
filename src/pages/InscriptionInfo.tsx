@@ -27,6 +27,7 @@ const InscriptionInfo = () => {
           <Card
             text={'63,294,117'}
             tags={inscriptionCard[0].tags}
+            image={inscriptionCard[0].image}
             BigCard
           />
         </div>
@@ -42,13 +43,13 @@ const InscriptionInfo = () => {
               marketplace
             />
           </div>
-          <div className={'mt-[29px]'}>
-            <Search
-              placeholder={'Add reply...'}
-              reply
-            />
-          </div>
-          <div></div>
+          {/*<div className={'mt-[29px]'}>*/}
+          {/*  <Search*/}
+          {/*    placeholder={'Add reply...'}*/}
+          {/*    reply*/}
+          {/*  />*/}
+          {/*</div>*/}
+          {/*<div></div>*/}
         </div>
       </div>
     </div>

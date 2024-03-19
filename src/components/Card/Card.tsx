@@ -1,10 +1,9 @@
-import Image from '../../assets/card/Image.png';
-import BigImage from '../../assets/card/BigImage.jpg';
 import CardTag from './CardTag/CardTag.tsx';
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import classNames from 'classnames';
 interface CardProps {
+  image: string;
   text?: string;
   date?: string;
   tags?: {
@@ -14,22 +13,20 @@ interface CardProps {
   }[];
   BigCard?: boolean;
 }
-const Card = ({ text, date, tags, BigCard }: CardProps) => {
-  const imageSize = BigCard ? '500px' : '200px';
+const Card = ({ text, date, tags, BigCard, image }: CardProps) => {
+  const imageSize = BigCard ? '500px' : '180px';
   return (
     <div
       className={`flex flex-col max-w-[${
         BigCard ? '500px' : '200px'
-      }] bg-[#1A1A1A] rounded-[15px] p-[15px]`}
+      }] bg-[#1A1A1A] rounded-[15px] p-[10px]`}
     >
-      <div className={'mb-[18px]'}>
-        <img
-          src={BigCard ? BigImage : Image}
-          className={'rounded-[15px]'}
-          alt={'img'}
-          style={{ width: imageSize }}
-        />
-      </div>
+      <img
+        src={image}
+        className={'mb-[18px]'}
+        alt={'img'}
+        style={{ width: imageSize }}
+      />
       <div
         className={classNames('flex justify-between', {
           ['mb-[20px]']: BigCard,
@@ -63,7 +60,7 @@ const Card = ({ text, date, tags, BigCard }: CardProps) => {
                   text={elem.tagText}
                   active={elem.active}
                   SvgIcon={elem.SvgIcon}
-                  classNames={BigCard ? 'text-[20px] leading-[23px]' : ''}
+                  classNames={BigCard ? 'text-[20px] leading-[23px]' : 'text-[14px] leading-[14px]'}
                 />
               );
             })

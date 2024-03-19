@@ -21,7 +21,8 @@ const MarketPlacePage = () => {
               config={filterConfig}
             />
             <Filter
-              selectAll={{ text: 'All' }}
+              // selectAll={{ text: 'All' }}
+              singleSelect
               SvgIcon={Svg}
               config={filterTypeConfig}
             />

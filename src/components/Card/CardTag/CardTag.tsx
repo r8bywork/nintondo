@@ -11,7 +11,7 @@ const CardTag = ({ SvgIcon, text, active, classNames }: CardTag) => {
   return (
     <div
       className={cn(
-        'rounded-[5px] border-[1px] flex items-center px-[5px] mr-[8px] leading-[15px]',
+        'rounded-[5px] border-[1px] flex items-center px-[5px] mr-[8px] leading-[14px]',
         {
           'border-[#FFBB00]': active,
           'border-[#4B4B4B]': !active,

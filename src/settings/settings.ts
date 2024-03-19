@@ -4,7 +4,8 @@ import CommentSvg from '../assets/card/comments.svg?react';
 import TrendingSvg from '../assets/card/rating.svg?react';
 import FullSizeSvg from '../assets/card/fullsize.svg?react';
 import ShareSvg from '../assets/card/share.svg?react';
-import { CSSProperties } from 'react';
+import ApeCard from '../assets/collection/ApeCard.png';
+import { FilterConfig, Header } from '../interfaces/intefaces.ts';
 export const footerContent = [
   {
     title: 'LEARN',
@@ -86,11 +87,6 @@ export const linksData = [
   },
 ];
 
-export interface Header {
-  name: string;
-  url: string;
-}
-
 export const HeaderLinks: Header[] = [
   { name: 'wallet', url: '/wallet' },
   { name: 'markets', url: '/markets' },
@@ -105,6 +101,7 @@ export const HeaderLinksMarketPlace: Header[] = [
 
 export const cardConfig = [
   {
+    image: ApeCard,
     text: '447,320',
     date: '359 days ago',
     tags: [
@@ -114,6 +111,7 @@ export const cardConfig = [
     ],
   },
   {
+    image: ApeCard,
     text: '1,234',
     date: '30 days ago',
     tags: [
@@ -123,6 +121,7 @@ export const cardConfig = [
     ],
   },
   {
+    image: ApeCard,
     text: '550,892',
     date: '180 days ago',
     tags: [
@@ -132,6 +131,7 @@ export const cardConfig = [
     ],
   },
   {
+    image: ApeCard,
     text: '987,654',
     date: '90 days ago',
     tags: [
@@ -141,6 +141,7 @@ export const cardConfig = [
     ],
   },
   {
+    image: ApeCard,
     text: '333',
     date: '5 days ago',
     tags: [
@@ -150,6 +151,7 @@ export const cardConfig = [
     ],
   },
   {
+    image: ApeCard,
     text: '76,543',
     date: '210 days ago',
     tags: [
@@ -159,6 +161,7 @@ export const cardConfig = [
     ],
   },
   {
+    image: ApeCard,
     text: '987',
     date: '15 days ago',
     tags: [
@@ -168,6 +171,7 @@ export const cardConfig = [
     ],
   },
   {
+    image: ApeCard,
     text: '112,233',
     date: '120 days ago',
     tags: [
@@ -177,6 +181,7 @@ export const cardConfig = [
     ],
   },
   {
+    image: ApeCard,
     text: '1,000,000',
     date: '250 days ago',
     tags: [
@@ -186,6 +191,7 @@ export const cardConfig = [
     ],
   },
   {
+    image: ApeCard,
     text: '999',
     date: '60 days ago',
     tags: [
@@ -195,6 +201,7 @@ export const cardConfig = [
     ],
   },
   {
+    image: ApeCard,
     text: '24,000',
     date: '300 days ago',
     tags: [
@@ -204,6 +211,7 @@ export const cardConfig = [
     ],
   },
   {
+    image: ApeCard,
     text: '678',
     date: '45 days ago',
     tags: [
@@ -213,6 +221,7 @@ export const cardConfig = [
     ],
   },
   {
+    image: ApeCard,
     text: '876,543',
     date: '150 days ago',
     tags: [
@@ -222,6 +231,7 @@ export const cardConfig = [
     ],
   },
   {
+    image: ApeCard,
     text: '123,456',
     date: '75 days ago',
     tags: [
@@ -231,6 +241,7 @@ export const cardConfig = [
     ],
   },
   {
+    image: ApeCard,
     text: '5,432',
     date: '25 days ago',
     tags: [
@@ -240,54 +251,28 @@ export const cardConfig = [
     ],
   },
   {
-    text: '987,654',
-    date: '180 days ago',
+    image: ApeCard,
+    text: '5,432',
+    date: '25 days ago',
     tags: [
-      { tagText: 'BMP', active: true },
-      { tagText: '8.9K', SvgIcon: TrendingSvg },
-      { tagText: '19.3K', SvgIcon: CommentSvg },
-    ],
-  },
-  {
-    text: '999,999',
-    date: '200 days ago',
-    tags: [
-      { tagText: 'TIFF', active: true },
-      { tagText: '10.1K', SvgIcon: TrendingSvg },
-      { tagText: '5.6K', SvgIcon: CommentSvg },
-    ],
-  },
-  {
-    text: '765,432',
-    date: '140 days ago',
-    tags: [
-      { tagText: 'SVG', active: true },
-      { tagText: '6.7K', SvgIcon: TrendingSvg },
-      { tagText: '13.4K', SvgIcon: CommentSvg },
+      { tagText: 'JPEG', active: true },
+      { tagText: '1.2K', SvgIcon: TrendingSvg },
+      { tagText: '87', SvgIcon: CommentSvg },
     ],
   },
 ];
-
-export interface FilterConfig {
-  activeColor: string;
-  styles?: CSSProperties;
-  filters: {
-    text: string;
-    isActive: boolean;
-  }[];
-}
 
 export const filterConfig: FilterConfig = {
   activeColor: '#FFFFFF',
   styles: { boxShadow: '0 0 12px 0 rgba(255, 255, 255, 0.5)' },
   filters: [
-    { text: 'Trending', isActive: false },
+    // { text: 'Trending', isActive: false },
     { text: 'Newest', isActive: false },
     { text: 'Oldest', isActive: false },
-    { text: 'Top', isActive: false },
-    { text: 'Most Replies', isActive: false },
-    { text: 'Oldest Sat', isActive: false },
-    { text: 'Largest File', isActive: false },
+    // { text: 'Top', isActive: false },
+    // { text: 'Most Replies', isActive: false },
+    // { text: 'Oldest Sat', isActive: false },
+    // { text: 'Largest File', isActive: false },
     { text: 'Highest Fee', isActive: false },
   ],
 };
@@ -306,7 +291,7 @@ export const filterTypeConfig: FilterConfig = {
     { text: 'JavaScript', isActive: false },
     { text: 'Markdown', isActive: false },
     { text: 'Parents', isActive: false },
-    { text: 'Games', isActive: false },
+    // { text: 'Games', isActive: false },
     { text: '3D', isActive: false },
   ],
 };
@@ -338,6 +323,7 @@ export const inscriptionInfo = [
 
 export const inscriptionCard = [
   {
+    image: ApeCard,
     text: '447,320',
     date: '359 days ago',
     tags: [
