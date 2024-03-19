@@ -4,14 +4,20 @@ import './Header.css';
 import { IHeader, HeaderLinks, HeaderLinksMarketPlace } from '../../../settings/settings.ts';
 import cn from 'classnames';
 import { useNintondoManagerContext } from '../../../utils/bell-provider.tsx';
-import { useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
+import { shortAddress } from '../../../utils/index.ts';
+import DropdownIcon from '../../../assets/dropdown.svg?react';
+import DroprightIcon from '../../../assets/dropright.svg?react';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const headerRef = useRef<HTMLDivElement | null>(null);
+  const popoverRef = useRef<HTMLDivElement | null>(null);
+  const popoverButtonRef = useRef<HTMLDivElement | null>(null);
   const { nintondoExists, address, connectWallet } = useNintondoManagerContext();
   const [config, setConfig] = useState<IHeader[]>(HeaderLinks);
   const location = useLocation();
+  const [showPopover, setShowPopover] = useState<boolean>(false);
 
   useEffect(() => {
     location.pathname === '/marketplace'
@@ -23,6 +29,14 @@ const Header = () => {
     const handleClickOutside = (event: MouseEvent) => {
       if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
         setIsMenuOpen(false);
+      }
+      if (
+        popoverRef.current &&
+        popoverButtonRef.current &&
+        !popoverRef.current.contains(event.target as Node) &&
+        !popoverButtonRef.current.contains(event.target as Node)
+      ) {
+        setShowPopover(false);
       }
     };
 
@@ -62,7 +76,7 @@ const Header = () => {
         </div>
       </div>
       <nav
-        className={cn('max-md:pb-[20px] md:flex', {
+        className={cn('max-md:pb-[20px] md:flex md:items-center', {
           // max-md:absolute
           // max-md:bg-[#061D3C]
           hidden: !isMenuOpen,
@@ -86,7 +100,35 @@ const Header = () => {
               CONNECT
             </button>
           </div>
-        ) : null}
+        ) : (
+          <div className='relative'>
+            <div
+              ref={popoverButtonRef}
+              onClick={() => setShowPopover((prev) => !prev)}
+              className='flex gap-3 items-center text-white text-base font-bold leading-normal hover:text-yellow-500 transition-all duration-300 ease-in-out border-2 border-[#191919] rounded-lg px-2 cursor-pointer'
+            >
+              {shortAddress(address)} <DropdownIcon className='w-3' />
+            </div>
+            {showPopover && (
+              <div
+                ref={popoverRef}
+                className='absolute bg-[#1A1A1A] text-white p-4 rounded-lg mt-2 z-10 animate-[slide-in_0.1s_ease-out] -left-1/3 w-[150%] flex flex-col items-center justify-center gap-2'
+              >
+                <div className='text-white hover:text-yellow-500 cursor-pointer'>
+                  <NavLink
+                    className='flex items-center gap-3'
+                    to='/split-service'
+                  >
+                    Split inscriptions <DroprightIcon className='w-3' />
+                  </NavLink>
+                </div>
+                <div className='flex items-center gap-3 text-white hover:text-yellow-500 cursor-pointer'>
+                  Disconnect
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </nav>
     </div>
   );

@@ -4,6 +4,7 @@ import Explorer from './pages/Explorer';
 import MainPage from './pages/MainPage';
 import MarketPlacePage from './pages/MarketPlacePage.tsx';
 import Header from './pages/components/Header/Header.tsx';
+import SplitServicePage from './pages/SplitServicePage.tsx';
 
 const App = () => {
   return (
@@ -21,6 +22,10 @@ const App = () => {
         <Route
           path='/marketplace/*'
           element={<MarketPlacePage />}
+        />
+        <Route
+          path='/split-service/*'
+          element={<SplitServicePage />}
         />
       </Routes>
     </Router>
