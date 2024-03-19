@@ -2,7 +2,7 @@ import axios from 'axios';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { BlockConfig, BlockData, TransactionConfig, TransactionData } from '../settings/fields';
+import { BlockConfig, TransactionConfig } from '../settings/fields';
 import BlockPage from './BlockPage';
 import Search from './components/Search/Search';
 import Skeleton from '../components/Placeholders/Skeleton.tsx';
@@ -11,6 +11,8 @@ import Table from '../components/Table/Table';
 import s from './styles/styles.module.scss';
 import TxPage from './TxPage.tsx';
 import AddressPage from './AddressPage.tsx';
+import { BlockData, TransactionData } from '../interfaces/intefaces.ts';
+
 interface tableData {
   latestBlock: BlockData[];
   latestTransactions: TransactionData[];

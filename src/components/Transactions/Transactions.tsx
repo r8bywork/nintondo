@@ -3,10 +3,11 @@ import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import BigArrowRight from '../../assets/BigArrowRight.svg?react';
 import CopySvg from '../../assets/copyOrange.svg?react';
-import { Transaction, VinFields, VoutFields, additionalFields } from '../../settings/fields.tsx';
+import { VinFields, VoutFields } from '../../settings/fields.tsx';
 import { truncate } from '../../settings/utils.ts';
 import TxHeader from './components/TxHeader.tsx';
 import Copy from '../Buttons/Copy.tsx';
+import { additionalFields, Transaction } from '../../interfaces/intefaces.ts';
 interface TransactionsProps {
   data: Transaction[];
   height?: number;

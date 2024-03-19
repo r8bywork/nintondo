@@ -2,12 +2,12 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import CubeSvg from '../assets/Cube.svg?react';
-import { AddressFields, AddressStats, Transaction } from '../settings/fields';
+import { AddressFields } from '../settings/fields';
 import HashCopyBlock from '../components/HashCopyBlock.tsx';
 import Skeleton from '../components/Placeholders/Skeleton.tsx';
 import Table from '../components/Table/Table';
 import Transactions from '../components/Transactions/Transactions.tsx';
-
+import { AddressStats, Transaction } from '../interfaces/intefaces.ts';
 const AddressPage = () => {
   const [tx, setTx] = useState<AddressStats[]>([]);
   const [txs, setTxs] = useState<Transaction[]>([]);

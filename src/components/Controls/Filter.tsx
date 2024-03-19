@@ -1,7 +1,7 @@
 import FilterTag from './components/FilterTag.tsx';
 import { FC, useEffect, useState } from 'react';
-import { FilterConfig } from '../../settings/settings.ts';
 import useItemsPerRow from '../../hooks/useItemsPerRow.ts';
+import { FilterConfig } from '../../interfaces/intefaces.ts';
 
 interface SvgProps {
   activecolor: string;

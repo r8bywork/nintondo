@@ -4,11 +4,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import CubeSvg from '../assets/Cube.svg?react';
 import LeftArrow from '../assets/arrowleft.svg?react';
 import RightArrow from '../assets/arrowright.svg?react';
-import { AdditionalBlockFields, BlockData, Transaction } from '../settings/fields';
+import { AdditionalBlockFields } from '../settings/fields';
 import HashCopyBlock from '../components/HashCopyBlock.tsx';
 import Skeleton from '../components/Placeholders/Skeleton.tsx';
 import Table from '../components/Table/Table';
 import Transactions from '../components/Transactions/Transactions';
+import { BlockData, Transaction } from '../interfaces/intefaces.ts';
 
 const BlockPage = () => {
   const [block, setBlock] = useState<BlockData[]>();

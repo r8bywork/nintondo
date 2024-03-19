@@ -43,13 +43,6 @@ const InscriptionInfo = () => {
               marketplace
             />
           </div>
-          {/*<div className={'mt-[29px]'}>*/}
-          {/*  <Search*/}
-          {/*    placeholder={'Add reply...'}*/}
-          {/*    reply*/}
-          {/*  />*/}
-          {/*</div>*/}
-          {/*<div></div>*/}
         </div>
       </div>
     </div>

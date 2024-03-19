@@ -1,10 +1,11 @@
 import Link from '../../../components/Buttons/Link.tsx';
 import { useState, useEffect, useRef } from 'react';
 import './Header.css';
-import { Header, HeaderLinks, HeaderLinksMarketPlace } from '../../../settings/settings.ts';
+import { HeaderLinks, HeaderLinksMarketPlace } from '../../../settings/settings.ts';
 import cn from 'classnames';
 import { useNintondoManagerContext } from '../../../utils/bell-provider.tsx';
 import { useLocation } from 'react-router-dom';
+import { Header } from '../../../interfaces/intefaces.ts';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

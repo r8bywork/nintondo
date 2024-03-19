@@ -2,11 +2,12 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import CubeSvg from '../assets/Cube.svg?react';
-import { Transaction, TxFieldsTable } from '../settings/fields';
+import { TxFieldsTable } from '../settings/fields';
 import HashCopyBlock from '../components/HashCopyBlock.tsx';
 import Skeleton from '../components/Placeholders/Skeleton.tsx';
 import Table from '../components/Table/Table';
 import Transactions from '../components/Transactions/Transactions.tsx';
+import { Transaction } from '../interfaces/intefaces.ts';
 
 const TxPage = () => {
   const [tx, setTx] = useState<Transaction[]>();
