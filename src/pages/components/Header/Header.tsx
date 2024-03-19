@@ -31,6 +31,7 @@ const Header = () => {
         setIsMenuOpen(false);
       }
       if (
+        showPopover &&
         popoverRef.current &&
         popoverButtonRef.current &&
         !popoverRef.current.contains(event.target as Node) &&
@@ -118,11 +119,15 @@ const Header = () => {
                   <NavLink
                     className='flex items-center gap-3'
                     to='/split-service'
+                    onClick={() => setShowPopover(false)}
                   >
                     Split inscriptions <DroprightIcon className='w-3' />
                   </NavLink>
                 </div>
-                <div className='flex items-center gap-3 text-white hover:text-yellow-500 cursor-pointer'>
+                <div
+                  className='flex items-center gap-3 text-white hover:text-yellow-500 cursor-pointer'
+                  onClick={() => setShowPopover(false)}
+                >
                   Disconnect
                 </div>
               </div>
