@@ -1,18 +1,16 @@
 import { useCallback } from 'react';
 import { useNintondoManagerContext } from '../utils/bell-provider';
 import { ApiOrdUTXO, ApiUTXO, Inscription } from '../interfaces/api';
-import { useGetApiutxo, useGetTransactionRawHex } from './electrs';
 import { Psbt, Transaction, networks } from 'belcoinjs-lib';
 import { IDummyInscription } from '../interfaces/marketapi';
 import { DEFAULT_FEE_RATE, DUMMY_UTXO_VALUE, FEE_ADDRESS } from '../consts';
 import { fetchBELLMainnet, gptFeeCalculate } from '../utils';
 import toast from 'react-hot-toast';
+import { getApiUtxo, getTransactionRawHex } from './electrs';
 
 export const useMakeDummyUTXOS = () => {
   const { signPsbtInputs } = useNintondoManagerContext();
   const { address } = useNintondoManagerContext();
-  const getTransactionRawHex = useGetTransactionRawHex();
-  const getApiUtxo = useGetApiutxo();
 
   return useCallback(async (): Promise<ApiUTXO[] | undefined> => {
     if (!address) return;
@@ -110,7 +108,6 @@ export const useMakeDummyUTXOS = () => {
 
 export const useCreateListedSignedPSBT = () => {
   const { address } = useNintondoManagerContext();
-  const getTransactionRawHex = useGetTransactionRawHex();
   const { signPsbtInputs } = useNintondoManagerContext();
 
   const placeholderTxId = 'f56443f446775e1ce6383265f1556ee85f203902ba3313af3142f88821ed2431';
@@ -178,7 +175,6 @@ export const useCreateListedSignedPSBT = () => {
 
 export const useCheckInscription = () => {
   const { address } = useNintondoManagerContext();
-  const getTransactionRawHex = useGetTransactionRawHex();
 
   return useCallback(
     async (inscription: IDummyInscription): Promise<ApiOrdUTXO | undefined> => {
@@ -201,8 +197,6 @@ export const useCheckInscription = () => {
 
 export const useHasEnoughUtxos = () => {
   const { address } = useNintondoManagerContext();
-  const getTransactionRawHex = useGetTransactionRawHex();
-  const getApiUtxo = useGetApiutxo();
 
   return useCallback(async (): Promise<ApiUTXO[] | undefined> => {
     if (!address) return;

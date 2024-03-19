@@ -84,19 +84,19 @@ export const linksData = [
   },
 ];
 
-export interface Header {
+export interface IHeader {
   name: string;
   url: string;
 }
 
-export const HeaderLinks: Header[] = [
+export const HeaderLinks: IHeader[] = [
   { name: 'wallet', url: '/wallet' },
   { name: 'markets', url: '/markets' },
   { name: 'explorer', url: '/explorer' },
   { name: 'marketplace', url: '/marketplace' },
 ];
 
-export const HeaderLinksMarketPlace: Header[] = [
+export const HeaderLinksMarketPlace: IHeader[] = [
   { name: 'inscriptions', url: '/marketplace' },
   { name: 'collections', url: '/collections' },
 ];

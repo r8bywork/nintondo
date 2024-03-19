@@ -1,7 +1,7 @@
 import Link from '../../../components/Buttons/Link.tsx';
 import { useState, useEffect, useRef } from 'react';
 import './Header.css';
-import { Header, HeaderLinks, HeaderLinksMarketPlace } from '../../../settings/settings.ts';
+import { IHeader, HeaderLinks, HeaderLinksMarketPlace } from '../../../settings/settings.ts';
 import cn from 'classnames';
 import { useNintondoManagerContext } from '../../../utils/bell-provider.tsx';
 import { useLocation } from 'react-router-dom';
@@ -10,7 +10,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const headerRef = useRef<HTMLDivElement | null>(null);
   const { nintondoExists, address, connectWallet } = useNintondoManagerContext();
-  const [config, setConfig] = useState<Header[]>(HeaderLinks);
+  const [config, setConfig] = useState<IHeader[]>(HeaderLinks);
   const location = useLocation();
 
   useEffect(() => {

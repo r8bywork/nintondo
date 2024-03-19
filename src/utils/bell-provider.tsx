@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 const useNintondoManager = () => {
   const [nintondoExists, setExists] = useState<boolean | undefined>(undefined);
   const [address, setAddress] = useState<string | undefined>(undefined);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [nintondo, setNintondo] = useState<any | undefined>(undefined);
 
   const connectWallet = useCallback(async () => {
@@ -50,9 +51,11 @@ const useNintondoManager = () => {
   }, [address]);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let nintondo = (window as any).nintondo;
     if (nintondo === undefined) {
       setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         nintondo = (window as any).nintondo;
         setNintondo(nintondo);
         setExists(nintondo !== undefined);
