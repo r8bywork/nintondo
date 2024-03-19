@@ -4,6 +4,7 @@ import Header from './pages/components/Header/Header';
 import Explorer from './pages/Explorer';
 import MainPage from './pages/MainPage';
 import MarketPlacePage from './pages/MarketPlacePage.tsx';
+import InscriptionInfo from './pages/InscriptionInfo.tsx';
 
 const App = () => {
   return (
@@ -21,6 +22,10 @@ const App = () => {
         <Route
           path='/marketplace/*'
           element={<MarketPlacePage />}
+        />
+        <Route
+          path='/marketplace/inscription/:hash'
+          element={<InscriptionInfo />}
         />
       </Routes>
     </Router>

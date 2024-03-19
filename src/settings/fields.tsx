@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { truncate } from './utils';
+import CardTag from '../components/Card/CardTag/CardTag.tsx';
 
 export type Field<T extends object> = {
   [K in keyof T]: {
@@ -107,6 +108,19 @@ export interface TransactionData {
   vsize: number;
   value: number;
 }
+
+export interface InscriptionInfo {
+  id: string;
+  ownedBy: string;
+  fileType: string;
+  fileSize: string;
+  created: string;
+  creationBlock: number;
+  creationTransaction: string;
+  creationFeeSats: number;
+  tags: string;
+}
+
 export const formatDate = (dateString: number) => {
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
@@ -451,5 +465,96 @@ export const AddressFields: Field<AddressStats>[] = [
         BEL)
       </p>
     ),
+  },
+];
+
+export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
+  {
+    value: 'id',
+    name: 'ID',
+    render: (value) => (
+      <>
+        <span className={'text-[#53DCFF]'}>
+          {truncate(value, {
+            nPrefix: 5,
+            nSuffix: 5,
+          })}
+        </span>
+      </>
+    ),
+  },
+  {
+    value: 'ownedBy',
+    name: 'OWNED BY',
+    render: (value) => (
+      <>
+        <span className={'text-[#53DCFF]'}>
+          {truncate(value, {
+            nPrefix: 5,
+            nSuffix: 5,
+          })}
+        </span>
+      </>
+    ),
+  },
+  {
+    value: 'fileType',
+    name: 'FILE TYPE',
+    render: (value) => (
+      <>
+        <span className={'text-[#4b4b4b] items-center flex'}>
+          <CardTag
+            text={value}
+            active
+            classNames={'leading-[23px]'}
+          />
+          image/webp
+        </span>
+      </>
+    ),
+  },
+  {
+    value: 'fileSize',
+    name: 'FILE SIZE',
+  },
+  {
+    value: 'created',
+    name: 'CREATED',
+  },
+  {
+    value: 'creationBlock',
+    name: 'CREATION BLOCK',
+    render: (value) => (
+      <>
+        <span className={'text-[#53DCFF]'}>{value.toLocaleString()}</span>
+      </>
+    ),
+  },
+  {
+    value: 'creationTransaction',
+    name: 'CREATION TRANSACTION',
+    render: (value) => (
+      <>
+        <span className={'text-[#53DCFF]'}>
+          {truncate(value, {
+            nPrefix: 5,
+            nSuffix: 5,
+          })}
+        </span>
+      </>
+    ),
+  },
+  {
+    value: 'creationFeeSats',
+    name: 'CREATION FEE (sats)',
+    render: (value) => (
+      <>
+        <span>{value.toLocaleString()}</span>
+      </>
+    ),
+  },
+  {
+    value: 'tags',
+    name: 'TAGS',
   },
 ];

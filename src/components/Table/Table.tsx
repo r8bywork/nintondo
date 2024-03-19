@@ -17,6 +17,7 @@ interface Props<T extends object> {
   title?: string;
   additional?: boolean;
   onClick?: () => void;
+  marketplace?: boolean;
 }
 
 const Table = <T extends object>({
@@ -26,8 +27,38 @@ const Table = <T extends object>({
   title,
   additional,
   onClick,
+  marketplace,
 }: Props<T>) => {
   const isMobile = window.innerWidth < 768;
+
+  if (marketplace) {
+    return (
+      <div className={'w-full max-w-7xl' + className}>
+        {data.map((item, idx) => (
+          <div
+            key={`card_${idx}`}
+            className='overflow-hidden backdrop-blur-md mb-[10px]'
+          >
+            {fields.map((field, fdx) => (
+              <div
+                key={`card_${idx}_field_${fdx}`}
+                className='flex bg-[#191919] px-[30px] max-lg:px-[10px] last:pb-[25px] first:rounded-t-[15px] last:rounded-b-[15px] first:pt-[15px]'
+              >
+                <div className='text-[#4B4B4B] py-[7px] text-[20px] border-b-[1px] border-b-[#4b4b4b]  w-full'>
+                  {field.name?.toString().toUpperCase()}
+                </div>
+                <div className='whitespace-nowrap py-[7px] text-white text-[20px] border-b-[1px] border-b-[#4b4b4b]'>
+                  {field.render
+                    ? field.render(item[field.value], item)
+                    : (item[field.value] as ReactNode)}
+                </div>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   if (isMobile) {
     return (
@@ -130,10 +161,6 @@ const Table = <T extends object>({
                         )}
                         <td
                           key={`table-row_${idx + 1}-value_${fdx + 1}`}
-                          // style={{
-                          //   borderImage:
-                          //     'linear-gradient(transparent 30%, white 0% 70%, transparent 0%) 0 0 0 1 / 1px',
-                          // }}
                           className={'whitespace-nowrap'}
                         >
                           {f.render ? f.render(i[f.value], i) : (i[f.value] as ReactNode)}

@@ -10,14 +10,25 @@ interface CardTag {
 const CardTag = ({ SvgIcon, text, active, classNames }: CardTag) => {
   return (
     <div
-      className={cn(classNames, 'rounded-[5px] border-[1px] flex items-center px-[5px] mr-[8px]', {
-        'border-[#FFBB00]': active,
-        'border-[#4B4B4B]': !active,
-        'text-[#FFBB00]': active,
-        'text-[#4B4B4B]': !active,
-      })}
+      className={cn(
+        'rounded-[5px] border-[1px] flex items-center px-[5px] mr-[8px] leading-[15px]',
+        {
+          'border-[#FFBB00]': active,
+          'border-[#4B4B4B]': !active,
+          'text-[#FFBB00]': active,
+          'text-[#4B4B4B]': !active,
+        },
+        classNames,
+      )}
     >
-      {SvgIcon && <SvgIcon className={'mr-[3px]'} />}
+      {SvgIcon && (
+        <SvgIcon
+          className={cn({
+            ['mr-[3px]']: text,
+            ['mr-0']: !text,
+          })}
+        />
+      )}
       <span>{text}</span>
     </div>
   );

@@ -14,7 +14,7 @@ const Header = () => {
   const location = useLocation();
 
   useEffect(() => {
-    location.pathname === '/marketplace'
+    location.pathname.startsWith('/marketplace')
       ? setConfig(HeaderLinksMarketPlace)
       : setConfig(HeaderLinks);
   }, [location]);
@@ -73,7 +73,10 @@ const Header = () => {
             key={link.name}
             text={link.name}
             href={link.url}
-            className='md:[&:not(:last-child)]:mr-28 text-white'
+            // className='md:[&:not(:last-child)]:mr-28 text-white'
+            className={cn('md:[&:not(:last-child)]:mr-28 text-white', {
+              ['text-yellow-500 underline']: location.pathname === link.url,
+            })}
             onClick={toggleMenu}
           />
         ))}

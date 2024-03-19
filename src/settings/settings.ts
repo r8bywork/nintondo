@@ -2,6 +2,8 @@ import ChromeIcon from '../assets/ChromeIcon.svg?react';
 import FirefoxIcon from '../assets/firefox2019.svg?react';
 import CommentSvg from '../assets/card/comments.svg?react';
 import TrendingSvg from '../assets/card/rating.svg?react';
+import FullSizeSvg from '../assets/card/fullsize.svg?react';
+import ShareSvg from '../assets/card/share.svg?react';
 import { CSSProperties } from 'react';
 export const footerContent = [
   {
@@ -319,3 +321,31 @@ export const filterTimeConfig: FilterConfig = {
     { text: '1 Month', isActive: false },
   ],
 };
+
+export const inscriptionInfo = [
+  {
+    id: 'e1636c83d2b337db7870939f01b5be484a08345c15ece7a1922c4f4e1a33480d',
+    ownedBy: 'f9389e3b91abb3537b0827119ff68634d499dcadf2ab81113ac1d9d25136c6dc',
+    fileType: 'WEBP',
+    fileSize: '12.848 KB',
+    created: 'March 5, 2024, 5:59 AM GMT+3',
+    creationBlock: 833186,
+    creationTransaction: 'e1636c83d2b337db7870939f01b5be484a08345c15ece7a1922c4f4e1a33480d',
+    creationFeeSats: 269200,
+    tags: '269,200 sats',
+  },
+];
+
+export const inscriptionCard = [
+  {
+    text: '447,320',
+    date: '359 days ago',
+    tags: [
+      { tagText: 'WEBP', active: true },
+      { tagText: '3.2K', SvgIcon: TrendingSvg },
+      { tagText: '87.2K', SvgIcon: CommentSvg },
+      { SvgIcon: ShareSvg },
+      { SvgIcon: FullSizeSvg },
+    ],
+  },
+];
