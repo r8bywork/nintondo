@@ -1,20 +1,21 @@
-import Link from '../../../components/Buttons/Link.tsx';
+import Link from '@/components/Buttons/Link.tsx';
 import { useState, useEffect, useRef } from 'react';
 import './Header.css';
-import { IHeader, HeaderLinks, HeaderLinksMarketPlace } from '../../../settings/settings.ts';
+import { IHeader, HeaderLinks, HeaderLinksMarketPlace } from '@/settings/settings.ts';
 import cn from 'classnames';
-import { useNintondoManagerContext } from '../../../utils/bell-provider.tsx';
+import { useNintondoManagerContext } from '@/utils/bell-provider.tsx';
 import { NavLink, useLocation } from 'react-router-dom';
-import { shortAddress } from '../../../utils/index.ts';
-import DropdownIcon from '../../../assets/dropdown.svg?react';
-import DroprightIcon from '../../../assets/dropright.svg?react';
+import { shortAddress } from '@/utils/index.ts';
+import DropdownIcon from '@/assets/dropdown.svg?react';
+import DroprightIcon from '@/assets/dropright.svg?react';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const headerRef = useRef<HTMLDivElement | null>(null);
   const popoverRef = useRef<HTMLDivElement | null>(null);
   const popoverButtonRef = useRef<HTMLDivElement | null>(null);
-  const { nintondoExists, address, connectWallet } = useNintondoManagerContext();
+  const { nintondoExists, address, verifyAddress, connectWallet, verifiedAddress, getPublicKey } =
+    useNintondoManagerContext();
   const [config, setConfig] = useState<IHeader[]>(HeaderLinks);
   const location = useLocation();
   const [showPopover, setShowPopover] = useState<boolean>(false);
@@ -26,12 +27,18 @@ const Header = () => {
   }, [location]);
 
   useEffect(() => {
+    (async () => {
+      if (nintondoExists && address === undefined && (await getPublicKey()) !== undefined)
+        await connectWallet();
+    })();
+  }, [nintondoExists, address]);
+
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
         setIsMenuOpen(false);
       }
       if (
-        showPopover &&
         popoverRef.current &&
         popoverButtonRef.current &&
         !popoverRef.current.contains(event.target as Node) &&
@@ -92,11 +99,11 @@ const Header = () => {
             onClick={toggleMenu}
           />
         ))}
-        {!address ? (
+        {!verifiedAddress ? (
           <div className='text-white text-base font-bold leading-normal hover:text-yellow-500 transition-all duration-300 ease-in-out'>
             <button
               className='btn'
-              onClick={connectWallet}
+              onClick={verifyAddress}
             >
               CONNECT
             </button>

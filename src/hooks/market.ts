@@ -57,10 +57,7 @@ export const useMakeDummyUTXOS = () => {
       value: change,
     });
 
-    const signedPsbtBase64 = await signPsbtInputs(
-      psbt.toBase64(),
-      utxos.map((_f, i) => i),
-    );
+    const signedPsbtBase64 = await signPsbtInputs(psbt.toBase64());
     if (!signedPsbtBase64) throw new Error('Failed to sign inputs to create dummys');
 
     psbt = Psbt.fromBase64(signedPsbtBase64);
@@ -152,17 +149,21 @@ export const useCreateListedSignedPSBT = () => {
         address: placeholderAddress,
         value: 2,
       });
-      console.log(price * 10 ** 8);
       sellerPsbt.addOutput({
         address: address,
         value: Number(price * 10 ** 8),
       });
 
-      const partiallySignedPsbtbase64 = await signPsbtInputs(
-        sellerPsbt.toBase64(),
-        [2],
-        [[Transaction.SIGHASH_SINGLE | Transaction.SIGHASH_ANYONECANPAY]],
-      );
+      const partiallySignedPsbtbase64 = await signPsbtInputs(sellerPsbt.toBase64(), {
+        autoFinalized: false,
+        toSignInputs: [
+          {
+            address,
+            index: 2,
+            sighashTypes: [Transaction.SIGHASH_SINGLE | Transaction.SIGHASH_ANYONECANPAY],
+          },
+        ],
+      });
 
       if (!partiallySignedPsbtbase64) return toast.error('Failed to sign psbt');
       sellerPsbt = Psbt.fromBase64(partiallySignedPsbtbase64);
@@ -210,8 +211,7 @@ export const useHasEnoughUtxos = () => {
 };
 
 export const useCreateBuyingSignedPsbt = () => {
-  const { address } = useNintondoManagerContext();
-  const { signPsbtInputs } = useNintondoManagerContext();
+  const { address, signPsbtInputs } = useNintondoManagerContext();
 
   return useCallback(
     async (inscription: IDummyInscription, sellerOrdUtxo: ApiOrdUTXO, utxos: ApiUTXO[]) => {
@@ -287,8 +287,15 @@ export const useCreateBuyingSignedPsbt = () => {
         value: change,
       });
 
-      const inputsToSign = [0, 1, ...utxos.map((_f, i) => i + 3)];
-      const partiallySignedPsbtBase64 = await signPsbtInputs(buyerPsbt.toBase64(), inputsToSign);
+      const inputsToSign = [0, 1, ...utxos.map((_, i) => i + 3)];
+      const partiallySignedPsbtBase64 = await signPsbtInputs(buyerPsbt.toBase64(), {
+        autoFinalized: false,
+        toSignInputs: inputsToSign.map((f) => ({
+          address,
+          index: f,
+          sighashTypes: undefined,
+        })),
+      });
       if (!partiallySignedPsbtBase64) {
         toast.error('Failed to sign buyer inputs');
         return;
