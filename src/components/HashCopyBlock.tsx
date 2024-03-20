@@ -1,9 +1,8 @@
 import cn from 'classnames';
 import CopySvg from '../assets/copy.svg?react';
-import { truncate } from '../settings/utils.ts';
 import Copy from './Buttons/Copy.tsx';
 import { ComponentType, SVGProps } from 'react';
-
+import { truncate } from '../utils';
 interface HashCopyProps {
   title?: string;
   classNames?: string;

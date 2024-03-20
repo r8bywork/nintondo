@@ -26,6 +26,19 @@ export const fetchMarket = async <T>({
   return await res.json();
 };
 
+export const fetchExplorer = async <T>({
+  path,
+  json = true,
+  ...props
+}: fetchProps): Promise<T | undefined> => {
+  const url = `${'https://bells.quark.blue/'}${path}`;
+  const res = await fetch(url.toString(), { ...props });
+
+  if (!json) return (await res.text()) as T;
+
+  return await res.json();
+};
+
 interface fetchProps extends RequestInit {
   method?: 'POST' | 'GET' | 'PUT' | 'DELETE';
   headers?: HeadersInit;
@@ -70,3 +83,15 @@ export function gptFeeCalculate(inputCount: number, outputCount: number, feeRate
 
   return fee;
 }
+
+type Params = {
+  nPrefix?: number;
+  nSuffix?: number;
+  separator?: 'braces' | 'brackets' | 'parenthesis';
+};
+export const truncate = (str: string, { nPrefix = 4, nSuffix = 4 }: Params = {}) => {
+  const nTotalIsLongerThanStr = nPrefix + nSuffix > str.length;
+  return str && !nTotalIsLongerThanStr
+    ? `${str.slice(0, nPrefix)}...${str.slice(str.length - nSuffix)}`
+    : str;
+};

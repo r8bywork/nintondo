@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { truncate } from './utils';
 import CardTag from '../components/Card/CardTag/CardTag.tsx';
 import {
   AddressStats,
@@ -11,6 +10,7 @@ import {
   Vout,
   Transaction,
 } from '../interfaces/intefaces.ts';
+import { truncate } from '../utils';
 
 export type Field<T extends object> = {
   [K in keyof T]: {

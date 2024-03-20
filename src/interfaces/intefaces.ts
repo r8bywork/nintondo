@@ -32,6 +32,18 @@ export interface AddressStats {
   };
 }
 
+interface FeeHistogram {
+  fee: number;
+  count: number;
+}
+
+export interface MemPool {
+  count: number;
+  total_fee: number;
+  vsize: number;
+  fee_histogram: FeeHistogram[][];
+}
+
 export interface BlockData {
   id: string;
   height: number;
@@ -122,4 +134,9 @@ export interface InscriptionInfo {
   creationTransaction: string;
   creationFeeSats: number;
   tags: string;
+}
+
+export interface TableData {
+  latestBlock: BlockData[];
+  latestTransactions: TransactionData[];
 }
