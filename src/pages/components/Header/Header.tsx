@@ -21,6 +21,7 @@ const Header = () => {
   }, [location]);
 
   useEffect(() => {
+    console.log(nintondoExists, address, connectWallet);
     const handleClickOutside = (event: MouseEvent) => {
       if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
         setIsMenuOpen(false);
@@ -32,10 +33,6 @@ const Header = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
-  if (nintondoExists === undefined) return <div className='text-white'>Loading</div>;
-
-  if (!nintondoExists) return <div className='text-white'>Install nintondo extension</div>;
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
