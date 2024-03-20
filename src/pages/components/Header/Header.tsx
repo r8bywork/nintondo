@@ -14,8 +14,15 @@ const Header = () => {
   const headerRef = useRef<HTMLDivElement | null>(null);
   const popoverRef = useRef<HTMLDivElement | null>(null);
   const popoverButtonRef = useRef<HTMLDivElement | null>(null);
-  const { nintondoExists, address, verifyAddress, connectWallet, verifiedAddress, getPublicKey } =
-    useNintondoManagerContext();
+  const {
+    nintondoExists,
+    address,
+    verifyAddress,
+    connectWallet,
+    verifiedAddress,
+    getPublicKey,
+    disconnect,
+  } = useNintondoManagerContext();
   const [config, setConfig] = useState<IHeader[]>(HeaderLinks);
   const location = useLocation();
   const [showPopover, setShowPopover] = useState<boolean>(false);
@@ -133,7 +140,10 @@ const Header = () => {
                 </div>
                 <div
                   className='flex items-center gap-3 text-white hover:text-yellow-500 cursor-pointer'
-                  onClick={() => setShowPopover(false)}
+                  onClick={async () => {
+                    setShowPopover(false);
+                    await disconnect();
+                  }}
                 >
                   Disconnect
                 </div>

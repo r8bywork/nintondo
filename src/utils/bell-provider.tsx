@@ -49,6 +49,8 @@ const useNintondoManager = () => {
 
   const verifyAddress = useCallback(async () => {
     if (!nintondo) return;
+    await connectWallet();
+    if (await checkStorage()) return;
     const connectedAddress = address ?? (await connectWallet());
     const message = `
 Welcome to Belmarket!
@@ -63,8 +65,6 @@ Wallet address:
 ${connectedAddress}
     `;
 
-    console.log(Buffer);
-
     try {
       const signedMessage = await nintondo.signMessage(message);
       const signatureBuffer = Buffer.from(signedMessage, 'base64');
@@ -73,8 +73,10 @@ ${connectedAddress}
       const verified = pair.verify(Buffer.from(sha256(message)), signatureBuffer);
       if (verified) {
         const publicAddress = getAddress(publicKeyBuffer, AddressType.P2PKH);
-        if (publicAddress === connectedAddress) setVerifiedAddress(true);
-        else toast.error('Failed to verify address');
+        if (publicAddress === connectedAddress) {
+          setVerifiedAddress(true);
+          localStorage.setItem('verifiedAddress', connectedAddress);
+        } else toast.error('Failed to verify address');
       } else toast.error('Failed to verify address');
     } catch (e) {
       console.log(e);
@@ -86,12 +88,40 @@ ${connectedAddress}
     if (!nintondo) return;
   }, [nintondo]);
 
-  const handleAccountsChanged = useCallback(() => {
+  const handleAccountsChanged = useCallback(async () => {
     if (address) {
       setAddress(undefined);
       setVerifiedAddress(false);
+      await checkStorage();
     }
   }, [address]);
+
+  const checkStorage = useCallback(async () => {
+    if (!nintondo) return;
+    const verifiedAddress = localStorage.getItem('verifiedAddress');
+    if (verifiedAddress !== null) {
+      const publicKeyHex = await nintondo.getPublicKey();
+      if (!publicKeyHex) return;
+      const publicKeyBuffer = Buffer.from(await nintondo.getPublicKey(), 'hex');
+      if (verifiedAddress === getAddress(publicKeyBuffer, AddressType.P2PKH)) {
+        setVerifiedAddress(true);
+        setAddress(verifiedAddress);
+        return true;
+      }
+    }
+  }, [nintondo]);
+
+  const disconnect = async () => {
+    setAddress(undefined);
+    setVerifiedAddress(false);
+    localStorage.removeItem('verifiedAddress');
+  };
+
+  useEffect(() => {
+    (async () => {
+      await checkStorage();
+    })();
+  }, [checkStorage, nintondo]);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -119,6 +149,7 @@ ${connectedAddress}
     verifyAddress,
     verifiedAddress,
     getPublicKey,
+    disconnect,
   };
 };
 
