@@ -1,3 +1,5 @@
+import { Status } from './api';
+
 export interface INintondoManagerProvider {
   nintondoExists?: boolean;
   address?: string;
@@ -35,4 +37,21 @@ export interface ToSignInput {
   index: number;
   publicKey: string;
   sighashTypes?: number[];
+}
+
+export interface Ord {
+  available_to_free: number;
+  inscriptions: InscriptionMetaInfo[];
+  status: Status;
+  txid: string;
+  value: number;
+  vout: number;
+}
+
+export interface InscriptionMetaInfo {
+  content_length: number;
+  content_type: string;
+  inscription_id: string;
+  inscription_number: number;
+  offset: number;
 }
