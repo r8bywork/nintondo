@@ -40,7 +40,7 @@ const TxPage = () => {
           <Table
             data={tx}
             fields={TxFieldsTable}
-            additional
+            mode={'additional'}
           />
         </>
       ) : (

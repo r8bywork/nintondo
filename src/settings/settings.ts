@@ -5,8 +5,9 @@ import TrendingSvg from '../assets/card/rating.svg?react';
 import FullSizeSvg from '../assets/card/fullsize.svg?react';
 import ShareSvg from '../assets/card/share.svg?react';
 import ApeCard from '../assets/collection/ApeCard.png';
-import { FilterConfig, Header } from '../interfaces/intefaces.ts';
+import { Collection, FilterConfig, Header } from '../interfaces/intefaces.ts';
 import Image from '../assets/collection/Ape.png';
+import ApeSmall from '../assets/collection/ApeSmall.png';
 import TwitterLogo from '../assets/social/twitter.svg?react';
 import DiscordLogo from '../assets/social/discord.svg?react';
 import ExplorerLogo from '../assets/social/explorer.svg?react';
@@ -409,3 +410,86 @@ export const CollectionPageMock = {
     },
   ],
 };
+
+export const collectionsMock: Collection[] = [
+  {
+    image: ApeSmall,
+    collection: 'Bitcoin Apes',
+    supply: 10000,
+    fileSize: 1464,
+    avgFileSize: 228247,
+    creationFee: 39208,
+    range: [9168662, 17705183],
+    creationDate: 'Feb, 7 2023',
+  },
+  {
+    image: ApeSmall,
+    collection: 'ABC',
+    supply: 7772,
+    fileSize: 1464,
+    avgFileSize: 228247,
+    creationFee: 39208,
+    range: [9168662, 17705183],
+    creationDate: 'Feb, 7 2023',
+  },
+  {
+    image: ApeSmall,
+    collection: 'Ordinal Maxi Biz (OMB)',
+    supply: 1556,
+    fileSize: 1464,
+    avgFileSize: 228247,
+    creationFee: 39208,
+    range: [9168662, 17705183],
+    creationDate: 'Feb, 7 2023',
+  },
+  {
+    image: ApeSmall,
+    collection: 'Bitcoin Apes',
+    supply: 10000,
+    fileSize: 1464,
+    avgFileSize: 228247,
+    creationFee: 39208,
+    range: [9168662, 17705183],
+    creationDate: 'Feb, 7 2023',
+  },
+  {
+    image: ApeSmall,
+    collection: 'ABC',
+    supply: 7772,
+    fileSize: 1464,
+    avgFileSize: 228247,
+    creationFee: 39208,
+    range: [9168662, 17705183],
+    creationDate: 'Feb, 7 2023',
+  },
+  {
+    image: ApeSmall,
+    collection: 'Ordinal Maxi Biz (OMB)',
+    supply: 1556,
+    fileSize: 1464,
+    avgFileSize: 228247,
+    creationFee: 39208,
+    range: [9168662, 17705183],
+    creationDate: 'Feb, 7 2023',
+  },
+  {
+    image: ApeSmall,
+    collection: 'Bitcoin Apes',
+    supply: 10000,
+    fileSize: 1464,
+    avgFileSize: 228247,
+    creationFee: 39208,
+    range: [9168662, 17705183],
+    creationDate: 'Feb, 7 2023',
+  },
+  {
+    image: ApeSmall,
+    collection: 'ABC',
+    supply: 7772,
+    fileSize: 1464,
+    avgFileSize: 228247,
+    creationFee: 39208,
+    range: [9168662, 17705183],
+    creationDate: 'Feb, 7 2023',
+  },
+];

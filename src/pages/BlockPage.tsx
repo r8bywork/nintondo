@@ -75,7 +75,7 @@ const BlockPage = () => {
           <Table
             data={block}
             fields={AdditionalBlockFields}
-            additional
+            mode={'additional'}
           />
         </>
       ) : (

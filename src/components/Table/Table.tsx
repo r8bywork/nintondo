@@ -9,15 +9,16 @@ type Field<T extends object> = {
     render?: (value: T[K], data: T) => ReactNode;
   };
 }[keyof T];
+type table = 'additional' | 'collections';
 
 interface Props<T extends object> {
   data: T[];
   fields: Field<T>[];
   className?: string;
   title?: string;
-  additional?: boolean;
   onClick?: () => void;
   marketplace?: boolean;
+  mode?: table;
 }
 
 const Table = <T extends object>({
@@ -25,9 +26,9 @@ const Table = <T extends object>({
   fields,
   className,
   title,
-  additional,
   onClick,
   marketplace,
+  mode,
 }: Props<T>) => {
   const isMobile = window.innerWidth < 768;
 
@@ -60,7 +61,7 @@ const Table = <T extends object>({
     );
   }
 
-  if (isMobile) {
+  if (isMobile && mode !== 'collections') {
     return (
       <div className={'w-full max-w-7xl' + className}>
         {title && (
@@ -103,11 +104,65 @@ const Table = <T extends object>({
     );
   }
 
+  const TableMode = (mode: string) => {
+    switch (mode) {
+      case 'additional':
+        return (
+          <>
+            {data.map((i, idx) => (
+              <React.Fragment key={`table_${uuidv4()}`}>
+                {fields.map((f, fdx) => (
+                  <tr key={`table-row_${uuidv4()}`}>
+                    <th
+                      key={`table-col_${idx}-value_${fdx}`}
+                      className='text-left text-[#FFBB00]'
+                    >
+                      {f.name?.toString().toUpperCase()}
+                    </th>
+                    <td
+                      key={`table-row_${idx + 1}-value_${fdx + 1}`}
+                      className={'whitespace-nowrap'}
+                    >
+                      {f.render ? f.render(i[f.value], i) : (i[f.value] as ReactNode)}
+                    </td>
+                  </tr>
+                ))}
+              </React.Fragment>
+            ))}
+          </>
+        );
+      default:
+        return (
+          <React.Fragment key={`table_${uuidv4()}`}>
+            {data.map((i, idx) => (
+              <tr
+                className={cn({
+                  'bg-[#161A20] cursor-pointer': mode !== 'collections' && idx % 2 === 0,
+                  'bg-[#020912] cursor-pointer': mode !== 'collections' && idx % 2 !== 0,
+                })}
+                key={`table-row_${idx}`}
+              >
+                {fields.map((f, fdx) => (
+                  <td
+                    key={`table-row_${idx}-value_${fdx}`}
+                    className={cn('whitespace-nowrap w-fit text-center', {
+                      ['first:text-left text-right']: mode === 'collections',
+                    })}
+                  >
+                    {f.render ? f.render(i[f.value], i) : (i[f.value] as ReactNode)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </React.Fragment>
+        );
+    }
+  };
+
   return (
     <div className={'w-full max-w-7xl' + className}>
       {title && (
         <div
-          // style={{ background: 'var(--GRD, linear-gradient(90deg, #FFF 0%, #FB0 99.07%))' }}
           className={
             'bg-[#FB0] relative top-0 ml-[20px] rounded-t-[15px] px-4 text-[24px] font-bold text-black w-fit'
           }
@@ -118,25 +173,33 @@ const Table = <T extends object>({
 
       <div
         className={cn(
-          'mb-[20px] rounded-[20px]',
-          { ['border border-[#FB0] rounded-3xl']: additional },
+          'mb-[20px] rounded-3xl',
+          {
+            ['border-[#FB0]']: mode === 'additional',
+            ['border-none rounded-[0px]']: mode === 'collections',
+          },
           s.container,
         )}
       >
         <table
           className={cn({
-            [s.table]: !additional,
-            [s.AdditionalTable]: additional,
+            [s.table]: mode !== ('additional' && 'collections'),
+            [s.AdditionalTable]: mode === 'additional',
+            [s.MarketplaceTable]: mode === 'collections',
           })}
           id='explorerTable'
         >
-          {!additional && (
+          {mode !== 'additional' && (
             <thead>
               <tr>
                 {fields.map((i, idx) => (
                   <th
                     key={`table-header_${idx}`}
-                    className='bg-[#FB0]'
+                    className={cn('', {
+                      ['bg-none text-[#FFBB00] leading-[20px] text-[20px] font-normal first:text-left text-right']:
+                        mode === 'collections',
+                      ['bg-[#FB0]']: mode !== 'collections',
+                    })}
                   >
                     {i.name}
                   </th>
@@ -144,54 +207,7 @@ const Table = <T extends object>({
               </tr>
             </thead>
           )}
-          <tbody>
-            {additional ? (
-              <>
-                {data.map((i, idx) => (
-                  <React.Fragment key={`table_${uuidv4()}`}>
-                    {fields.map((f, fdx) => (
-                      <tr key={`table-row_${uuidv4()}`}>
-                        {additional && (
-                          <th
-                            key={`table-col_${idx}-value_${fdx}`}
-                            className='text-left text-[#FFBB00]'
-                          >
-                            {f.name?.toString().toUpperCase()}
-                          </th>
-                        )}
-                        <td
-                          key={`table-row_${idx + 1}-value_${fdx + 1}`}
-                          className={'whitespace-nowrap'}
-                        >
-                          {f.render ? f.render(i[f.value], i) : (i[f.value] as ReactNode)}
-                        </td>
-                      </tr>
-                    ))}
-                  </React.Fragment>
-                ))}
-              </>
-            ) : (
-              <React.Fragment key={`table_${uuidv4()}`}>
-                {data.map((i, idx) => (
-                  <tr
-                    className={
-                      idx % 2 === 0 ? 'bg-[#161A20] cursor-pointer' : 'bg-[#020912] cursor-pointer'
-                    }
-                    key={`table-row_${idx}`}
-                  >
-                    {fields.map((f, fdx) => (
-                      <td
-                        key={`table-row_${idx}-value_${fdx}`}
-                        className={'whitespace-nowrap w-fit text-center '}
-                      >
-                        {f.render ? f.render(i[f.value], i) : (i[f.value] as ReactNode)}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </React.Fragment>
-            )}
-          </tbody>
+          <tbody>{TableMode(mode || '')}</tbody>
         </table>
       </div>
     </div>

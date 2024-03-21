@@ -140,3 +140,14 @@ export interface TableData {
   latestBlock: BlockData[];
   latestTransactions: TransactionData[];
 }
+
+export interface Collection {
+  image: string;
+  collection: string;
+  supply: number;
+  fileSize: number;
+  avgFileSize: number;
+  creationFee: number;
+  range: number[];
+  creationDate: string;
+}

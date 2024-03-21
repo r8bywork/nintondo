@@ -44,7 +44,7 @@ const AddressPage = () => {
           <Table
             data={tx}
             fields={AddressFields}
-            additional
+            mode={'additional'}
           />
         </>
       ) : (

@@ -13,7 +13,7 @@ import FoundCounter from '../components/FoundCounter.tsx';
 const InscriptionsPage = () => {
   return (
     <div className={'bg-black min-h-screen'}>
-      <div className='max-w-[1700px] max-medium:flex-col mx-auto flex pt-[150px]'>
+      <div className='max-w-[1700px] max-medium:flex-col mx-auto flex pt-[150px] max-medium:pt-[100px]'>
         <div className='w-full max-w-[421px] max-medium:max-w-none pt-[35px]'>
           <Search placeholder={'Search'} />
           <div className={'mt-[35px] flex flex-col gap-[30px]'}>
@@ -43,8 +43,9 @@ const InscriptionsPage = () => {
           <FoundCounter
             count={2022442}
             customText={'inscriptions'}
+            classNames={'px-[15px]'}
           />
-          <div className='max-w-[1250px] mx-auto flex flex-wrap pt-[10px] gap-[10px]'>
+          <div className='max-w-[1250px] mx-auto flex flex-wrap pt-[10px] gap-[10px] max-lg:justify-center'>
             {cardConfig.map((card, index) => (
               <Card
                 key={index}

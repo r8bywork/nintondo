@@ -9,6 +9,7 @@ import {
   Vin,
   Vout,
   Transaction,
+  Collection,
 } from '../interfaces/intefaces.ts';
 import { truncate } from '../utils';
 
@@ -455,5 +456,67 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
   {
     value: 'tags',
     name: 'TAGS',
+  },
+];
+
+export const collectionsFieldsTable: Field<Collection>[] = [
+  {
+    value: 'collection',
+    name: 'COLLECTION',
+    render: (value, data) => (
+      <span className={'flex items-center'}>
+        <img
+          src={data.image}
+          alt={'logo'}
+          className={'w-[27px] h-[27px] mr-[13px]'}
+        />
+        {value.toLocaleString()}
+      </span>
+    ),
+  },
+  {
+    value: 'supply',
+    name: 'SUPPLY',
+    render: (value) => <span>{value.toLocaleString()}</span>,
+  },
+  {
+    value: 'fileSize',
+    name: 'FILE SIZE',
+    render: (value) => (
+      <span>
+        {value.toLocaleString()} <span className={'text-[#4B4B4B]'}>GB</span>
+      </span>
+    ),
+  },
+  {
+    value: 'avgFileSize',
+    name: 'AVG FILE SIZE',
+    render: (value) => (
+      <span>
+        {value.toLocaleString()} <span className={'text-[#4B4B4B]'}>KB</span>
+      </span>
+    ),
+  },
+  {
+    value: 'creationFee',
+    name: 'CREATION FEE',
+    render: (value) => (
+      <span>
+        {value.toLocaleString()} <span className={'text-[#4B4B4B]'}>BTC</span>
+      </span>
+    ),
+  },
+  {
+    value: 'range',
+    name: 'RANGE',
+    render: (value) => (
+      <span>
+        {value[0].toLocaleString()} - {value[1].toLocaleString()}
+      </span>
+    ),
+  },
+  {
+    value: 'creationDate',
+    name: 'CREATION DATE',
   },
 ];
