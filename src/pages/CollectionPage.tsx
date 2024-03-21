@@ -1,6 +1,7 @@
 import CollectionHeader from '../components/CollectionComponents/CollectionHeader.tsx';
 import { cardConfig, CollectionPageMock } from '../settings/settings.ts';
 import Card from '../components/Card/Card.tsx';
+import FoundCounter from '../components/FoundCounter.tsx';
 
 const CollectionPage = () => {
   return (
@@ -8,10 +9,10 @@ const CollectionPage = () => {
       <div className={'max-w-[1670px] w-full mx-auto px-[0px]'}>
         <CollectionHeader data={CollectionPageMock} />
         <div className='flex-grow overflow-y-auto mt-[45px]'>
-          <span className={'text-[#4B4B4B] font-16px px-[15px]'}>
-            Found <span className={'text-white'}>{Number(10000).toLocaleString()}</span>{' '}
-            inscriptions
-          </span>
+          <FoundCounter
+            count={(10000).toLocaleString()}
+            customText={'collections'}
+          />
           <div className='mx-auto flex flex-wrap pt-[10px] gap-[10px]'>
             {cardConfig.map((card, index) => (
               <Card

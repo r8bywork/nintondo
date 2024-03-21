@@ -9,7 +9,8 @@ import Search from './components/Search/Search.tsx';
 import Filter from '../components/Controls/Filter.tsx';
 import Svg from '../assets/filters/Plus.tsx';
 import TimeSvg from '../assets/filters/Time.tsx';
-const MarketPlacePage = () => {
+import FoundCounter from '../components/FoundCounter.tsx';
+const InscriptionsPage = () => {
   return (
     <div className={'bg-black min-h-screen'}>
       <div className='max-w-[1700px] max-medium:flex-col mx-auto flex pt-[150px]'>
@@ -21,7 +22,6 @@ const MarketPlacePage = () => {
               config={filterConfig}
             />
             <Filter
-              // selectAll={{ text: 'All' }}
               singleSelect
               SvgIcon={Svg}
               config={filterTypeConfig}
@@ -40,9 +40,10 @@ const MarketPlacePage = () => {
           </div>
         </div>
         <div className='flex-grow overflow-y-auto'>
-          <span className={'text-[#4B4B4B] font-16px px-[15px]'}>
-            Found <span className={'text-white'}>2,022,442</span> inscriptions
-          </span>
+          <FoundCounter
+            count={2022442}
+            customText={'inscriptions'}
+          />
           <div className='max-w-[1250px] mx-auto flex flex-wrap pt-[10px] gap-[10px]'>
             {cardConfig.map((card, index) => (
               <Card
@@ -57,4 +58,4 @@ const MarketPlacePage = () => {
   );
 };
 
-export default MarketPlacePage;
+export default InscriptionsPage;

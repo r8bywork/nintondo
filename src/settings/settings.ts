@@ -97,12 +97,12 @@ export const HeaderLinks: Header[] = [
   { name: 'wallet', url: '/wallet' },
   { name: 'markets', url: '/markets' },
   { name: 'explorer', url: '/explorer' },
-  { name: 'marketplace', url: '/marketplace' },
+  { name: 'marketplace', url: '/marketplace/inscriptions' },
 ];
 
 export const HeaderLinksMarketPlace: Header[] = [
-  { name: 'inscriptions', url: '/marketplace' },
-  { name: 'collections', url: '/collections' },
+  { name: 'inscriptions', url: '/marketplace/inscriptions' },
+  { name: 'collections', url: '/marketplace/collections' },
 ];
 
 export const cardConfig = [

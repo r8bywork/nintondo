@@ -3,9 +3,10 @@ import './App.css';
 import Header from './pages/components/Header/Header';
 import Explorer from './pages/Explorer';
 import MainPage from './pages/MainPage';
-import MarketPlacePage from './pages/MarketPlacePage.tsx';
+import InscriptionsPage from './pages/InscriptionsPage.tsx';
 import InscriptionInfo from './pages/InscriptionInfo.tsx';
 import CollectionPage from './pages/CollectionPage.tsx';
+import CollectionsPage from './pages/CollectionsPage.tsx';
 
 const App = () => {
   return (
@@ -21,15 +22,19 @@ const App = () => {
           element={<Explorer />}
         />
         <Route
-          path='/marketplace/*'
-          element={<MarketPlacePage />}
+          path='/marketplace/inscriptions*'
+          element={<InscriptionsPage />}
         />
         <Route
-          path='/marketplace/inscription/:hash'
+          path='/marketplace/inscriptions/:hash'
           element={<InscriptionInfo />}
         />
         <Route
-          path='/marketplace/collection/:hash'
+          path='/marketplace/collections/*'
+          element={<CollectionsPage />}
+        />
+        <Route
+          path='/marketplace/collections/:hash'
           element={<CollectionPage />}
         />
       </Routes>
