@@ -4,7 +4,7 @@ import Header from './pages/components/Header/Header';
 import Explorer from './pages/Explorer';
 import MainPage from './pages/MainPage';
 import InscriptionsPage from './pages/InscriptionsPage.tsx';
-import InscriptionInfo from './pages/InscriptionInfo.tsx';
+import InscriptionPage from './pages/InscriptionPage.tsx';
 import CollectionPage from './pages/CollectionPage.tsx';
 import CollectionsPage from './pages/CollectionsPage.tsx';
 
@@ -27,7 +27,7 @@ const App = () => {
         />
         <Route
           path='/marketplace/inscriptions/:hash'
-          element={<InscriptionInfo />}
+          element={<InscriptionPage />}
         />
         <Route
           path='/marketplace/collections/*'

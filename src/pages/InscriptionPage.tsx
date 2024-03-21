@@ -7,7 +7,7 @@ import { inscriptionCard, inscriptionInfo } from '../settings/settings.ts';
 import Table from '../components/Table/Table.tsx';
 import { InscriptionInfoFields } from '../settings/fields.tsx';
 
-const InscriptionInfo = () => {
+const InscriptionPage = () => {
   const { hash } = useParams();
   const navigate = useNavigate();
   console.log(hash);
@@ -18,7 +18,7 @@ const InscriptionInfo = () => {
           <div className={'flex mb-[22px]'}>
             <button
               className='bg-[#FFFFFF] px-[20px] mr-[13px] rounded-[17px]'
-              onClick={() => navigate('/marketplace')}
+              onClick={() => navigate('/marketplace/inscriptions')}
             >
               <LeftArrow />
             </button>
@@ -48,4 +48,4 @@ const InscriptionInfo = () => {
     </div>
   );
 };
-export default InscriptionInfo;
+export default InscriptionPage;
