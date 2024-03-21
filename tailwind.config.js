@@ -12,11 +12,14 @@ export default {
         'regal-yellow': '#FFBB00',
         'regal-purple': '#B75BFF',
       },
+      maxHeight: {
+        128: '32rem',
+        192: '48rem',
+      },
     },
   },
   variants: {
     extend: {},
   },
-
   plugins: [],
 };
