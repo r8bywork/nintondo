@@ -46,7 +46,7 @@ const SplitVisualizer: FC<SplitVisualizerProps> = ({
         </div>
       </div>
 
-      <div className='flex flex-col max-h-192 overflow-y-scroll custom_scrollbar_container'>
+      <div className='flex flex-col max-h-192 overflow-y-scroll custom_scrollbar_container justify-center items-center w-full'>
         {selectedOrds.map((f, i) => (
           <div
             key={i}
