@@ -9,15 +9,16 @@ interface UtxoSelectorProps {
 
 const UtxoSelector: FC<UtxoSelectorProps> = ({ ords, selectOrdHandler, selectAllHandler }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setSelectedAll] = useState<boolean>(false);
+  const [selectedAll, setSelectedAll] = useState<boolean>(false);
 
   return (
-    <div className='flex flex-col min-w-[50%]'>
+    <div className='flex flex-col min-w-[45%]'>
       <div className='w-full flex justify-between items-center'>
         <p className='text-lg font-medium'>Select utxos to split</p>
         <div className='flex justify-center gap-3 items-center'>
           <input
             type='checkbox'
+            checked={selectedAll}
             className='p-3 cursor-pointer'
             onChange={() => {
               setSelectedAll((prev) => {
@@ -29,6 +30,11 @@ const UtxoSelector: FC<UtxoSelectorProps> = ({ ords, selectOrdHandler, selectAll
           <span className='text-lg font-medium'>Select all</span>
         </div>
       </div>
+      {!ords.length && (
+        <div className='flex justify-center items-center min-h-128'>
+          <p>No ords to select</p>
+        </div>
+      )}
       <div className='grid grid-cols-2 max-h-192 overflow-y-scroll custom_scrollbar_container'>
         {ords.map((f, i) => (
           <div

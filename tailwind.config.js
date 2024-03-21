@@ -16,6 +16,9 @@ export default {
         128: '32rem',
         192: '48rem',
       },
+      minHeight: {
+        128: '32rem',
+      },
     },
   },
   variants: {

@@ -46,6 +46,7 @@ export interface Ord {
   txid: string;
   value: number;
   vout: number;
+  inscriptionIndex?: number;
 }
 
 export interface InscriptionMetaInfo {

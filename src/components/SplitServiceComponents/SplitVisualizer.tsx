@@ -4,11 +4,37 @@ import { FC } from 'react';
 
 interface SplitVisualizerProps {
   selectedOrds: Ord[];
+  setSelectedOrds: (ords: Ord[]) => void;
 }
 
-const SplitVisualizer: FC<SplitVisualizerProps> = ({ selectedOrds }) => {
+const SplitVisualizer: FC<SplitVisualizerProps> = ({ selectedOrds, setSelectedOrds }) => {
+  const switchToInscription = (ord: Ord, direction: 'next' | 'previous') => {
+    setSelectedOrds(
+      selectedOrds.map((o) => {
+        if (o.txid === ord.txid) {
+          const maxIndex = o.inscriptions.length - 1;
+          let newIndex = o.inscriptionIndex ?? 0;
+          if (direction === 'next') {
+            newIndex = newIndex < maxIndex ? newIndex + 1 : 0;
+          } else {
+            newIndex = newIndex > 0 ? newIndex - 1 : maxIndex;
+          }
+          return { ...o, inscriptionIndex: newIndex };
+        }
+        return o;
+      }),
+    );
+  };
+
+  if (!selectedOrds.length)
+    return (
+      <div className='flex min-w-[55%] h-128 items-center justify-center'>
+        <p>Selected ords will appear here</p>
+      </div>
+    );
+
   return (
-    <div className='flex flex-col min-w-[50%]'>
+    <div className='flex flex-col min-w-[55%]'>
       <div className='flex flex-col'>
         <div className='w-full flex justify-center items-center'>
           <p className='text-lg font-medium'>Splits</p>
@@ -29,25 +55,47 @@ const SplitVisualizer: FC<SplitVisualizerProps> = ({ selectedOrds }) => {
             <BigArrowRight className='h-4' />
             <div className='flex flex-col p-3 m-3 max-w-fit rounded-lg gap-5'>
               <div className='flex flex-col gap-1 bg-[#1A1A1A] p-3 rounded-lg'>
-                <span>Inscription(s):</span>
-                <div className='flex gap-3 justify-center'>
-                  {f.inscriptions.map((inscription, index) => (
-                    <a
-                      key={index}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='flex flex-col items-center gap-2'
-                      href={`http://localhost:8111/pub/preview/${inscription.inscription_id}`}
+                <div className='p-2 flex items-center gap-3'>
+                  {f.inscriptions.length > 1 && (
+                    <span
+                      onClick={() => switchToInscription(f, 'next')}
+                      className='cursor-pointer'
                     >
-                      <div className='w-28 h-28 overflow-hidden rounded-lg'>
+                      &#10094;
+                    </span>
+                  )}
+                  <div className='flex gap-2 items-center'>
+                    <div className='w-20 h-20 overflow-hidden rounded-lg'>
+                      <a
+                        target='_blank'
+                        href={`http://localhost:8111/pub/preview/${
+                          f.inscriptions[f.inscriptionIndex ?? 0].inscription_id
+                        }`}
+                        rel='noopener noreferrer'
+                      >
                         <img
-                          src={`http://localhost:8111/pub/preview/${inscription.inscription_id}`}
+                          src={`http://localhost:8111/pub/preview/${
+                            f.inscriptions[f.inscriptionIndex ?? 0].inscription_id
+                          }`}
                           className='object-cover'
                         />
-                      </div>
+                      </a>
+                    </div>
+                    <div className='flex flex-col'>
+                      <span>
+                        Number: #{f.inscriptions[f.inscriptionIndex ?? 0].inscription_number}
+                      </span>
                       <span>Value: 0.001 BEL</span>
-                    </a>
-                  ))}
+                    </div>
+                  </div>
+                  {f.inscriptions.length > 1 && (
+                    <span
+                      onClick={() => switchToInscription(f, 'previous')}
+                      className='cursor-pointer'
+                    >
+                      &#10095;
+                    </span>
+                  )}
                 </div>
               </div>
               <div className='flex flex-col gap-1 bg-[#1A1A1A] p-3 rounded-lg'>

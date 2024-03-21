@@ -18,12 +18,10 @@ const SplitServicePage = () => {
   }, [address]);
 
   const selectedOrdHandler = (ord: Ord) => {
-    console.log(ord);
     setSelectedOrds((prev) => [...prev, ord]);
     setOrds((prev) => {
       const index = prev.findIndex((f) => f.txid === ord.txid);
-      prev.splice(index, 1);
-      return prev;
+      return [...prev.slice(0, index), ...prev.slice(index + 1)];
     });
   };
 
@@ -33,6 +31,8 @@ const SplitServicePage = () => {
   };
 
   useEffect(() => {
+    setSelectedOrds([]);
+    setOrds([]);
     (async () => {
       setLoading(true);
       if (!address || !verifiedAddress) return;
@@ -72,13 +72,18 @@ const SplitServicePage = () => {
 
   return (
     <div className={'bg-black'}>
-      <div className='min-h-screen max-w-[1700px] mx-auto flex pt-[150px] flex-col sm:flex-row text-white gap-4 text-white p-4'>
-        <UtxoSelector
-          ords={ords}
-          selectOrdHandler={selectedOrdHandler}
-          selectAllHandler={selectAllHandler}
-        />
-        <SplitVisualizer selectedOrds={selectedOrds} />
+      <div className='min-h-screen max-w-[1700px] mx-auto flex pt-[150px] flex-col text-white gap-4 text-white p-4'>
+        <div className='flex justify-center flex-col md:flex-row gap-4'>
+          <UtxoSelector
+            ords={ords}
+            selectOrdHandler={selectedOrdHandler}
+            selectAllHandler={selectAllHandler}
+          />
+          <SplitVisualizer
+            selectedOrds={selectedOrds}
+            setSelectedOrds={setSelectedOrds}
+          />
+        </div>
       </div>
     </div>
   );
