@@ -11,6 +11,7 @@ const SplitServicePage = () => {
   const [loading, setLoading] = useState(false);
 
   const [selectedOrds, setSelectedOrds] = useState<Ord[]>([]);
+  const [selectedAll, setSelectedAll] = useState<boolean>(false);
 
   const getUserInscriptions = useCallback(async (): Promise<Ord[]> => {
     const response = (await axios.get(`http://localhost:3001/offset_ords/address/${address}`)).data;
@@ -25,9 +26,18 @@ const SplitServicePage = () => {
     });
   };
 
-  const selectAllHandler = () => {
+  const selectAll = () => {
     setSelectedOrds((prev) => [...prev, ...ords]);
     setOrds([]);
+  };
+
+  const removeSelectedOrdHandler = (ord: Ord) => {
+    setSelectedAll(false);
+    setOrds((prev) => [...prev, ord]);
+    setSelectedOrds((prev) => {
+      const index = prev.findIndex((f) => f.txid === ord.txid);
+      return [...prev.slice(0, index), ...prev.slice(index + 1)];
+    });
   };
 
   useEffect(() => {
@@ -77,11 +87,18 @@ const SplitServicePage = () => {
           <UtxoSelector
             ords={ords}
             selectOrdHandler={selectedOrdHandler}
-            selectAllHandler={selectAllHandler}
+            setSelectedAll={() => {
+              setSelectedAll((prev) => {
+                if (!prev) selectAll();
+                return !prev;
+              });
+            }}
+            selectedAll={selectedAll}
           />
           <SplitVisualizer
             selectedOrds={selectedOrds}
             setSelectedOrds={setSelectedOrds}
+            removeSelectedOrdHandler={removeSelectedOrdHandler}
           />
         </div>
       </div>

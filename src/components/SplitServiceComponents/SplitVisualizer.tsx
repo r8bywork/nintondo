@@ -5,9 +5,14 @@ import { FC } from 'react';
 interface SplitVisualizerProps {
   selectedOrds: Ord[];
   setSelectedOrds: (ords: Ord[]) => void;
+  removeSelectedOrdHandler: (ord: Ord) => void;
 }
 
-const SplitVisualizer: FC<SplitVisualizerProps> = ({ selectedOrds, setSelectedOrds }) => {
+const SplitVisualizer: FC<SplitVisualizerProps> = ({
+  selectedOrds,
+  setSelectedOrds,
+  removeSelectedOrdHandler,
+}) => {
   const switchToInscription = (ord: Ord, direction: 'next' | 'previous') => {
     setSelectedOrds(
       selectedOrds.map((o) => {
@@ -47,10 +52,18 @@ const SplitVisualizer: FC<SplitVisualizerProps> = ({ selectedOrds, setSelectedOr
             key={i}
             className='flex items-center'
           >
-            <div className='flex flex-col p-3 m-3 border-[#191919] border-2 max-w-fit rounded-lg'>
-              <p>Value: {(f.value / 10 ** 8).toFixed(4)} BEL</p>
-              <p>Inscriptions: {f.inscriptions.length}</p>
-              <p>Retrievable bells amount: {(f.available_to_free / 10 ** 8).toFixed(4)} BEL</p>
+            <div className='flex flex-col items-center'>
+              <div className='flex flex-col p-3 m-3 border-[#191919] border-2 max-w-fit rounded-lg'>
+                <p>Value: {(f.value / 10 ** 8).toFixed(4)} BEL</p>
+                <p>Inscriptions: {f.inscriptions.length}</p>
+                <p>Retrievable bells amount: {(f.available_to_free / 10 ** 8).toFixed(4)} BEL</p>
+              </div>
+              <div
+                onClick={() => removeSelectedOrdHandler(f)}
+                className='cursor-pointer'
+              >
+                &#10005; Remove
+              </div>
             </div>
             <BigArrowRight className='h-4' />
             <div className='flex flex-col p-3 m-3 max-w-fit rounded-lg gap-5'>

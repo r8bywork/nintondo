@@ -1,15 +1,20 @@
 import { Ord } from '@/interfaces/nintondo-manager-provider';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 interface UtxoSelectorProps {
   ords: Ord[];
   selectOrdHandler: (ord: Ord) => void;
-  selectAllHandler: () => void;
+  selectedAll: boolean;
+  setSelectedAll: () => void;
 }
 
-const UtxoSelector: FC<UtxoSelectorProps> = ({ ords, selectOrdHandler, selectAllHandler }) => {
+const UtxoSelector: FC<UtxoSelectorProps> = ({
+  ords,
+  selectOrdHandler,
+  selectedAll,
+  setSelectedAll,
+}) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [selectedAll, setSelectedAll] = useState<boolean>(false);
 
   return (
     <div className='flex flex-col min-w-[45%]'>
@@ -21,10 +26,7 @@ const UtxoSelector: FC<UtxoSelectorProps> = ({ ords, selectOrdHandler, selectAll
             checked={selectedAll}
             className='p-3 cursor-pointer'
             onChange={() => {
-              setSelectedAll((prev) => {
-                if (!prev) selectAllHandler();
-                return !prev;
-              });
+              setSelectedAll();
             }}
           />
           <span className='text-lg font-medium'>Select all</span>
