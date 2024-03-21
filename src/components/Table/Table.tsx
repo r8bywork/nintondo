@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import s from './styles.module.scss';
 type Field<T extends object> = {
@@ -19,7 +19,11 @@ interface Props<T extends object> {
   onClick?: () => void;
   marketplace?: boolean;
   mode?: table;
+  selectedColumns?: (keyof T)[];
 }
+type FieldValue<T> = {
+  [K in keyof T]: T[K];
+};
 
 const Table = <T extends object>({
   data,
@@ -29,18 +33,43 @@ const Table = <T extends object>({
   onClick,
   marketplace,
   mode,
+  selectedColumns,
 }: Props<T>) => {
   const isMobile = window.innerWidth < 768;
+  const [filteredData, setFilteredData] = useState<T[]>([]);
+  const [filteredFields, setFilteredFields] = useState<Field<T>[]>([]);
+
+  useEffect(() => {
+    if (isMobile && selectedColumns) {
+      setFilteredFields(fields.filter((field) => selectedColumns.includes(field.value)));
+    } else {
+      setFilteredFields(fields);
+    }
+  }, [isMobile, fields, selectedColumns]);
+  useEffect(() => {
+    if (isMobile && selectedColumns) {
+      setFilteredData(
+        data.map((item) => {
+          return selectedColumns.reduce((newItem, columnName) => {
+            newItem[columnName] = item[columnName];
+            return newItem;
+          }, {} as FieldValue<T>);
+        }),
+      );
+    } else {
+      setFilteredData(data);
+    }
+  }, [isMobile, data, selectedColumns]);
 
   if (marketplace) {
     return (
       <div className={'w-full max-w-7xl' + className}>
-        {data.map((item, idx) => (
+        {filteredData.map((item, idx) => (
           <div
             key={`card_${idx}`}
             className='overflow-hidden backdrop-blur-md mb-[10px]'
           >
-            {fields.map((field, fdx) => (
+            {filteredFields.map((field, fdx) => (
               <div
                 key={`card_${idx}_field_${fdx}`}
                 className='flex bg-[#191919] px-[30px] max-lg:px-[10px] last:pb-[25px] first:rounded-t-[15px] last:rounded-b-[15px] first:pt-[15px]'
@@ -77,12 +106,12 @@ const Table = <T extends object>({
           </div>
         )}
         <div className={cn('rounded-[12px]', className)}>
-          {data.map((item, idx) => (
+          {filteredData.map((item, idx) => (
             <div
               key={`card_${idx}`}
               className='border border-[#FB0] rounded-[17px] overflow-hidden bg-black/60 backdrop-blur-md mb-[10px]'
             >
-              {fields.map((field, fdx) => (
+              {filteredFields.map((field, fdx) => (
                 <div
                   key={`card_${idx}_field_${fdx}`}
                   className='my-2 flex bg-black px-4'
@@ -109,9 +138,9 @@ const Table = <T extends object>({
       case 'additional':
         return (
           <>
-            {data.map((i, idx) => (
+            {filteredData.map((i, idx) => (
               <React.Fragment key={`table_${uuidv4()}`}>
-                {fields.map((f, fdx) => (
+                {filteredFields.map((f, fdx) => (
                   <tr key={`table-row_${uuidv4()}`}>
                     <th
                       key={`table-col_${idx}-value_${fdx}`}
@@ -134,7 +163,7 @@ const Table = <T extends object>({
       default:
         return (
           <React.Fragment key={`table_${uuidv4()}`}>
-            {data.map((i, idx) => (
+            {filteredData.map((i, idx) => (
               <tr
                 className={cn({
                   'bg-[#161A20] cursor-pointer': mode !== 'collections' && idx % 2 === 0,
@@ -142,7 +171,7 @@ const Table = <T extends object>({
                 })}
                 key={`table-row_${idx}`}
               >
-                {fields.map((f, fdx) => (
+                {filteredFields.map((f, fdx) => (
                   <td
                     key={`table-row_${idx}-value_${fdx}`}
                     className={cn('whitespace-nowrap w-fit text-center', {
@@ -192,7 +221,7 @@ const Table = <T extends object>({
           {mode !== 'additional' && (
             <thead>
               <tr>
-                {fields.map((i, idx) => (
+                {filteredFields.map((i, idx) => (
                   <th
                     key={`table-header_${idx}`}
                     className={cn('', {

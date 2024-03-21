@@ -19,6 +19,7 @@ const CollectionsPage = () => {
             data={collectionsMock}
             fields={collectionsFieldsTable}
             mode={'collections'}
+            selectedColumns={['image', 'collection', 'creationFee']}
           />
         </div>
       </div>
