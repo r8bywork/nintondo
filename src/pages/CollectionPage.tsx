@@ -10,7 +10,7 @@ const CollectionPage = () => {
         <CollectionHeader data={CollectionPageMock} />
         <div className='flex-grow overflow-y-auto mt-[45px]'>
           <FoundCounter
-            count={(10000).toLocaleString()}
+            count={10000}
             customText={'collections'}
           />
           <div className='mx-auto flex flex-wrap pt-[10px] gap-[10px]'>
