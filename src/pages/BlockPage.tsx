@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import CubeSvg from '../assets/Cube.svg?react';
@@ -10,42 +9,38 @@ import Skeleton from '../components/Placeholders/Skeleton.tsx';
 import Table from '../components/Table/Table';
 import Transactions from '../components/Transactions/Transactions';
 import { BlockData, Transaction } from '../interfaces/intefaces.ts';
+import {
+  useExplorerGetBlockById,
+  useExplorerGetBlockHeight,
+  useExplorerGetBlockStatus,
+  useExplorerGetTransactions,
+} from '../hooks/explorerapi.ts';
 
 const BlockPage = () => {
-  const [block, setBlock] = useState<BlockData[]>();
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [block, setBlock] = useState<BlockData[] | undefined>();
+  const [transactions, setTransactions] = useState<Transaction[] | undefined>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [transLoading, setTransLoading] = useState<boolean>(false);
-  const [lastBlock, setLastBlock] = useState<number>(0);
+  const [lastBlock, setLastBlock] = useState<number | undefined>(0);
   const navigate = useNavigate();
-
-  const getBlock = async (block: string) => {
-    const response = await axios.get(`https://bells.quark.blue/api/block/${block}`);
-    const blockStatus = await axios.get(`https://bells.quark.blue/api/block/${block}/status`);
-    return [{ ...response.data, ...blockStatus.data }];
-  };
-
-  const getTransactions = async (block: string, length?: number) => {
-    const response = await axios.get(
-      `https://bells.quark.blue/api/block/${block}/txs/${length || 0}`,
-    );
-    return response.data;
-  };
-
-  const getHeightBlock = async () => {
-    const response = await axios.get('https://bells.quark.blue/api/blocks/tip/height');
-    return response.data;
-  };
-
+  const getTransactions = useExplorerGetTransactions();
+  const getHeightBlock = useExplorerGetBlockHeight();
+  const getBlockById = useExplorerGetBlockById();
+  const getBlockStatus = useExplorerGetBlockStatus();
   const { hash } = useParams();
 
   useEffect(() => {
     if (hash) {
       setIsLoading(true);
       setTransLoading(true);
-      Promise.all([getBlock(hash), getTransactions(hash), getHeightBlock()])
-        .then(([blockRes, transactionsRes, height]) => {
-          setBlock(blockRes);
+      Promise.all([
+        getBlockStatus(hash),
+        getBlockById(hash),
+        getTransactions(hash),
+        getHeightBlock(),
+      ])
+        .then(([blockRes, blockStatus, transactionsRes, height]) => {
+          setBlock([{ ...blockRes, ...blockStatus }] as BlockData[]);
           setTransactions(transactionsRes);
           setLastBlock(height);
         })
@@ -59,7 +54,11 @@ const BlockPage = () => {
   const loadMore = async () => {
     if (hash && transactions) {
       const newTransactions = await getTransactions(hash, transactions.length + 25);
-      setTransactions((prevTransactions) => [...prevTransactions, ...newTransactions]);
+      setTransactions((prevTransactions) =>
+        prevTransactions !== undefined && newTransactions !== undefined
+          ? [...prevTransactions, ...newTransactions]
+          : newTransactions,
+      );
     }
   };
 

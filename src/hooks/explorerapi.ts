@@ -2,8 +2,10 @@ import { useCallback } from 'react';
 import axios from 'axios';
 import { fetchExplorer } from '../utils';
 import {
+  additionalFields,
   AddressStats,
   BlockData,
+  BlockStatus,
   MemPool,
   Transaction,
   TransactionData,
@@ -62,6 +64,56 @@ export const useExplorerGetLatestBlock = () => {
   return useCallback(async (height?: number | null): Promise<BlockData[] | undefined> => {
     return await fetchExplorer<BlockData[]>({
       path: `api/blocks/${height ?? ''}`,
+      json: true,
+      method: 'GET',
+    });
+  }, []);
+};
+
+export const useExplorerGetBlockById = () => {
+  return useCallback(async (block: string): Promise<BlockData[] | undefined> => {
+    return await fetchExplorer<BlockData[]>({
+      path: `api/block/${block}`,
+      json: true,
+      method: 'GET',
+    });
+  }, []);
+};
+
+export const useExplorerGetTransactions = () => {
+  return useCallback(async (block: string, length?: number): Promise<Transaction[] | undefined> => {
+    return await fetchExplorer<Transaction[]>({
+      path: `api/block/${block}/txs/${length || 0}`,
+      json: true,
+      method: 'GET',
+    });
+  }, []);
+};
+
+export const useExplorerGetBlockHeight = () => {
+  return useCallback(async (): Promise<number | undefined> => {
+    return await fetchExplorer<number>({
+      path: 'api/blocks/tip/height',
+      json: true,
+      method: 'GET',
+    });
+  }, []);
+};
+
+export const useExplorerGetBlockStatus = () => {
+  return useCallback(async (block: string): Promise<BlockStatus | undefined> => {
+    return await fetchExplorer<BlockStatus>({
+      path: `api/block/${block}/status`,
+      json: true,
+      method: 'GET',
+    });
+  }, []);
+};
+
+export const useExplorerGetTxOutspends = () => {
+  return useCallback(async (txid: string): Promise<additionalFields[] | undefined> => {
+    return await fetchExplorer<additionalFields[]>({
+      path: `api/tx/${txid}/outspends`,
       json: true,
       method: 'GET',
     });

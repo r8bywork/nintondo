@@ -44,9 +44,13 @@ export interface MemPool {
   fee_histogram: FeeHistogram[][];
 }
 
-export interface BlockData {
-  id: string;
+export interface BlockStatus {
   height: number;
+  in_best_chain: boolean;
+  next_best: string;
+}
+export interface BlockData extends BlockStatus {
+  id: string;
   version: number;
   timestamp: number;
   tx_count: number;
@@ -58,8 +62,6 @@ export interface BlockData {
   nonce: number;
   bits: number;
   difficulty: number;
-  in_best_chain: boolean;
-  next_best: string;
 }
 
 export interface Transaction {
