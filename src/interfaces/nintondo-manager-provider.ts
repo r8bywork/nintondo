@@ -47,6 +47,7 @@ export interface Ord {
   value: number;
   vout: number;
   inscriptionIndex?: number;
+  raw_hex: string;
 }
 
 export interface InscriptionMetaInfo {
