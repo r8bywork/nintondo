@@ -14,10 +14,13 @@ export default {
       },
       maxHeight: {
         128: '32rem',
+        160: '40rem',
         192: '48rem',
       },
       minHeight: {
         128: '32rem',
+        160: '40rem',
+        192: '48rem',
       },
     },
   },

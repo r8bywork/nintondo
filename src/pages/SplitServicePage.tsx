@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 import UtxoSelector from '@/components/SplitServiceComponents/UtxoSelector';
 import SplitVisualizer from '@/components/SplitServiceComponents/SplitVisualizer';
+import SplitSummary from '@/components/SplitServiceComponents/SplitSummary';
 
 const SplitServicePage = () => {
   const { address, verifiedAddress } = useNintondoManagerContext();
@@ -38,6 +39,35 @@ const SplitServicePage = () => {
       const index = prev.findIndex((f) => f.txid === ord.txid);
       return [...prev.slice(0, index), ...prev.slice(index + 1)];
     });
+  };
+
+  const inscriptionBurnAllHandler = (action: 'burn' | 'unburn') => {
+    setSelectedOrds((prev: Ord[]) =>
+      prev.map((o) => ({
+        ...o,
+        inscriptions: o.inscriptions.map((inscription) => ({
+          ...inscription,
+          burn: action === 'burn',
+        })),
+      })),
+    );
+  };
+
+  const inscriptionBurnHandler = (ord: Ord, action: 'burn' | 'unburn') => {
+    setSelectedOrds((prev: Ord[]) =>
+      prev.map((o) =>
+        o.txid === ord.txid
+          ? {
+              ...o,
+              inscriptions: o.inscriptions.map((inscription, index) =>
+                index === (o.inscriptionIndex ?? 0)
+                  ? { ...inscription, burn: action === 'burn' }
+                  : inscription,
+              ),
+            }
+          : o,
+      ),
+    );
   };
 
   useEffect(() => {
@@ -83,7 +113,7 @@ const SplitServicePage = () => {
   return (
     <div className={'bg-black'}>
       <div className='min-h-screen max-w-[1700px] mx-auto flex pt-[150px] flex-col text-white gap-4 text-white p-4'>
-        <div className='flex justify-center flex-col md:flex-row gap-4'>
+        <div className='flex justify-center flex-col lg:flex-row gap-4'>
           <UtxoSelector
             ords={ords}
             selectOrdHandler={selectedOrdHandler}
@@ -99,8 +129,11 @@ const SplitServicePage = () => {
             selectedOrds={selectedOrds}
             setSelectedOrds={setSelectedOrds}
             removeSelectedOrdHandler={removeSelectedOrdHandler}
+            inscriptionBurnHandler={inscriptionBurnHandler}
+            inscriptionBurnAllHandler={inscriptionBurnAllHandler}
           />
         </div>
+        <SplitSummary selectedOrds={selectedOrds} />
       </div>
     </div>
   );

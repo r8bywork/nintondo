@@ -55,4 +55,5 @@ export interface InscriptionMetaInfo {
   inscription_id: string;
   inscription_number: number;
   offset: number;
+  burn?: boolean;
 }
