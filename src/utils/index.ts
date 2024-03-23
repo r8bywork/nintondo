@@ -95,3 +95,25 @@ export const truncate = (str: string, { nPrefix = 4, nSuffix = 4 }: Params = {})
     ? `${str.slice(0, nPrefix)}...${str.slice(str.length - nSuffix)}`
     : str;
 };
+
+export const createHref = (query: Record<string, string>, params: URLSearchParams) => {
+  const queryParams = new URLSearchParams(params);
+  Object.entries(query).map(([key, value]) => {
+    if (value !== undefined) {
+      queryParams.set(key, value);
+    }
+  });
+  return queryParams.toString();
+};
+
+export const scrollToTopExplorerTable = () => {
+  const tableTop = document.getElementById('explorer')?.getBoundingClientRect();
+  const headerHeight = document.getElementById('header')?.getBoundingClientRect().height;
+
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  const top = tableTop!.top + scrollTop - headerHeight! - 5;
+  window.scrollTo({
+    top,
+    behavior: 'smooth',
+  });
+};

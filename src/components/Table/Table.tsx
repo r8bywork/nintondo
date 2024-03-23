@@ -1,7 +1,9 @@
 import cn from 'classnames';
 import React, { ReactNode, useEffect, useState } from 'react';
+import Arrow from '../../assets/TableArrow.svg?react';
 import { v4 as uuidv4 } from 'uuid';
 import s from './styles.module.scss';
+import Pagination from './Pagination.tsx';
 type Field<T extends object> = {
   [K in keyof T]: {
     name: string | ReactNode;
@@ -20,6 +22,12 @@ interface Props<T extends object> {
   marketplace?: boolean;
   mode?: table;
   selectedColumns?: (keyof T)[];
+  pagination?: {
+    recordsTotal: number;
+    currentPage?: number;
+    pageCount: number;
+    onPageChange: (page: number) => void;
+  };
 }
 type FieldValue<T> = {
   [K in keyof T]: T[K];
@@ -34,6 +42,7 @@ const Table = <T extends object>({
   marketplace,
   mode,
   selectedColumns,
+  pagination,
 }: Props<T>) => {
   const isMobile = window.innerWidth < 768;
   const [filteredData, setFilteredData] = useState<T[]>([]);
@@ -46,6 +55,7 @@ const Table = <T extends object>({
       setFilteredFields(fields);
     }
   }, [isMobile, fields, selectedColumns]);
+
   useEffect(() => {
     if (isMobile && selectedColumns) {
       setFilteredData(
@@ -201,6 +211,7 @@ const Table = <T extends object>({
       )}
 
       <div
+        id={'explorer'}
         className={cn(
           'mb-[20px] rounded-3xl',
           {
@@ -239,6 +250,21 @@ const Table = <T extends object>({
           <tbody>{TableMode(mode || '')}</tbody>
         </table>
       </div>
+      {pagination && (
+        <div>
+          <Pagination
+            activeClassName='bg-[#FFBB00] text-black'
+            leftBtnPlaceholder={<Arrow />}
+            rightBtnPlaceholder={<Arrow className={'rotate-180 flex'} />}
+            buttonsClassName='flex items-center justify-center w-auto min-w-[2.25rem] px-[6px] h-9 bg-[#191919] rounded-full'
+            currentPage={pagination.currentPage ?? 1}
+            arrowsClassName='h-full flex items-center p-[10px] bg-[#191919] rounded-[26px]'
+            className={'flex justify-center items-center gap-x-[10px] text-center align-middle'}
+            pageCount={pagination.pageCount}
+            onPageChange={pagination.onPageChange}
+          />
+        </div>
+      )}
     </div>
   );
 };

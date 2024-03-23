@@ -414,7 +414,7 @@ export const CollectionPageMock = {
 export const collectionsMock: Collection[] = [
   {
     image: ApeSmall,
-    collection: 'Bitcoin Apes',
+    collection: '1',
     supply: 10000,
     fileSize: 1464,
     avgFileSize: 228247,
@@ -424,7 +424,7 @@ export const collectionsMock: Collection[] = [
   },
   {
     image: ApeSmall,
-    collection: 'ABC',
+    collection: '2',
     supply: 7772,
     fileSize: 1464,
     avgFileSize: 228247,
@@ -434,7 +434,7 @@ export const collectionsMock: Collection[] = [
   },
   {
     image: ApeSmall,
-    collection: 'Ordinal Maxi Biz (OMB)',
+    collection: '3',
     supply: 1556,
     fileSize: 1464,
     avgFileSize: 228247,
@@ -444,7 +444,7 @@ export const collectionsMock: Collection[] = [
   },
   {
     image: ApeSmall,
-    collection: 'Bitcoin Apes',
+    collection: '4',
     supply: 10000,
     fileSize: 1464,
     avgFileSize: 228247,
@@ -454,7 +454,7 @@ export const collectionsMock: Collection[] = [
   },
   {
     image: ApeSmall,
-    collection: 'ABC',
+    collection: '5',
     supply: 7772,
     fileSize: 1464,
     avgFileSize: 228247,
@@ -464,7 +464,7 @@ export const collectionsMock: Collection[] = [
   },
   {
     image: ApeSmall,
-    collection: 'Ordinal Maxi Biz (OMB)',
+    collection: '6',
     supply: 1556,
     fileSize: 1464,
     avgFileSize: 228247,
@@ -474,7 +474,7 @@ export const collectionsMock: Collection[] = [
   },
   {
     image: ApeSmall,
-    collection: 'Bitcoin Apes',
+    collection: '7',
     supply: 10000,
     fileSize: 1464,
     avgFileSize: 228247,
@@ -484,7 +484,7 @@ export const collectionsMock: Collection[] = [
   },
   {
     image: ApeSmall,
-    collection: 'ABC',
+    collection: '8',
     supply: 7772,
     fileSize: 1464,
     avgFileSize: 228247,
