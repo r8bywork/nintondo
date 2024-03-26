@@ -1,15 +1,14 @@
-import { BURN_ADDRESS, ORD_VALUE } from '@/consts';
+import { BURN_ADDRESS, DEFAULT_FEE_RATE, ORD_VALUE } from '@/consts';
 import { Ord } from '@/interfaces/nintondo-manager-provider';
+import { gptFeeCalculate } from '@/utils';
 import { useNintondoManagerContext } from '@/utils/bell-provider';
 import { networks, Psbt } from 'belcoinjs-lib';
 
 export const useSplitOrds = () => {
-  const { address, verifiedAddress } = useNintondoManagerContext();
+  const { address, verifiedAddress, signPsbtInputs } = useNintondoManagerContext();
 
-  return (ords: Ord[]) => {
+  return async (ords: Ord[]) => {
     if (!address || !verifiedAddress) return;
-
-    let freedAmount = 0;
 
     const psbt = new Psbt({ network: networks.bitcoin });
     ords.forEach((f) => {
@@ -20,14 +19,44 @@ export const useSplitOrds = () => {
       });
     });
 
+    let change = 0;
+
     ords.forEach((utxo) => {
-      utxo.inscriptions.forEach((inscription) => {
+      const addedValues: number[] = [];
+      const sortedInscriptions = utxo.inscriptions.sort((a, b) => a.offset - b.offset);
+      sortedInscriptions.forEach((inscription) => {
+        const availableToFree =
+          inscription.offset - (addedValues.reduce((acc, v) => (acc += v), 0) + ORD_VALUE);
+
+        if (inscription.offset > 0 && availableToFree > 0) {
+          psbt.addOutput({
+            address,
+            value: availableToFree,
+          });
+          addedValues.push(availableToFree);
+        }
         psbt.addOutput({
           address: inscription.burn ? BURN_ADDRESS : address,
           value: ORD_VALUE,
         });
+        addedValues.push(ORD_VALUE);
       });
-      freedAmount += utxo.value - ORD_VALUE * utxo.inscriptions.filter((f) => f.burn).length;
+      change += utxo.value - addedValues.reduce((acc, v) => (acc += v), 0);
     });
+
+    if (change - gptFeeCalculate(ords.length, psbt.txOutputs.length + 1, DEFAULT_FEE_RATE) > 0)
+      psbt.addOutput({
+        address,
+        value: change - gptFeeCalculate(ords.length, psbt.txOutputs.length + 1, DEFAULT_FEE_RATE),
+      });
+    else {
+      throw new Error('FUCK');
+    }
+
+    const signedPsbtBase64 = await signPsbtInputs(psbt.toBase64());
+    if (!signedPsbtBase64) return;
+    const signedPsbt = Psbt.fromBase64(signedPsbtBase64);
+
+    console.log(signedPsbt.finalizeAllInputs().extractTransaction(true).toHex());
   };
 };
