@@ -39,6 +39,19 @@ export const fetchExplorer = async <T>({
   return await res.json();
 };
 
+export const fetchMarketInfo = async <T>({
+  path,
+  json = true,
+  ...props
+}: fetchProps): Promise<T | undefined> => {
+  const url = `${'http://0.0.0.0:8111/'}${path}`;
+  const res = await fetch(url.toString(), { ...props });
+
+  if (!json) return (await res.text()) as T;
+
+  return await res.json();
+};
+
 interface fetchProps extends RequestInit {
   method?: 'POST' | 'GET' | 'PUT' | 'DELETE';
   headers?: HeadersInit;

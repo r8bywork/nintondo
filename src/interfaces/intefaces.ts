@@ -126,18 +126,6 @@ export interface TransactionData {
   value: number;
 }
 
-export interface InscriptionInfo {
-  id: string;
-  ownedBy: string;
-  fileType: string;
-  fileSize: string;
-  created: string;
-  creationBlock: number;
-  creationTransaction: string;
-  creationFeeSats: number;
-  tags: string;
-}
-
 export interface TableData {
   latestBlock: BlockData[];
   latestTransactions: TransactionData[];

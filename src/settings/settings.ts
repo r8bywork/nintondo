@@ -274,7 +274,7 @@ export const filterConfig: FilterConfig = {
   styles: { boxShadow: '0 0 12px 0 rgba(255, 255, 255, 0.5)' },
   filters: [
     // { text: 'Trending', isActive: false },
-    { text: 'Newest', isActive: false },
+    { text: 'Newest', isActive: true },
     { text: 'Oldest', isActive: false },
     // { text: 'Top', isActive: false },
     // { text: 'Most Replies', isActive: false },
@@ -292,7 +292,7 @@ export const filterTypeConfig: FilterConfig = {
     { text: 'GIFs', isActive: false },
     { text: 'Videos', isActive: false },
     { text: 'Audio', isActive: false },
-    { text: 'SVGs', isActive: false },
+    { text: 'SVGs', isActive: true },
     { text: 'Text', isActive: false },
     { text: 'HTML', isActive: false },
     { text: 'JavaScript', isActive: false },
@@ -310,7 +310,7 @@ export const filterTimeConfig: FilterConfig = {
     { text: '1 Hour', isActive: false },
     { text: '1 Day', isActive: false },
     { text: '1 Week', isActive: false },
-    { text: '1 Month', isActive: false },
+    { text: '1 Month', isActive: true },
   ],
 };
 

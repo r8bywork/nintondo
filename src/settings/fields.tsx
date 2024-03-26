@@ -4,13 +4,13 @@ import CardTag from '../components/Card/CardTag/CardTag.tsx';
 import {
   AddressStats,
   BlockData,
-  InscriptionInfo,
   TransactionData,
   Vin,
   Vout,
   Transaction,
   Collection,
 } from '../interfaces/intefaces.ts';
+import { InscriptionInfo } from '../interfaces/inscriptions.ts';
 import { truncate } from '../utils';
 
 export type Field<T extends object> = {
@@ -384,23 +384,13 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
     ),
   },
   {
-    value: 'ownedBy',
+    value: 'owned_by',
     name: 'OWNED BY',
-    render: (value) => (
-      <>
-        <span className={'text-[#53DCFF]'}>
-          {truncate(value, {
-            nPrefix: 5,
-            nSuffix: 5,
-          })}
-        </span>
-      </>
-    ),
   },
   {
-    value: 'fileType',
+    value: 'file_type',
     name: 'FILE TYPE',
-    render: (value) => (
+    render: (value, data) => (
       <>
         <span className={'text-[#4b4b4b] items-center flex'}>
           <CardTag
@@ -408,13 +398,13 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
             active
             classNames={'leading-[23px]'}
           />
-          image/webp
+          {data.mime}
         </span>
       </>
     ),
   },
   {
-    value: 'fileSize',
+    value: 'file_size',
     name: 'FILE SIZE',
   },
   {
@@ -422,7 +412,7 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
     name: 'CREATED',
   },
   {
-    value: 'creationBlock',
+    value: 'ctreation_block',
     name: 'CREATION BLOCK',
     render: (value) => (
       <>
@@ -431,7 +421,7 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
     ),
   },
   {
-    value: 'creationTransaction',
+    value: 'ctreation_transaction',
     name: 'CREATION TRANSACTION',
     render: (value) => (
       <>
@@ -443,19 +433,6 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
         </span>
       </>
     ),
-  },
-  {
-    value: 'creationFeeSats',
-    name: 'CREATION FEE (sats)',
-    render: (value) => (
-      <>
-        <span>{value.toLocaleString()}</span>
-      </>
-    ),
-  },
-  {
-    value: 'tags',
-    name: 'TAGS',
   },
 ];
 
