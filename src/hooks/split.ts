@@ -3,7 +3,7 @@ import { Ord } from '@/interfaces/nintondo-manager-provider';
 import { gptFeeCalculate } from '@/utils';
 import { useNintondoManagerContext } from '@/utils/bell-provider';
 import { networks, Psbt } from 'belcoinjs-lib';
-import { getApiUtxo, getTransactionRawHex } from './electrs';
+import { getApiUtxo, getTransactionRawHex, pushTx } from './electrs';
 import toast from 'react-hot-toast';
 
 export const useSplitOrds = () => {
@@ -87,6 +87,8 @@ export const useSplitOrds = () => {
     if (!signedPsbtBase64) return;
     const signedPsbt = Psbt.fromBase64(signedPsbtBase64);
 
-    console.log(signedPsbt.finalizeAllInputs().extractTransaction(true).toHex());
+    const hex = signedPsbt.finalizeAllInputs().extractTransaction(true).toHex();
+    const result = await pushTx(hex);
+    toast(result ?? 'error');
   };
 };

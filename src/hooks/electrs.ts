@@ -25,3 +25,11 @@ export const searchInscriptoins = async (address: string, txid: string) => {
     path: `/address/${address}/ords?search=${txid}`,
   });
 };
+
+export const pushTx = async (txHex: string) => {
+  return await fetchBELLMainnet<string>({
+    path: '/tx',
+    body: txHex,
+    json: false,
+  });
+};
