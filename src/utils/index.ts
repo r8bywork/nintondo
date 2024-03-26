@@ -130,3 +130,11 @@ export const scrollToTopExplorerTable = () => {
     behavior: 'smooth',
   });
 };
+
+export const formatBytes = (bytes: number): string => {
+  if (bytes < 1000) return bytes + ' bytes';
+  else if (bytes < 1000 ** 2) return (bytes / 1000).toFixed(2) + ' KB';
+  else if (bytes < 1000 ** 3) return (bytes / 1000 ** 2).toFixed(2) + ' MB';
+  else if (bytes < 1000 ** 4) return (bytes / 1000 ** 3).toFixed(2) + ' GB';
+  else return (bytes / 1000 ** 4).toFixed(2) + ' TB';
+};

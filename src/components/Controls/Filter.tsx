@@ -20,9 +20,17 @@ interface FilterProps {
   };
   SvgIcon?: FC<SvgProps>;
   containParams?: HiddenElementStyles;
+  onChange: (filter: string) => void;
 }
 
-const Filter = ({ config, singleSelect, selectAll, SvgIcon, containParams }: FilterProps) => {
+const Filter = ({
+  config,
+  singleSelect,
+  selectAll,
+  SvgIcon,
+  containParams,
+  onChange,
+}: FilterProps) => {
   const [filters, setFilters] = useState<FilterConfig['filters']>(config.filters);
   const [selectAllBtn, setSelectAllBtn] = useState<boolean>(false);
   const { containerRef, itemsPerRow } = useItemsPerRow(
@@ -34,6 +42,7 @@ const Filter = ({ config, singleSelect, selectAll, SvgIcon, containParams }: Fil
     const updatedFilters = filters.map((filter) => ({ ...filter, isActive: !selectAllBtn }));
     setFilters(updatedFilters);
     setSelectAllBtn(!selectAllBtn);
+    onChange('all');
   };
 
   const handleFilterClick = (filter: FilterConfig['filters'][0]) => {
@@ -44,6 +53,7 @@ const Filter = ({ config, singleSelect, selectAll, SvgIcon, containParams }: Fil
           ? { ...f, isActive: !f.isActive }
           : f,
     );
+    onChange(updatedFilters.find((elem) => elem.isActive)?.text || '');
     setFilters(updatedFilters);
   };
 

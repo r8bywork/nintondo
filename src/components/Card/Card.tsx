@@ -36,12 +36,14 @@ const Card = ({ onClick, text, date, tags, BigCard, image }: CardProps) => {
       }] bg-[#1A1A1A] rounded-[15px] p-[10px]`}
       onClick={onClick}
     >
-      <AsyncImage
-        src={`http://0.0.0.0:8111/pub/preview/${image}`}
-        style={{ width: imageSize, height: imageSize }}
-        loader={<div className={''}></div>}
-        className={'rounded-[10px] mb-[18px]'}
-      />
+      <div style={{ imageRendering: 'pixelated' }}>
+        <AsyncImage
+          src={`http://0.0.0.0:8111/pub/preview/${image}`}
+          style={{ width: imageSize, height: imageSize }}
+          loader={<div className={''}></div>}
+          className={'rounded-[10px] mb-[18px]'}
+        />
+      </div>
       <div
         className={classNames('flex justify-between items-center mb-[16px]', {
           ['mb-[20px]']: BigCard,

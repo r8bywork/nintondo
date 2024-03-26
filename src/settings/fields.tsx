@@ -11,7 +11,7 @@ import {
   Collection,
 } from '../interfaces/intefaces.ts';
 import { InscriptionInfo } from '../interfaces/inscriptions.ts';
-import { truncate } from '../utils';
+import { formatBytes, truncate } from '../utils';
 
 export type Field<T extends object> = {
   [K in keyof T]: {
@@ -406,6 +406,9 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
   {
     value: 'file_size',
     name: 'FILE SIZE',
+    render: (value) => (
+      <span className={'text-[#4b4b4b] items-center flex'}>{formatBytes(value)}</span>
+    ),
   },
   {
     value: 'created',

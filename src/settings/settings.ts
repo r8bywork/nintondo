@@ -273,14 +273,8 @@ export const filterConfig: FilterConfig = {
   activeColor: '#FFFFFF',
   styles: { boxShadow: '0 0 12px 0 rgba(255, 255, 255, 0.5)' },
   filters: [
-    // { text: 'Trending', isActive: false },
     { text: 'Newest', isActive: true },
     { text: 'Oldest', isActive: false },
-    // { text: 'Top', isActive: false },
-    // { text: 'Most Replies', isActive: false },
-    // { text: 'Oldest Sat', isActive: false },
-    // { text: 'Largest File', isActive: false },
-    { text: 'Highest Fee', isActive: false },
   ],
 };
 
@@ -292,13 +286,12 @@ export const filterTypeConfig: FilterConfig = {
     { text: 'GIFs', isActive: false },
     { text: 'Videos', isActive: false },
     { text: 'Audio', isActive: false },
-    { text: 'SVGs', isActive: true },
+    { text: 'SVGs', isActive: false },
     { text: 'Text', isActive: false },
     { text: 'HTML', isActive: false },
     { text: 'JavaScript', isActive: false },
     { text: 'Markdown', isActive: false },
     { text: 'Parents', isActive: false },
-    // { text: 'Games', isActive: false },
     { text: '3D', isActive: false },
   ],
 };

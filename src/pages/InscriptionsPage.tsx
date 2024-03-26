@@ -11,25 +11,46 @@ import { InscriptionCards } from '../interfaces/inscriptions.ts';
 import Pagination from '../components/Table/Pagination.tsx';
 import Arrow from '../assets/TableArrow.svg?react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../redux/store/store.ts';
+import { selectTimeFilter } from '../redux/slices/timeFilterSlice.ts';
+import { selectTypeFilter } from '../redux/slices/typeFiltersSlice.ts';
+import { selectSortByFilter } from '../redux/slices/sortByFiltersSlice.ts';
 const InscriptionsPage = () => {
   const navigate = useNavigate();
   const [inscriptions, setInscriptions] = useState<InscriptionCards>();
   const [page, setPage] = useState(0);
-  const [sortBy] = useState('newest');
-  const [contentFilter] = useState('all');
+  const timeFilters = useSelector((state: RootState) => state.timeFilters);
+  const contentFilter = useSelector((state: RootState) => state.typeFilters);
+  const sortBy = useSelector((state: RootState) => state.sortByFilters);
+  const dispatch: AppDispatch = useDispatch();
   const getInscriptions = useExplorerGetInscriptionsList();
+
   useEffect(() => {
-    getInscriptions(page, sortBy, contentFilter)
+    getInscriptions(page, sortBy.selectedSortByFilter, contentFilter.selectedTypeFilter)
       .then((data) => {
         setInscriptions(data);
+        data && page > data.pages ? setPage(0) : null;
       })
       .catch((error) => {
         console.error('Ошибка при получении списка инскрипций:', error);
       });
-  }, [page, sortBy, contentFilter]);
+  }, [page, sortBy, contentFilter, timeFilters]);
 
   const onPageChange = (newPage: number) => {
     setPage(newPage);
+  };
+
+  const handleTimeFilterChange = (filter: string) => {
+    dispatch(selectTimeFilter(filter.split(' ')[1].toLowerCase()));
+  };
+
+  const handleTypeFilterChange = (filter: string) => {
+    dispatch(selectTypeFilter(filter.toLowerCase()));
+  };
+
+  const handleSortByFilterChange = (filter: string) => {
+    dispatch(selectSortByFilter(filter.toLowerCase()));
   };
 
   return (
@@ -41,16 +62,21 @@ const InscriptionsPage = () => {
             <Filter
               singleSelect
               config={filterConfig}
+              onChange={handleSortByFilterChange}
             />
             <Filter
+              selectAll={{ text: 'All' }}
               singleSelect
               SvgIcon={Svg}
               config={filterTypeConfig}
+              onChange={handleTypeFilterChange}
             />
             <Filter
               selectAll={{ text: 'All Time' }}
               SvgIcon={TimeSvg}
               config={filterTimeConfig}
+              onChange={handleTimeFilterChange}
+              singleSelect
               containParams={{
                 fontSize: '16px',
                 marginRight: '0px',
