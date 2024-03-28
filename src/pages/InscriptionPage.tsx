@@ -44,6 +44,11 @@ const InscriptionPage = () => {
               };
               reader.readAsDataURL(blob);
             });
+          } else if (contentType && contentType.includes('model')) {
+            return response.text().then((json) => {
+              setType('text');
+              setImage(json);
+            });
           }
         })
         .catch((error) => console.error('Ошибка загрузки данных изображения:', error));
