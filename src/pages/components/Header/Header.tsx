@@ -10,7 +10,7 @@ import { Header } from '../../../interfaces/intefaces.ts';
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const headerRef = useRef<HTMLDivElement | null>(null);
-  const { nintondoExists, address, connectWallet } = useNintondoManagerContext();
+  const { address, connectWallet } = useNintondoManagerContext();
   const [config, setConfig] = useState<Header[]>(HeaderLinks);
   const location = useLocation();
 
@@ -21,7 +21,6 @@ const Header = () => {
   }, [location]);
 
   useEffect(() => {
-    console.log(nintondoExists, address, connectWallet);
     const handleClickOutside = (event: MouseEvent) => {
       if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
         setIsMenuOpen(false);
@@ -61,8 +60,6 @@ const Header = () => {
       </div>
       <nav
         className={cn('max-md:pb-[20px] md:flex', {
-          // max-md:absolute
-          // max-md:bg-[#061D3C]
           hidden: !isMenuOpen,
         })}
       >
@@ -71,7 +68,6 @@ const Header = () => {
             key={link.name}
             text={link.name}
             href={link.url}
-            // className='md:[&:not(:last-child)]:mr-28 text-white'
             className={cn('md:[&:not(:last-child)]:mr-28 text-white', {
               ['text-yellow-500 underline']: location.pathname === link.url,
             })}

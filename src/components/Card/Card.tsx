@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { AsyncImage } from 'loadable-image';
 interface CardProps {
   onClick?: () => void;
-  image: string | undefined;
+  image: string;
   text?: number;
   date?: string;
   tags?: {
@@ -14,6 +14,7 @@ interface CardProps {
     active?: boolean;
   }[];
   BigCard?: boolean;
+  contentType: string;
 }
 
 const formattedString = (startDate: Date, endDate: Date) => {
@@ -24,7 +25,7 @@ const formattedString = (startDate: Date, endDate: Date) => {
   return differenceInDays === 1 ? '1 day ago' : `${differenceInDays} days ago`;
 };
 
-const Card = ({ onClick, text, date, tags, BigCard, image }: CardProps) => {
+const Card = ({ onClick, text, date, tags, BigCard, image, contentType }: CardProps) => {
   const today = new Date();
   const specifiedDate = new Date(date ? date : '');
   const imageSize = BigCard ? '480px' : '180px';
@@ -36,14 +37,27 @@ const Card = ({ onClick, text, date, tags, BigCard, image }: CardProps) => {
       }] bg-[#1A1A1A] rounded-[15px] p-[10px]`}
       onClick={onClick}
     >
-      <div style={{ imageRendering: 'pixelated' }}>
-        <AsyncImage
-          src={`http://0.0.0.0:8111/pub/preview/${image}`}
-          style={{ width: imageSize, height: imageSize }}
-          loader={<div className={''}></div>}
-          className={'rounded-[10px] mb-[18px]'}
-        />
-      </div>
+      {contentType === 'image' ? (
+        <div style={{ imageRendering: 'pixelated' }}>
+          <AsyncImage
+            src={image}
+            style={{ width: imageSize, height: imageSize }}
+            loader={<div className={''}></div>}
+            className={'rounded-[10px] mb-[18px]'}
+          />
+        </div>
+      ) : (
+        <div
+          className='mb-[18px] text-white flex flex-col overflow-hidden '
+          style={{
+            width: imageSize,
+            height: imageSize,
+            overflowWrap: 'anywhere',
+          }}
+        >
+          <pre className={'whitespace-pre-wrap'}>{image}</pre>
+        </div>
+      )}
       <div
         className={classNames('flex justify-between items-center mb-[16px]', {
           ['mb-[20px]']: BigCard,

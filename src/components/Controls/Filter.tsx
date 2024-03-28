@@ -39,10 +39,14 @@ const Filter = ({
   );
 
   const handleSelectAll = () => {
-    const updatedFilters = filters.map((filter) => ({ ...filter, isActive: !selectAllBtn }));
+    const areAllFiltersActive = filters.every((filter) => filter.isActive);
+    const updatedFilters = filters.map((filter, index) => ({
+      ...filter,
+      isActive: !areAllFiltersActive || index === 0,
+    }));
+    onChange(areAllFiltersActive ? filters[0].text : 'all');
     setFilters(updatedFilters);
-    setSelectAllBtn(!selectAllBtn);
-    onChange('all');
+    setSelectAllBtn(!areAllFiltersActive);
   };
 
   const handleFilterClick = (filter: FilterConfig['filters'][0]) => {

@@ -27,7 +27,12 @@ const InscriptionsPage = () => {
   const getInscriptions = useExplorerGetInscriptionsList();
 
   useEffect(() => {
-    getInscriptions(page, sortBy.selectedSortByFilter, contentFilter.selectedTypeFilter)
+    getInscriptions(
+      page,
+      sortBy.selectedSortByFilter,
+      contentFilter.selectedTypeFilter,
+      timeFilters.selectedTimeFilter,
+    )
       .then((data) => {
         setInscriptions(data);
         data && page > data.pages ? setPage(0) : null;
@@ -42,7 +47,7 @@ const InscriptionsPage = () => {
   };
 
   const handleTimeFilterChange = (filter: string) => {
-    dispatch(selectTimeFilter(filter.split(' ')[1].toLowerCase()));
+    dispatch(selectTimeFilter(filter !== 'all' ? filter.split(' ')[1].toLowerCase() : filter));
   };
 
   const handleTypeFilterChange = (filter: string) => {
@@ -77,12 +82,6 @@ const InscriptionsPage = () => {
               config={filterTimeConfig}
               onChange={handleTimeFilterChange}
               singleSelect
-              containParams={{
-                fontSize: '16px',
-                marginRight: '0px',
-                paddingLeft: '0px',
-                paddingRight: '0px',
-              }}
             />
           </div>
         </div>
@@ -98,12 +97,13 @@ const InscriptionsPage = () => {
                 {inscriptions?.inscriptions.map((card, index) => (
                   <Card
                     onClick={() => navigate(`/marketplace/inscriptions/${card.id}`)}
-                    image={card.id}
+                    image={`http://0.0.0.0:8111/pub/preview/${card.id}`}
                     key={index}
                     text={card.number}
                     date={card.created}
                     tags={[{ tagText: card.file_type, active: true }]}
                     BigCard={false}
+                    contentType={'image'}
                   />
                 ))}
               </div>

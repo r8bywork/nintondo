@@ -28,8 +28,9 @@ export const useExplorerGetInscriptionsList = () => {
       page?: number,
       sortBy?: string,
       contentFilter?: string,
+      timeFilter?: string,
     ): Promise<InscriptionCards | undefined> => {
-      const url = `pub/search?&page=${page}&sort_by=${sortBy}&content_filter=${contentFilter}`;
+      const url = `pub/search?&page=${page}&sort_by=${sortBy}&content_filter=${contentFilter}&time_filter=${timeFilter}`;
       return await fetchMarketInfo<InscriptionCards>({
         path: url,
         json: true,

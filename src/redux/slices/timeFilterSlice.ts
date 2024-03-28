@@ -5,7 +5,7 @@ interface TimeFiltersState {
 }
 
 const initialState: TimeFiltersState = {
-  selectedTimeFilter: 'month',
+  selectedTimeFilter: 'all',
 };
 
 const timeFiltersSlice = createSlice({

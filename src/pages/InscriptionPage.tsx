@@ -5,10 +5,7 @@ import Title from '../components/Title.tsx';
 import Card from '../components/Card/Card.tsx';
 import Table from '../components/Table/Table.tsx';
 import { InscriptionInfoFields } from '../settings/fields.tsx';
-import {
-  useExplorerGetInscriptionImage,
-  useExplorerGetInscriptionInfo,
-} from '../hooks/marketinfo.ts';
+import { useExplorerGetInscriptionInfo } from '../hooks/marketinfo.ts';
 import { useEffect, useState } from 'react';
 import { InscriptionInfo } from '../interfaces/inscriptions.ts';
 
@@ -17,26 +14,37 @@ const InscriptionPage = () => {
   const navigate = useNavigate();
   const [data, setData] = useState<InscriptionInfo[]>([]);
   const [image, setImage] = useState<string>('');
+  const [type, setType] = useState<string>();
   const getInscriptionInfo = useExplorerGetInscriptionInfo();
-  const getInscriptionImage = useExplorerGetInscriptionImage();
   useEffect(() => {
     if (hash) {
-      Promise.all([getInscriptionInfo(hash), getInscriptionImage(hash)]).then(
-        ([reqData, reqImage]) => {
-          if (reqData && reqImage !== null && reqImage !== undefined) {
-            setData([reqData] as InscriptionInfo[]);
+      Promise.all([getInscriptionInfo(hash)]).then(([reqData]) => {
+        if (reqData !== null) {
+          setData([reqData] as InscriptionInfo[]);
+        }
+      });
+      fetch(`http://0.0.0.0:8111/pub/content/${hash}`)
+        .then((response) => {
+          const contentType = response.headers.get('content-type');
+          if (
+            contentType &&
+            (contentType.includes('text') || contentType.includes('application/'))
+          ) {
+            return response.text().then((json) => {
+              setType('text');
+              setImage(json);
+            });
+          } else if (contentType && contentType.includes('image/')) {
+            return response.blob().then((blob) => {
+              const reader = new FileReader();
+              reader.onload = () => {
+                const base64Data = reader.result as string;
+                setType('image');
+                setImage(base64Data);
+              };
+              reader.readAsDataURL(blob);
+            });
           }
-        },
-      );
-      fetch(`http://0.0.0.0:8111/pub/preview/${hash}`)
-        .then((response) => response.blob())
-        .then((blob) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const base64Data = reader.result as string;
-            setImage(base64Data);
-          };
-          reader.readAsDataURL(blob);
         })
         .catch((error) => console.error('Ошибка загрузки данных изображения:', error));
     }
@@ -55,12 +63,13 @@ const InscriptionPage = () => {
             </button>
             <Search placeholder={'Search'} />
           </div>
-          {image && data && (
+          {image && data[0] && type && (
             <Card
               text={data[0].number}
               date={data[0].created}
               tags={[{ tagText: data[0].file_type, active: true }]}
-              image={data[0].id}
+              image={image}
+              contentType={type}
               BigCard
             />
           )}
