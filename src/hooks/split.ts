@@ -1,4 +1,4 @@
-import { BURN_ADDRESS, DEFAULT_FEE_RATE, ORD_VALUE } from '@/consts';
+import { DEFAULT_FEE_RATE, ORD_VALUE } from '@/consts';
 import { Ord } from '@/interfaces/nintondo-manager-provider';
 import { gptFeeCalculate } from '@/utils';
 import { useNintondoManagerContext } from '@/utils/bell-provider';
@@ -21,7 +21,7 @@ export const useSplitOrds = () => {
       });
     });
 
-    ords.forEach(async (utxo, i) => {
+    for (const [i, utxo] of ords.entries()) {
       const addedValues: number[] = [];
       const sortedInscriptions = utxo.inscriptions.sort((a, b) => a.offset - b.offset);
       sortedInscriptions.forEach((inscription) => {
@@ -36,7 +36,7 @@ export const useSplitOrds = () => {
           addedValues.push(availableToFree);
         }
         psbt.addOutput({
-          address: inscription.burn ? BURN_ADDRESS : address,
+          address: address,
           value: ORD_VALUE,
         });
         addedValues.push(ORD_VALUE);
@@ -52,22 +52,37 @@ export const useSplitOrds = () => {
             value: lastOutputValue,
           });
         } else {
+          if (utxo.value - addedValues.reduce((acc, v) => (acc += v), 0) > 1000)
+            psbt.addOutput({
+              address: address,
+              value: utxo.value - addedValues.reduce((acc, v) => (acc += v), 0),
+            });
           const requiredFee = gptFeeCalculate(
             ords.length + 1,
             psbt.txOutputs.length + 1,
             DEFAULT_FEE_RATE,
           );
           const utxos = await getApiUtxo(address);
-          if (!utxos)
-            return toast.error(`You need additional ${requiredFee + 1000} BELL in order to split`);
+          if (!utxos || !utxos.length)
+            return toast.error(
+              `You need additional ${(requiredFee + 1000) / 10 ** 8} BELL in order to split`,
+            );
           const feeValues: number[] = [];
-          for (const f of utxos) {
+          for (const [i, f] of utxos.entries()) {
             psbt.addInput({
               hash: f.txid,
               index: f.vout,
               nonWitnessUtxo: Buffer.from((await getTransactionRawHex(f.txid))!, 'hex'),
             });
-            if (feeValues.reduce((acc, v) => (acc += v), 0) > requiredFee) break;
+            feeValues.push(f.value);
+            if (
+              i === utxos.length - 1 &&
+              feeValues.reduce((acc, v) => (acc += v), 0) - 1000 <= requiredFee
+            )
+              return toast.error(
+                `You need additional ${requiredFee + 1000} BELL in order to split`,
+              );
+            if (feeValues.reduce((acc, v) => (acc += v), 0) - 1000 > requiredFee) break;
           }
           psbt.addOutput({
             address,
@@ -75,13 +90,13 @@ export const useSplitOrds = () => {
           });
         }
       } else {
-        if (utxo.value - addedValues.reduce((acc, v) => (acc += v), 0) > 0)
+        if (utxo.value - addedValues.reduce((acc, v) => (acc += v), 0) > 1000)
           psbt.addOutput({
             address: address,
             value: utxo.value - addedValues.reduce((acc, v) => (acc += v), 0),
           });
       }
-    });
+    }
 
     const signedPsbtBase64 = await signPsbtInputs(psbt.toBase64());
     if (!signedPsbtBase64) return;
@@ -89,6 +104,6 @@ export const useSplitOrds = () => {
 
     const hex = signedPsbt.finalizeAllInputs().extractTransaction(true).toHex();
     const result = await pushTx(hex);
-    toast(result ?? 'error');
+    toast((result?.length ?? 'error') === 64 ? 'Success' : result!);
   };
 };

@@ -20,7 +20,7 @@ export const CONTENT_URL = 'http://93.125.14.5:8111/pub/content';
 
 export const DUMMY_UTXO_VALUE = 10_000;
 export const DEFAULT_FEE_RATE = 100;
-export const ORD_VALUE = 100_000;
+export const ORD_VALUE = 1000;
 
 export const FEE_ADDRESS = 'BMPNoA3NXhWoL89AkvFpYHEv8orNpUn5qq';
 export const BURN_ADDRESS = 'BHZELfz5GGTxZDYVzfv9XFcg2hBVTctHjS';

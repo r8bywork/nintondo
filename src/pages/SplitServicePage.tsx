@@ -41,33 +41,13 @@ const SplitServicePage = () => {
     });
   };
 
-  const inscriptionBurnAllHandler = (action: 'burn' | 'unburn') => {
-    setSelectedOrds((prev: Ord[]) =>
-      prev.map((o) => ({
-        ...o,
-        inscriptions: o.inscriptions.map((inscription) => ({
-          ...inscription,
-          burn: action === 'burn',
-        })),
-      })),
-    );
-  };
-
-  const inscriptionBurnHandler = (ord: Ord, action: 'burn' | 'unburn') => {
-    setSelectedOrds((prev: Ord[]) =>
-      prev.map((o) =>
-        o.txid === ord.txid
-          ? {
-              ...o,
-              inscriptions: o.inscriptions.map((inscription, index) =>
-                index === (o.inscriptionIndex ?? 0)
-                  ? { ...inscription, burn: action === 'burn' }
-                  : inscription,
-              ),
-            }
-          : o,
-      ),
-    );
+  const updateSend = (ord: Ord) => {
+    setSelectedOrds((prev) => {
+      const index = prev.findIndex((f) => f.txid === ord.txid);
+      const updatedOrds = prev;
+      updatedOrds[index] = ord;
+      return updatedOrds;
+    });
   };
 
   useEffect(() => {
@@ -129,8 +109,7 @@ const SplitServicePage = () => {
             selectedOrds={selectedOrds}
             setSelectedOrds={setSelectedOrds}
             removeSelectedOrdHandler={removeSelectedOrdHandler}
-            inscriptionBurnHandler={inscriptionBurnHandler}
-            inscriptionBurnAllHandler={inscriptionBurnAllHandler}
+            updateSend={updateSend}
           />
         </div>
         <SplitSummary selectedOrds={selectedOrds} />

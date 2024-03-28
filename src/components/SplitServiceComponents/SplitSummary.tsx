@@ -19,13 +19,6 @@ const SplitSummary: FC<SplitSummaryProps> = ({ selectedOrds }) => {
           Total inscriptions: {selectedOrds.reduce((acc, val) => acc + val.inscriptions.length, 0)}
         </p>
         <p>
-          Total save inscriptions:{' '}
-          {selectedOrds.reduce(
-            (acc, val) => (acc += val.inscriptions.filter((f) => !f.burn).length),
-            0,
-          )}
-        </p>
-        <p>
           Total bells save:{' '}
           <span className='text-lime-500'>
             {selectedOrds.reduce((acc, val) => acc + val.available_to_free, 0) / 10 ** 8} BEL

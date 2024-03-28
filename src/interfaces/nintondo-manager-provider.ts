@@ -48,6 +48,7 @@ export interface Ord {
   vout: number;
   inscriptionIndex?: number;
   raw_hex: string;
+  sendToAddress?: string;
 }
 
 export interface InscriptionMetaInfo {
@@ -56,5 +57,4 @@ export interface InscriptionMetaInfo {
   inscription_id: string;
   inscription_number: number;
   offset: number;
-  burn?: boolean;
 }

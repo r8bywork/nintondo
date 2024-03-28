@@ -31,5 +31,6 @@ export const pushTx = async (txHex: string) => {
     path: '/tx',
     body: txHex,
     json: false,
+    method: 'POST',
   });
 };
