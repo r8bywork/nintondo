@@ -16,34 +16,44 @@ import { AppDispatch, RootState } from '../redux/store/store.ts';
 import { selectTimeFilter } from '../redux/slices/timeFilterSlice.ts';
 import { selectTypeFilter } from '../redux/slices/typeFiltersSlice.ts';
 import { selectSortByFilter } from '../redux/slices/sortByFiltersSlice.ts';
+import Skeleton from '../components/Placeholders/Skeleton.tsx';
+import { createHref } from '../utils';
 const InscriptionsPage = () => {
   const navigate = useNavigate();
   const [inscriptions, setInscriptions] = useState<InscriptionCards>();
-  const [page, setPage] = useState(0);
   const timeFilters = useSelector((state: RootState) => state.timeFilters);
   const contentFilter = useSelector((state: RootState) => state.typeFilters);
   const sortBy = useSelector((state: RootState) => state.sortByFilters);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const dispatch: AppDispatch = useDispatch();
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const page = urlSearchParams.get('page');
+  const [currentPage, setCurrentPage] = useState(Number(page ? parseInt(page, 10) - 1 : 0));
+
   const getInscriptions = useExplorerGetInscriptionsList();
 
   useEffect(() => {
+    setIsLoading(true);
     getInscriptions(
-      page,
+      currentPage,
       sortBy.selectedSortByFilter,
       contentFilter.selectedTypeFilter,
       timeFilters.selectedTimeFilter,
     )
       .then((data) => {
         setInscriptions(data);
-        data && page > data.pages ? setPage(0) : null;
+        data && currentPage > data.pages ? setCurrentPage(0) : null;
       })
       .catch((error) => {
         console.error('Ошибка при получении списка инскрипций:', error);
       });
-  }, [page, sortBy, contentFilter, timeFilters]);
+    setIsLoading(false);
+  }, [currentPage, sortBy, contentFilter, timeFilters]);
 
   const onPageChange = (newPage: number) => {
-    setPage(newPage);
+    const params = createHref({ page: String(newPage + 1) }, urlSearchParams);
+    window.history.pushState({}, '', `${window.location.pathname}?${params}`);
+    setCurrentPage(newPage);
   };
 
   const handleTimeFilterChange = (filter: string) => {
@@ -86,7 +96,7 @@ const InscriptionsPage = () => {
           </div>
         </div>
         <div className='flex-grow overflow-y-auto'>
-          {inscriptions && (
+          {inscriptions && !isLoading ? (
             <>
               <FoundCounter
                 count={inscriptions?.count}
@@ -112,7 +122,7 @@ const InscriptionsPage = () => {
                 leftBtnPlaceholder={<Arrow />}
                 rightBtnPlaceholder={<Arrow className={'rotate-180 flex'} />}
                 buttonsClassName='flex items-center justify-center w-auto min-w-[2.25rem] px-[6px] h-9 bg-[#191919] rounded-full'
-                currentPage={page}
+                currentPage={currentPage}
                 arrowsClassName='h-full flex items-center p-[10px] bg-[#191919] rounded-[26px]'
                 className={
                   'text-white flex justify-center pt-[30px] pb-[30px] items-center gap-x-[10px] text-center align-middle'
@@ -121,6 +131,8 @@ const InscriptionsPage = () => {
                 onPageChange={onPageChange}
               />
             </>
+          ) : (
+            <Skeleton classNames='h-[80dvh]' />
           )}
         </div>
       </div>

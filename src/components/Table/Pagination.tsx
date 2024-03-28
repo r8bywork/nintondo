@@ -53,8 +53,8 @@ const Pagination: FC<Props> = ({
   const halfCount = Math.floor(visiblePageButtonsCount / 2);
 
   const visiblePages = () => {
-    let startPage = currentPage - halfCount > 0 ? currentPage - halfCount : 1;
-    let endPage = currentPage + halfCount <= pageCount ? currentPage + halfCount : pageCount;
+    let startPage = currentPage - halfCount > 0 ? currentPage - halfCount : 0;
+    let endPage = currentPage + halfCount < pageCount ? currentPage + halfCount : pageCount - 1;
 
     if (endPage - startPage + 1 < visiblePageButtonsCount) {
       if (startPage === 1) {
@@ -64,14 +64,13 @@ const Pagination: FC<Props> = ({
       }
     }
 
-    return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+    return Array.from({ length: endPage - startPage + 2 }, (_, i) => startPage + i);
   };
 
   const shouldShowLeftPage = currentPage - Math.floor(visiblePageButtonsCount / 2) > 1;
   const shouldShowLeftDots = currentPage - Math.floor(visiblePageButtonsCount / 2) > 2;
   const shouldShowRightPage = currentPage + Math.floor(visiblePageButtonsCount / 2) < pageCount;
   const shouldShowRightDots = currentPage + Math.floor(visiblePageButtonsCount / 2) < pageCount - 1;
-
   const handlePageChange = (page: number) => {
     if (page !== currentPage) {
       onPageChange(page);
@@ -81,8 +80,8 @@ const Pagination: FC<Props> = ({
   const LinkItem: FC<{ page: number }> = ({ page }) => (
     <button
       key={page}
-      onClick={() => handlePageChange(page)}
-      className={`${buttonsClassName}${currentPage === page ? ` ${activeClassName}` : ''}`}
+      onClick={() => handlePageChange(page - 1)} // Уменьшаем на 1 для корректной внутренней логики
+      className={`${buttonsClassName}${currentPage === page - 1 ? ` ${activeClassName}` : ''}`}
     >
       {page}
     </button>
@@ -90,7 +89,7 @@ const Pagination: FC<Props> = ({
 
   return (
     <div className={className}>
-      {currentPage > 1 && leftBtnPlaceholder && visiblePageButtonsCount > 4 && (
+      {currentPage > 0 && leftBtnPlaceholder && visiblePageButtonsCount > 4 && (
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           className={arrowsClassName}
@@ -103,12 +102,12 @@ const Pagination: FC<Props> = ({
       {visiblePages().map((pageNumber) => (
         <LinkItem
           key={`page-${pageNumber}`}
-          page={pageNumber}
+          page={pageNumber + 1}
         />
       ))}
       {shouldShowRightDots && <span className={cn(buttonsClassName, 'select-none')}>...</span>}
-      {shouldShowRightPage && <LinkItem page={pageCount} />}
-      {currentPage < pageCount && rightBtnPlaceholder && visiblePageButtonsCount > 4 && (
+      {shouldShowRightPage && <LinkItem page={pageCount + 1} />}
+      {currentPage < pageCount - 1 && rightBtnPlaceholder && visiblePageButtonsCount > 4 && (
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           className={arrowsClassName}
