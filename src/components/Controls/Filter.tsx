@@ -1,5 +1,5 @@
 import FilterTag from './components/FilterTag.tsx';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import useItemsPerRow from '../../hooks/useItemsPerRow.ts';
 import { FilterConfig } from '../../interfaces/intefaces.ts';
 
@@ -21,50 +21,38 @@ interface FilterProps {
   SvgIcon?: FC<SvgProps>;
   containParams?: HiddenElementStyles;
   onChange: (filter: string) => void;
+  initialState: string;
 }
 
 const Filter = ({
   config,
-  singleSelect,
   selectAll,
   SvgIcon,
   containParams,
   onChange,
+  initialState,
 }: FilterProps) => {
-  const [filters, setFilters] = useState<FilterConfig['filters']>(config.filters);
-  const [selectAllBtn, setSelectAllBtn] = useState<boolean>(false);
+  const [filters] = useState<FilterConfig['filters']>(config.filters);
   const { containerRef, itemsPerRow } = useItemsPerRow(
     config.filters.map((elem) => elem.text),
     containParams,
   );
+  const [selectedFilter, setSelectedFilter] = useState<string>(initialState || '');
 
   const handleSelectAll = () => {
-    const areAllFiltersActive = filters.every((filter) => filter.isActive);
-    const updatedFilters = filters.map((filter, index) => ({
-      ...filter,
-      isActive: !areAllFiltersActive || index === 0,
-    }));
-    onChange(areAllFiltersActive ? filters[0].text : 'all');
-    setFilters(updatedFilters);
-    setSelectAllBtn(!areAllFiltersActive);
+    if (selectedFilter === 'all') {
+      setSelectedFilter(filters[0].text.toLowerCase());
+      onChange(filters[0].text.toLowerCase());
+    } else {
+      setSelectedFilter('all');
+      onChange('all');
+    }
   };
 
-  const handleFilterClick = (filter: FilterConfig['filters'][0]) => {
-    const updatedFilters = filters.map((f) =>
-      singleSelect
-        ? { ...f, isActive: f === filter }
-        : f === filter
-          ? { ...f, isActive: !f.isActive }
-          : f,
-    );
-    onChange(updatedFilters.find((elem) => elem.isActive)?.text || '');
-    setFilters(updatedFilters);
+  const handleFilterClick = (filterText: string) => {
+    setSelectedFilter(filterText.toLowerCase());
+    onChange(filterText);
   };
-
-  useEffect(() => {
-    const allFiltersActive = filters.every((filter) => filter.isActive);
-    setSelectAllBtn(allFiltersActive);
-  }, [filters]);
 
   const renderRows = () => {
     let filterIndex = 0;
@@ -85,9 +73,9 @@ const Filter = ({
                 <FilterTag
                   key={filter.text}
                   activeColor={config.activeColor}
-                  active={filter.isActive}
+                  active={selectedFilter === filter.text.toLowerCase() || selectedFilter === 'all'}
                   text={filter.text}
-                  onClick={() => handleFilterClick(filter)}
+                  onClick={() => handleFilterClick(filter?.text)}
                   styles={config.styles}
                   classNames={'last:mr-[0px] mr-[12px]'}
                 />
@@ -109,13 +97,13 @@ const Filter = ({
           {SvgIcon && (
             <SvgIcon
               className={'mr-[10px]'}
-              activecolor={selectAllBtn ? config.activeColor : ''}
+              activecolor={selectedFilter === 'all' ? config.activeColor : ''}
             />
           )}
           <FilterTag
             text={selectAll.text}
             activeColor={config.activeColor}
-            active={selectAllBtn}
+            active={selectedFilter === 'all'}
             onClick={handleSelectAll}
           />
         </div>

@@ -272,39 +272,31 @@ export const cardConfig = [
 export const filterConfig: FilterConfig = {
   activeColor: '#FFFFFF',
   styles: { boxShadow: '0 0 12px 0 rgba(255, 255, 255, 0.5)' },
-  filters: [
-    { text: 'Newest', isActive: true },
-    { text: 'Oldest', isActive: false },
-  ],
+  filters: [{ text: 'Newest' }, { text: 'Oldest' }],
 };
 
 export const filterTypeConfig: FilterConfig = {
   activeColor: '#FFBB00',
   styles: { boxShadow: '0 0 12px 0 rgba(255, 187, 0, 0.5)' },
   filters: [
-    { text: 'Images', isActive: true },
-    { text: 'GIFs', isActive: true },
-    { text: 'Videos', isActive: true },
-    { text: 'Audio', isActive: true },
-    { text: 'SVGs', isActive: true },
-    { text: 'Text', isActive: true },
-    { text: 'HTML', isActive: true },
-    { text: 'JavaScript', isActive: true },
-    { text: 'Markdown', isActive: true },
-    { text: 'Parents', isActive: true },
-    { text: '3D', isActive: true },
+    { text: 'Images' },
+    { text: 'GIFs' },
+    { text: 'Videos' },
+    { text: 'Audio' },
+    { text: 'SVGs' },
+    { text: 'Text' },
+    { text: 'HTML' },
+    { text: 'JavaScript' },
+    { text: 'Markdown' },
+    { text: 'Parents' },
+    { text: '3D' },
   ],
 };
 
 export const filterTimeConfig: FilterConfig = {
   activeColor: '#B75BFF',
   styles: { boxShadow: '0 0 12px 0 rgba(183, 91, 255, 0.5)' },
-  filters: [
-    { text: '1 Hour', isActive: true },
-    { text: '1 Day', isActive: true },
-    { text: '1 Week', isActive: true },
-    { text: '1 Month', isActive: true },
-  ],
+  filters: [{ text: '1 Hour' }, { text: '1 Day' }, { text: '1 Week' }, { text: '1 Month' }],
 };
 
 export const inscriptionInfo = [

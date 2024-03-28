@@ -10,7 +10,7 @@ export interface FilterConfig {
   styles?: CSSProperties;
   filters: {
     text: string;
-    isActive: boolean;
+    // isActive: boolean;
   }[];
 }
 

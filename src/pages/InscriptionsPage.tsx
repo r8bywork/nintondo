@@ -65,23 +65,23 @@ const InscriptionsPage = () => {
           <Search placeholder={'Search'} />
           <div className={'mt-[35px] flex flex-col gap-[30px]'}>
             <Filter
-              singleSelect
               config={filterConfig}
               onChange={handleSortByFilterChange}
+              initialState={sortBy.selectedSortByFilter}
             />
             <Filter
               selectAll={{ text: 'All' }}
-              singleSelect
               SvgIcon={Svg}
               config={filterTypeConfig}
               onChange={handleTypeFilterChange}
+              initialState={contentFilter.selectedTypeFilter}
             />
             <Filter
               selectAll={{ text: 'All Time' }}
               SvgIcon={TimeSvg}
               config={filterTimeConfig}
               onChange={handleTimeFilterChange}
-              singleSelect
+              initialState={timeFilters.selectedTimeFilter}
             />
           </div>
         </div>
