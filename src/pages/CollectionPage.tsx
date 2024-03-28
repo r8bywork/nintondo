@@ -18,6 +18,7 @@ const CollectionPage = () => {
               <Card
                 key={index}
                 {...card}
+                contentType={'image'}
               />
             ))}
           </div>

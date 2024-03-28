@@ -109,7 +109,7 @@ export const HeaderLinksMarketPlace: Header[] = [
 export const cardConfig = [
   {
     image: ApeCard,
-    text: '447,320',
+    text: 447320,
     date: '359 days ago',
     tags: [
       { tagText: 'WEBP', active: true },
@@ -119,7 +119,7 @@ export const cardConfig = [
   },
   {
     image: ApeCard,
-    text: '1,234',
+    text: 1234,
     date: '30 days ago',
     tags: [
       { tagText: 'PNG', active: true },
@@ -129,7 +129,7 @@ export const cardConfig = [
   },
   {
     image: ApeCard,
-    text: '550,892',
+    text: 550892,
     date: '180 days ago',
     tags: [
       { tagText: 'JPEG', active: true },
@@ -139,7 +139,7 @@ export const cardConfig = [
   },
   {
     image: ApeCard,
-    text: '987,654',
+    text: 987654,
     date: '90 days ago',
     tags: [
       { tagText: 'SVG', active: true },
@@ -149,7 +149,7 @@ export const cardConfig = [
   },
   {
     image: ApeCard,
-    text: '333',
+    text: 333,
     date: '5 days ago',
     tags: [
       { tagText: 'GIF', active: true },
@@ -159,7 +159,7 @@ export const cardConfig = [
   },
   {
     image: ApeCard,
-    text: '76,543',
+    text: 76543,
     date: '210 days ago',
     tags: [
       { tagText: 'TIFF', active: true },
@@ -169,7 +169,7 @@ export const cardConfig = [
   },
   {
     image: ApeCard,
-    text: '987',
+    text: 987,
     date: '15 days ago',
     tags: [
       { tagText: 'BMP', active: true },
@@ -179,7 +179,7 @@ export const cardConfig = [
   },
   {
     image: ApeCard,
-    text: '112,233',
+    text: 112233,
     date: '120 days ago',
     tags: [
       { tagText: 'PSD', active: true },
@@ -189,7 +189,7 @@ export const cardConfig = [
   },
   {
     image: ApeCard,
-    text: '1,000,000',
+    text: 1000000,
     date: '250 days ago',
     tags: [
       { tagText: 'EPS', active: true },
@@ -199,7 +199,7 @@ export const cardConfig = [
   },
   {
     image: ApeCard,
-    text: '999',
+    text: 999,
     date: '60 days ago',
     tags: [
       { tagText: 'ICO', active: true },
@@ -209,7 +209,7 @@ export const cardConfig = [
   },
   {
     image: ApeCard,
-    text: '24,000',
+    text: 24000,
     date: '300 days ago',
     tags: [
       { tagText: 'JPG', active: true },
@@ -219,7 +219,7 @@ export const cardConfig = [
   },
   {
     image: ApeCard,
-    text: '678',
+    text: 678,
     date: '45 days ago',
     tags: [
       { tagText: 'ICO', active: true },
@@ -229,7 +229,7 @@ export const cardConfig = [
   },
   {
     image: ApeCard,
-    text: '876,543',
+    text: 876543,
     date: '150 days ago',
     tags: [
       { tagText: 'GIF', active: true },
@@ -239,7 +239,7 @@ export const cardConfig = [
   },
   {
     image: ApeCard,
-    text: '123,456',
+    text: 123456,
     date: '75 days ago',
     tags: [
       { tagText: 'PNG', active: true },
@@ -249,7 +249,7 @@ export const cardConfig = [
   },
   {
     image: ApeCard,
-    text: '5,432',
+    text: 5432,
     date: '25 days ago',
     tags: [
       { tagText: 'JPEG', active: true },
@@ -259,7 +259,7 @@ export const cardConfig = [
   },
   {
     image: ApeCard,
-    text: '5,432',
+    text: 5432,
     date: '25 days ago',
     tags: [
       { tagText: 'JPEG', active: true },
