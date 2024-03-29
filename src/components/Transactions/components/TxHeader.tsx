@@ -2,10 +2,11 @@ import classNames from 'classnames';
 import { get } from 'lodash';
 import { ReactNode, useEffect, useState } from 'react';
 import { v4 } from 'uuid';
-import { Field, additionalFields, Transaction } from '../../../settings/fields.tsx';
+import { Field } from '../../../settings/fields.tsx';
 import s from './TxHeader.module.scss';
-import { truncate } from '../../../settings/utils.ts';
 import { Link } from 'react-router-dom';
+import { additionalFields, Transaction } from '../../../interfaces/intefaces.ts';
+import { truncate } from '../../../utils';
 
 interface TxProps<T extends object> {
   vin?: boolean;

@@ -4,6 +4,10 @@ export default {
   // darkMode: false,
   theme: {
     extend: {
+      screens: {
+        medium: '850px',
+        // => @media (min-width: 576px) { ... }
+      },
       rotate: {
         90: '90deg',
       },

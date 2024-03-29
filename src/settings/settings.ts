@@ -2,7 +2,17 @@ import ChromeIcon from '../assets/ChromeIcon.svg?react';
 import FirefoxIcon from '../assets/firefox2019.svg?react';
 import CommentSvg from '../assets/card/comments.svg?react';
 import TrendingSvg from '../assets/card/rating.svg?react';
-import { CSSProperties } from 'react';
+import FullSizeSvg from '../assets/card/fullsize.svg?react';
+import ShareSvg from '../assets/card/share.svg?react';
+import ApeCard from '../assets/collection/ApeCard.png';
+import { Collection, FilterConfig, Header } from '../interfaces/intefaces.ts';
+import Image from '../assets/collection/Ape.png';
+import ApeSmall from '../assets/collection/ApeSmall.png';
+import TwitterLogo from '../assets/social/twitter.svg?react';
+import DiscordLogo from '../assets/social/discord.svg?react';
+import ExplorerLogo from '../assets/social/explorer.svg?react';
+import ShareLogo from '../assets/social/share2.svg?react';
+
 export const footerContent = [
   {
     title: 'LEARN',
@@ -93,7 +103,7 @@ export const HeaderLinks: IHeader[] = [
   { name: 'wallet', url: '/wallet' },
   { name: 'markets', url: '/markets' },
   { name: 'explorer', url: '/explorer' },
-  { name: 'marketplace', url: '/marketplace' },
+  { name: 'marketplace', url: '/marketplace/inscriptions' },
 ];
 
 export const HeaderLinksMarketPlace: IHeader[] = [
@@ -103,7 +113,8 @@ export const HeaderLinksMarketPlace: IHeader[] = [
 
 export const cardConfig = [
   {
-    text: '447,320',
+    image: ApeCard,
+    text: 447320,
     date: '359 days ago',
     tags: [
       { tagText: 'WEBP', active: true },
@@ -112,7 +123,8 @@ export const cardConfig = [
     ],
   },
   {
-    text: '1,234',
+    image: ApeCard,
+    text: 1234,
     date: '30 days ago',
     tags: [
       { tagText: 'PNG', active: true },
@@ -121,7 +133,8 @@ export const cardConfig = [
     ],
   },
   {
-    text: '550,892',
+    image: ApeCard,
+    text: 550892,
     date: '180 days ago',
     tags: [
       { tagText: 'JPEG', active: true },
@@ -130,7 +143,8 @@ export const cardConfig = [
     ],
   },
   {
-    text: '987,654',
+    image: ApeCard,
+    text: 987654,
     date: '90 days ago',
     tags: [
       { tagText: 'SVG', active: true },
@@ -139,7 +153,8 @@ export const cardConfig = [
     ],
   },
   {
-    text: '333',
+    image: ApeCard,
+    text: 333,
     date: '5 days ago',
     tags: [
       { tagText: 'GIF', active: true },
@@ -148,7 +163,8 @@ export const cardConfig = [
     ],
   },
   {
-    text: '76,543',
+    image: ApeCard,
+    text: 76543,
     date: '210 days ago',
     tags: [
       { tagText: 'TIFF', active: true },
@@ -157,7 +173,8 @@ export const cardConfig = [
     ],
   },
   {
-    text: '987',
+    image: ApeCard,
+    text: 987,
     date: '15 days ago',
     tags: [
       { tagText: 'BMP', active: true },
@@ -166,7 +183,8 @@ export const cardConfig = [
     ],
   },
   {
-    text: '112,233',
+    image: ApeCard,
+    text: 112233,
     date: '120 days ago',
     tags: [
       { tagText: 'PSD', active: true },
@@ -175,7 +193,8 @@ export const cardConfig = [
     ],
   },
   {
-    text: '1,000,000',
+    image: ApeCard,
+    text: 1000000,
     date: '250 days ago',
     tags: [
       { tagText: 'EPS', active: true },
@@ -184,7 +203,8 @@ export const cardConfig = [
     ],
   },
   {
-    text: '999',
+    image: ApeCard,
+    text: 999,
     date: '60 days ago',
     tags: [
       { tagText: 'ICO', active: true },
@@ -193,7 +213,8 @@ export const cardConfig = [
     ],
   },
   {
-    text: '24,000',
+    image: ApeCard,
+    text: 24000,
     date: '300 days ago',
     tags: [
       { tagText: 'JPG', active: true },
@@ -202,7 +223,8 @@ export const cardConfig = [
     ],
   },
   {
-    text: '678',
+    image: ApeCard,
+    text: 678,
     date: '45 days ago',
     tags: [
       { tagText: 'ICO', active: true },
@@ -211,7 +233,8 @@ export const cardConfig = [
     ],
   },
   {
-    text: '876,543',
+    image: ApeCard,
+    text: 876543,
     date: '150 days ago',
     tags: [
       { tagText: 'GIF', active: true },
@@ -220,7 +243,8 @@ export const cardConfig = [
     ],
   },
   {
-    text: '123,456',
+    image: ApeCard,
+    text: 123456,
     date: '75 days ago',
     tags: [
       { tagText: 'PNG', active: true },
@@ -229,7 +253,8 @@ export const cardConfig = [
     ],
   },
   {
-    text: '5,432',
+    image: ApeCard,
+    text: 5432,
     date: '25 days ago',
     tags: [
       { tagText: 'JPEG', active: true },
@@ -238,84 +263,223 @@ export const cardConfig = [
     ],
   },
   {
-    text: '987,654',
-    date: '180 days ago',
+    image: ApeCard,
+    text: 5432,
+    date: '25 days ago',
     tags: [
-      { tagText: 'BMP', active: true },
-      { tagText: '8.9K', SvgIcon: TrendingSvg },
-      { tagText: '19.3K', SvgIcon: CommentSvg },
-    ],
-  },
-  {
-    text: '999,999',
-    date: '200 days ago',
-    tags: [
-      { tagText: 'TIFF', active: true },
-      { tagText: '10.1K', SvgIcon: TrendingSvg },
-      { tagText: '5.6K', SvgIcon: CommentSvg },
-    ],
-  },
-  {
-    text: '765,432',
-    date: '140 days ago',
-    tags: [
-      { tagText: 'SVG', active: true },
-      { tagText: '6.7K', SvgIcon: TrendingSvg },
-      { tagText: '13.4K', SvgIcon: CommentSvg },
+      { tagText: 'JPEG', active: true },
+      { tagText: '1.2K', SvgIcon: TrendingSvg },
+      { tagText: '87', SvgIcon: CommentSvg },
     ],
   },
 ];
 
-export interface FilterConfig {
-  activeColor: string;
-  styles?: CSSProperties;
-  filters: {
-    text: string;
-    isActive: boolean;
-  }[];
-}
-
 export const filterConfig: FilterConfig = {
   activeColor: '#FFFFFF',
   styles: { boxShadow: '0 0 12px 0 rgba(255, 255, 255, 0.5)' },
-  filters: [
-    { text: 'Trending', isActive: false },
-    { text: 'Newest', isActive: false },
-    { text: 'Oldest', isActive: false },
-    { text: 'Top', isActive: false },
-    { text: 'Most Replies', isActive: false },
-    { text: 'Oldest Sat', isActive: false },
-    { text: 'Largest File', isActive: false },
-    { text: 'Highest Fee', isActive: false },
-  ],
+  filters: [{ text: 'Newest' }, { text: 'Oldest' }],
 };
 
 export const filterTypeConfig: FilterConfig = {
   activeColor: '#FFBB00',
   styles: { boxShadow: '0 0 12px 0 rgba(255, 187, 0, 0.5)' },
   filters: [
-    { text: 'Images', isActive: false },
-    { text: 'GIFs', isActive: false },
-    { text: 'Videos', isActive: false },
-    { text: 'Audio', isActive: false },
-    { text: 'SVGs', isActive: false },
-    { text: 'Text', isActive: false },
-    { text: 'HTML', isActive: false },
-    { text: 'JavaScript', isActive: false },
-    { text: 'Markdown', isActive: false },
-    { text: 'Parents', isActive: false },
-    { text: 'Games', isActive: false },
-    { text: '3D', isActive: false },
+    { text: 'Images' },
+    { text: 'GIFs' },
+    { text: 'Videos' },
+    { text: 'Audio' },
+    { text: 'SVGs' },
+    { text: 'Text' },
+    { text: 'HTML' },
+    { text: 'JavaScript' },
+    { text: 'Markdown' },
+    { text: 'Parents' },
+    { text: '3D' },
   ],
 };
 
 export const filterTimeConfig: FilterConfig = {
   activeColor: '#B75BFF',
   styles: { boxShadow: '0 0 12px 0 rgba(183, 91, 255, 0.5)' },
-  filters: [
-    { text: '1 Hour', isActive: false },
-    { text: '1 Day', isActive: false },
-    { text: '1 Week', isActive: false },
-    { text: '1 Month', isActive: false },
+  filters: [{ text: '1 Hour' }, { text: '1 Day' }, { text: '1 Week' }, { text: '1 Month' }],
+};
+
+export const inscriptionInfo = [
+  {
+    id: 'e1636c83d2b337db7870939f01b5be484a08345c15ece7a1922c4f4e1a33480d',
+    ownedBy: 'f9389e3b91abb3537b0827119ff68634d499dcadf2ab81113ac1d9d25136c6dc',
+    fileType: 'WEBP',
+    fileSize: '12.848 KB',
+    created: 'March 5, 2024, 5:59 AM GMT+3',
+    creationBlock: 833186,
+    creationTransaction: 'e1636c83d2b337db7870939f01b5be484a08345c15ece7a1922c4f4e1a33480d',
+    creationFeeSats: 269200,
+    tags: '269,200 sats',
+  },
+];
+
+export const inscriptionCard = [
+  {
+    image: ApeCard,
+    text: '447,320',
+    date: '359 days ago',
+    tags: [
+      { tagText: 'WEBP', active: true },
+      { tagText: '3.2K', SvgIcon: TrendingSvg },
+      { tagText: '87.2K', SvgIcon: CommentSvg },
+      { SvgIcon: ShareSvg },
+      { SvgIcon: FullSizeSvg },
+    ],
+  },
+];
+
+export const TabSelectFields = [
+  {
+    value: 'dashboard',
+    title: 'dashboard',
+  },
+  {
+    value: 'blocks',
+    title: 'blocks',
+  },
+  {
+    value: 'transactions',
+    title: 'transactions',
+  },
+];
+
+export const CollectionPageMock = {
+  image: Image,
+  name: 'Bitcoin Apes',
+  createdAt: 'February 2023',
+  currency: 'BTC',
+  details: [
+    {
+      title: 'supply',
+      value: 10000,
+    },
+    {
+      title: 'file size',
+      value: 1.464,
+      additionalSymbol: 'GB',
+    },
+    {
+      title: 'creation fee',
+      value: 32.208,
+      additionalSymbol: 'BTC',
+    },
+    {
+      title: 'range',
+      value: [8962, 568263],
+    },
+  ],
+  link: [
+    {
+      SvgIcon: TwitterLogo,
+      link: 'https://twitter.com',
+      text: 'Twitter',
+      active: false,
+    },
+    {
+      SvgIcon: DiscordLogo,
+      link: 'https://discord.com',
+      text: 'Discord',
+      active: false,
+    },
+    {
+      SvgIcon: ExplorerLogo,
+      link: 'https://bitcoin.com',
+      text: 'Explorer',
+      active: false,
+    },
+    {
+      SvgIcon: ShareLogo,
+      link: 'https://apes.com',
+      text: 'Apes',
+      active: true,
+    },
   ],
 };
+
+export const collectionsMock: Collection[] = [
+  {
+    image: ApeSmall,
+    collection: '1',
+    supply: 10000,
+    fileSize: 1464,
+    avgFileSize: 228247,
+    creationFee: 39208,
+    range: [9168662, 17705183],
+    creationDate: 'Feb, 7 2023',
+  },
+  {
+    image: ApeSmall,
+    collection: '2',
+    supply: 7772,
+    fileSize: 1464,
+    avgFileSize: 228247,
+    creationFee: 39208,
+    range: [9168662, 17705183],
+    creationDate: 'Feb, 7 2023',
+  },
+  {
+    image: ApeSmall,
+    collection: '3',
+    supply: 1556,
+    fileSize: 1464,
+    avgFileSize: 228247,
+    creationFee: 39208,
+    range: [9168662, 17705183],
+    creationDate: 'Feb, 7 2023',
+  },
+  {
+    image: ApeSmall,
+    collection: '4',
+    supply: 10000,
+    fileSize: 1464,
+    avgFileSize: 228247,
+    creationFee: 39208,
+    range: [9168662, 17705183],
+    creationDate: 'Feb, 7 2023',
+  },
+  {
+    image: ApeSmall,
+    collection: '5',
+    supply: 7772,
+    fileSize: 1464,
+    avgFileSize: 228247,
+    creationFee: 39208,
+    range: [9168662, 17705183],
+    creationDate: 'Feb, 7 2023',
+  },
+  {
+    image: ApeSmall,
+    collection: '6',
+    supply: 1556,
+    fileSize: 1464,
+    avgFileSize: 228247,
+    creationFee: 39208,
+    range: [9168662, 17705183],
+    creationDate: 'Feb, 7 2023',
+  },
+  {
+    image: ApeSmall,
+    collection: '7',
+    supply: 10000,
+    fileSize: 1464,
+    avgFileSize: 228247,
+    creationFee: 39208,
+    range: [9168662, 17705183],
+    creationDate: 'Feb, 7 2023',
+  },
+  {
+    image: ApeSmall,
+    collection: '8',
+    supply: 7772,
+    fileSize: 1464,
+    avgFileSize: 228247,
+    creationFee: 39208,
+    range: [9168662, 17705183],
+    creationDate: 'Feb, 7 2023',
+  },
+];

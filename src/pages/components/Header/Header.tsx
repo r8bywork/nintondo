@@ -28,7 +28,7 @@ const Header = () => {
   const [showPopover, setShowPopover] = useState<boolean>(false);
 
   useEffect(() => {
-    location.pathname === '/marketplace'
+    location.pathname.startsWith('/marketplace')
       ? setConfig(HeaderLinksMarketPlace)
       : setConfig(HeaderLinks);
   }, [location]);
@@ -61,10 +61,6 @@ const Header = () => {
     };
   }, []);
 
-  if (nintondoExists === undefined) return <div className='text-white'>Loading</div>;
-
-  if (!nintondoExists) return <div className='text-white'>Install nintondo extension</div>;
-
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -92,8 +88,6 @@ const Header = () => {
       </div>
       <nav
         className={cn('max-md:pb-[20px] md:flex md:items-center', {
-          // max-md:absolute
-          // max-md:bg-[#061D3C]
           hidden: !isMenuOpen,
         })}
       >
@@ -102,7 +96,9 @@ const Header = () => {
             key={link.name}
             text={link.name}
             href={link.url}
-            className='md:[&:not(:last-child)]:mr-28 text-white'
+            className={cn('md:[&:not(:last-child)]:mr-28 text-white', {
+              ['text-yellow-500 underline']: location.pathname === link.url,
+            })}
             onClick={toggleMenu}
           />
         ))}

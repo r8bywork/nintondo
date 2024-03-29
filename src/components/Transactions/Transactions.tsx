@@ -1,12 +1,13 @@
-import axios from 'axios';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import BigArrowRight from '../../assets/BigArrowRight.svg?react';
 import CopySvg from '../../assets/copyOrange.svg?react';
-import { Transaction, VinFields, VoutFields, additionalFields } from '../../settings/fields.tsx';
-import { truncate } from '../../settings/utils.ts';
+import { VinFields, VoutFields } from '../../settings/fields.tsx';
 import TxHeader from './components/TxHeader.tsx';
 import Copy from '../Buttons/Copy.tsx';
+import { additionalFields, Transaction } from '../../interfaces/intefaces.ts';
+import { truncate } from '../../utils';
+import { useExplorerGetTxOutspends } from '../../hooks/explorerapi.ts';
 interface TransactionsProps {
   data: Transaction[];
   height?: number;
@@ -14,7 +15,10 @@ interface TransactionsProps {
 
 const Transactions = ({ data, height }: TransactionsProps) => {
   const [isOpenMap, setIsOpenMap] = useState<{ [key: string]: boolean }>({});
-  const [transaction, setTransaction] = useState<Record<string, additionalFields[]>>({});
+  const [transaction, setTransaction] = useState<Record<string, additionalFields[]> | undefined>(
+    {},
+  );
+  const getOutspend = useExplorerGetTxOutspends();
   const toggleDetails = async (txid: string) => {
     setIsOpenMap((prevMap) => ({
       ...prevMap,
@@ -22,13 +26,14 @@ const Transactions = ({ data, height }: TransactionsProps) => {
     }));
 
     if (!isOpenMap[txid]) {
-      const response = await axios.get(`https://bells.quark.blue/api/tx/${txid}/outspends`);
+      const response = await getOutspend(txid);
       setTransaction((prevTransactions) => ({
         ...prevTransactions,
-        [txid]: response.data,
+        [txid]: response as additionalFields[],
       }));
     }
   };
+
   const totalValues = data.map(
     (elem) => elem.vout.reduce((sum, voutElem) => sum + voutElem.value, 0) / 100000000,
   );

@@ -1,5 +1,5 @@
 import { payments, address as belAddress } from 'belcoinjs-lib';
-// import { TEST_API_URL } from '../consts';
+import { TEST_API_URL } from '../consts';
 
 export const fetchBELLMainnet = async <T>({
   path,
@@ -20,6 +20,32 @@ export const fetchMarket = async <T>({
   ...props
 }: fetchProps): Promise<T | undefined> => {
   const url = `${'http://localhost:3002'}${path}`;
+  const res = await fetch(url.toString(), { ...props });
+
+  if (!json) return (await res.text()) as T;
+
+  return await res.json();
+};
+
+export const fetchExplorer = async <T>({
+  path,
+  json = true,
+  ...props
+}: fetchProps): Promise<T | undefined> => {
+  const url = `${'https://bells.quark.blue/'}${path}`;
+  const res = await fetch(url.toString(), { ...props });
+
+  if (!json) return (await res.text()) as T;
+
+  return await res.json();
+};
+
+export const fetchMarketInfo = async <T>({
+  path,
+  json = true,
+  ...props
+}: fetchProps): Promise<T | undefined> => {
+  const url = `${'http://0.0.0.0:8111/'}${path}`;
   const res = await fetch(url.toString(), { ...props });
 
   if (!json) return (await res.text()) as T;
@@ -106,3 +132,44 @@ export function isValidBitcoinAddress(address: string) {
     return false;
   }
 }
+type Params = {
+  nPrefix?: number;
+  nSuffix?: number;
+  separator?: 'braces' | 'brackets' | 'parenthesis';
+};
+export const truncate = (str: string, { nPrefix = 4, nSuffix = 4 }: Params = {}) => {
+  const nTotalIsLongerThanStr = nPrefix + nSuffix > str.length;
+  return str && !nTotalIsLongerThanStr
+    ? `${str.slice(0, nPrefix)}...${str.slice(str.length - nSuffix)}`
+    : str;
+};
+
+export const createHref = (query: Record<string, string>, params: URLSearchParams) => {
+  const queryParams = new URLSearchParams(params);
+  Object.entries(query).map(([key, value]) => {
+    if (value !== undefined) {
+      queryParams.set(key, value);
+    }
+  });
+  return queryParams.toString();
+};
+
+export const scrollToTopExplorerTable = () => {
+  const tableTop = document.getElementById('explorer')?.getBoundingClientRect();
+  const headerHeight = document.getElementById('header')?.getBoundingClientRect().height;
+
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  const top = tableTop!.top + scrollTop - headerHeight! - 5;
+  window.scrollTo({
+    top,
+    behavior: 'smooth',
+  });
+};
+
+export const formatBytes = (bytes: number): string => {
+  if (bytes < 1000) return bytes + ' bytes';
+  else if (bytes < 1000 ** 2) return (bytes / 1000).toFixed(2) + ' KB';
+  else if (bytes < 1000 ** 3) return (bytes / 1000 ** 2).toFixed(2) + ' MB';
+  else if (bytes < 1000 ** 4) return (bytes / 1000 ** 3).toFixed(2) + ' GB';
+  else return (bytes / 1000 ** 4).toFixed(2) + ' TB';
+};

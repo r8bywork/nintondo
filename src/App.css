@@ -29,6 +29,26 @@
 #root {
   margin: 0 auto;
   padding: 0;
+  cursor: default;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080C15;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #62697A;
+  border-radius: 6px;
+  border: 3px solid #080C15;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #62697A #080C15;
 }
 
 .custom_scrollbar_container::-webkit-scrollbar {

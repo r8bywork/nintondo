@@ -1,26 +1,20 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import CubeSvg from '../assets/Cube.svg?react';
-import { AddressFields, AddressStats, Transaction } from '../settings/fields';
+import { AddressFields } from '../settings/fields';
 import HashCopyBlock from '../components/HashCopyBlock.tsx';
 import Skeleton from '../components/Placeholders/Skeleton.tsx';
 import Table from '../components/Table/Table';
 import Transactions from '../components/Transactions/Transactions.tsx';
+import { AddressStats, Transaction } from '../interfaces/intefaces.ts';
+import { useExplorerGetBlock, useExplorerGetBlockTxs } from '../hooks/explorerapi.ts';
 
 const AddressPage = () => {
-  const [tx, setTx] = useState<AddressStats[]>([]);
-  const [txs, setTxs] = useState<Transaction[]>([]);
+  const [tx, setTx] = useState<AddressStats[] | undefined>([]);
+  const [txs, setTxs] = useState<Transaction[] | undefined>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const getBlock = async (hash: string) => {
-    const response = await axios.get(`https://bells.quark.blue/api/address/${hash}`);
-    return [response.data];
-  };
-  const getTxs = async (hash: string) => {
-    const txs = await axios.get(`https://bells.quark.blue/api/address/${hash}/txs`);
-    return [...txs.data];
-  };
+  const getBlock = useExplorerGetBlock();
+  const getTxs = useExplorerGetBlockTxs();
 
   const { hash } = useParams();
 
@@ -29,7 +23,7 @@ const AddressPage = () => {
       setIsLoading(true);
       Promise.all([getBlock(hash), getTxs(hash)])
         .then(([txRes, txs]) => {
-          setTx(txRes);
+          setTx([txRes] as AddressStats[]);
           setTxs(txs);
         })
         .finally(() => {
@@ -50,7 +44,7 @@ const AddressPage = () => {
           <Table
             data={tx}
             fields={AddressFields}
-            additional
+            mode={'additional'}
           />
         </>
       ) : (

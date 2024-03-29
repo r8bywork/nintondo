@@ -1,6 +1,17 @@
 import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { truncate } from './utils';
+import CardTag from '../components/Card/CardTag/CardTag.tsx';
+import {
+  AddressStats,
+  BlockData,
+  TransactionData,
+  Vin,
+  Vout,
+  Transaction,
+  Collection,
+} from '../interfaces/intefaces.ts';
+import { InscriptionInfo } from '../interfaces/inscriptions.ts';
+import { formatBytes, truncate } from '../utils';
 
 export type Field<T extends object> = {
   [K in keyof T]: {
@@ -10,103 +21,6 @@ export type Field<T extends object> = {
   };
 }[keyof T];
 
-export interface AddressStats {
-  address: string;
-  chain_stats: {
-    funded_txo_count: number;
-    funded_txo_sum: number;
-    spent_txo_count: number;
-    spent_txo_sum: number;
-    tx_count: number;
-  };
-  mempool_stats: {
-    funded_txo_count: number;
-    funded_txo_sum: number;
-    spent_txo_count: number;
-    spent_txo_sum: number;
-    tx_count: number;
-  };
-}
-
-export interface BlockData {
-  id: string;
-  height: number;
-  version: number;
-  timestamp: number;
-  tx_count: number;
-  size: number;
-  weight: number;
-  merkle_root: string;
-  previousblockhash: string;
-  mediantime: number;
-  nonce: number;
-  bits: number;
-  difficulty: number;
-  in_best_chain: boolean;
-  next_best: string;
-}
-
-export interface Transaction {
-  txid: string;
-  version: number;
-  locktime: number;
-  vin: Vin[];
-  vout: Vout[];
-  size: number;
-  weight: number;
-  fee: number;
-  status: TransactionStatus;
-  vsize: number;
-}
-
-export interface Vin {
-  txid: string;
-  vout: number;
-  prevout: Vout;
-  scriptsig: string;
-  scriptsig_asm: string;
-  is_coinbase: boolean;
-  sequence: number;
-  scriptpubkey_asm: string;
-  scriptpubkey_address: string;
-  value: number;
-}
-
-export interface Vout {
-  scriptpubkey: string;
-  scriptpubkey_asm: string;
-  scriptpubkey_type: string;
-  txid: string;
-  scriptpubkey_address: string;
-  value: number;
-  transaction: additionalFields;
-}
-
-export interface additionalFields {
-  spent: boolean;
-  txid: string;
-  vin: 0;
-  status: {
-    confirmed: boolean;
-    block_height: number;
-    block_hash: string;
-    block_time: number;
-  };
-}
-
-interface TransactionStatus {
-  confirmed: boolean;
-  block_height: number;
-  block_hash: string;
-  block_time: number;
-}
-
-export interface TransactionData {
-  txid: string;
-  fee: number;
-  vsize: number;
-  value: number;
-}
 export const formatDate = (dateString: number) => {
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
@@ -451,5 +365,138 @@ export const AddressFields: Field<AddressStats>[] = [
         BEL)
       </p>
     ),
+  },
+];
+
+export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
+  {
+    value: 'id',
+    name: 'ID',
+    render: (value) => (
+      <>
+        <span className={'text-[#53DCFF]'}>
+          {truncate(value, {
+            nPrefix: 5,
+            nSuffix: 5,
+          })}
+        </span>
+      </>
+    ),
+  },
+  {
+    value: 'owned_by',
+    name: 'OWNED BY',
+  },
+  {
+    value: 'file_type',
+    name: 'FILE TYPE',
+    render: (value, data) => (
+      <>
+        <span className={'text-[#4b4b4b] items-center flex'}>
+          <CardTag
+            text={value}
+            active
+            classNames={'leading-[23px]'}
+          />
+          {data.mime}
+        </span>
+      </>
+    ),
+  },
+  {
+    value: 'file_size',
+    name: 'FILE SIZE',
+    render: (value) => (
+      <span className={'text-[#4b4b4b] items-center flex'}>{formatBytes(value)}</span>
+    ),
+  },
+  {
+    value: 'created',
+    name: 'CREATED',
+  },
+  {
+    value: 'ctreation_block',
+    name: 'CREATION BLOCK',
+    render: (value) => (
+      <>
+        <span className={'text-[#53DCFF]'}>{value.toLocaleString()}</span>
+      </>
+    ),
+  },
+  {
+    value: 'ctreation_transaction',
+    name: 'CREATION TRANSACTION',
+    render: (value) => (
+      <>
+        <span className={'text-[#53DCFF]'}>
+          {truncate(value, {
+            nPrefix: 5,
+            nSuffix: 5,
+          })}
+        </span>
+      </>
+    ),
+  },
+];
+
+export const collectionsFieldsTable: Field<Collection>[] = [
+  {
+    value: 'collection',
+    name: 'COLLECTION',
+    render: (value, data) => (
+      <span className={'flex items-center'}>
+        <img
+          src={data.image}
+          alt={'logo'}
+          className={'w-[27px] h-[27px] mr-[13px]'}
+        />
+        {value.toLocaleString()}
+      </span>
+    ),
+  },
+  {
+    value: 'supply',
+    name: 'SUPPLY',
+    render: (value) => <span>{value.toLocaleString()}</span>,
+  },
+  {
+    value: 'fileSize',
+    name: 'FILE SIZE',
+    render: (value) => (
+      <span>
+        {value.toLocaleString()} <span className={'text-[#4B4B4B]'}>GB</span>
+      </span>
+    ),
+  },
+  {
+    value: 'avgFileSize',
+    name: 'AVG FILE SIZE',
+    render: (value) => (
+      <span>
+        {value.toLocaleString()} <span className={'text-[#4B4B4B]'}>KB</span>
+      </span>
+    ),
+  },
+  {
+    value: 'creationFee',
+    name: 'CREATION FEE',
+    render: (value) => (
+      <span>
+        {value.toLocaleString()} <span className={'text-[#4B4B4B]'}>BTC</span>
+      </span>
+    ),
+  },
+  {
+    value: 'range',
+    name: 'RANGE',
+    render: (value) => (
+      <span>
+        {value[0].toLocaleString()} - {value[1].toLocaleString()}
+      </span>
+    ),
+  },
+  {
+    value: 'creationDate',
+    name: 'CREATION DATE',
   },
 ];

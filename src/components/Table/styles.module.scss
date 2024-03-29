@@ -3,7 +3,7 @@
 }
 
 .table {
-  @apply w-full border-separate border rounded-[21px] border-white border-spacing-y-[0px] max-sm:min-w-max;
+  @apply w-full border-separate border rounded-3xl border-spacing-y-[0px] max-sm:min-w-max;
   thead {
     @apply text-black;
   }
@@ -13,7 +13,7 @@
       @apply border-r border-white border-opacity-60;
     }
     th {
-      @apply py-2 px-4 xl:px-2 first:rounded-tl-[20px] last:rounded-tr-[20px];
+      @apply py-2 px-4 xl:px-2 first:rounded-tl-3xl last:rounded-tr-3xl;
     }
 
     td {
@@ -22,7 +22,7 @@
   }
   tr:last-child{
     td{
-      @apply first:rounded-bl-[20px] last:rounded-br-[20px];
+      @apply first:rounded-bl-3xl last:rounded-br-3xl;
     }
   }
 }
@@ -32,14 +32,34 @@
 
   tr {
     th:not(:last-child),
+    td:not(:last-child) {
+      @apply rounded-none;
+    }
+    th:not(:last-child),
     td {
-      @apply border border-[#FB0] border-opacity-40;
+      @apply border-[0.2px] border-[#FB0] border-opacity-40;
     }
     th {
       @apply py-2 px-4 w-1/5;
     }
     td {
       @apply py-2 px-4;
+    }
+  }
+}
+
+
+.MarketplaceTable {
+  @apply w-full bg-black max-sm:min-w-max;
+  tr:not(:last-child){
+    @apply border-b-[1px] border-[#4B4B4B];
+  }
+  tr {
+    th{
+      @apply pb-[15px];
+    }
+    td {
+      @apply py-[20px];
     }
   }
 }
