@@ -48,6 +48,8 @@ export interface Ord {
   vout: number;
   inscriptionIndex?: number;
   raw_hex: string;
+  send?: boolean;
+  verifiedSendAddress?: boolean;
   sendToAddress?: string;
 }
 

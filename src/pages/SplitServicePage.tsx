@@ -14,6 +14,8 @@ const SplitServicePage = () => {
   const [selectedOrds, setSelectedOrds] = useState<Ord[]>([]);
   const [selectedAll, setSelectedAll] = useState<boolean>(false);
 
+  const [alreadyDidSplit, setAlreadyDidSplit] = useState<boolean>(false);
+
   const getUserInscriptions = useCallback(async (): Promise<Ord[]> => {
     const response = (await axios.get(`http://localhost:3001/offset_ords/address/${address}`)).data;
     return response.ords as Ord[];
@@ -41,15 +43,6 @@ const SplitServicePage = () => {
     });
   };
 
-  const updateSend = (ord: Ord) => {
-    setSelectedOrds((prev) => {
-      const index = prev.findIndex((f) => f.txid === ord.txid);
-      const updatedOrds = prev;
-      updatedOrds[index] = ord;
-      return updatedOrds;
-    });
-  };
-
   useEffect(() => {
     setSelectedOrds([]);
     setOrds([]);
@@ -62,6 +55,11 @@ const SplitServicePage = () => {
       setLoading(false);
     })();
   }, [address, verifiedAddress]);
+
+  useEffect(() => {
+    const splittedAddress = localStorage.getItem('splitedAddress');
+    if (splittedAddress === address) setAlreadyDidSplit(true);
+  }, [address]);
 
   if (!verifiedAddress)
     return (
@@ -81,7 +79,7 @@ const SplitServicePage = () => {
       </div>
     );
 
-  if (!ords.length && !selectedOrds.length)
+  if ((!ords.length && !selectedOrds.length) || alreadyDidSplit)
     return (
       <div className={'bg-black'}>
         <div className='h-screen max-w-[1700px] mx-auto flex pt-[150px] items-center justify-center text-white'>
@@ -109,10 +107,12 @@ const SplitServicePage = () => {
             selectedOrds={selectedOrds}
             setSelectedOrds={setSelectedOrds}
             removeSelectedOrdHandler={removeSelectedOrdHandler}
-            updateSend={updateSend}
           />
         </div>
-        <SplitSummary selectedOrds={selectedOrds} />
+        <SplitSummary
+          selectedOrds={selectedOrds}
+          nonSelectedOrds={ords}
+        />
       </div>
     </div>
   );

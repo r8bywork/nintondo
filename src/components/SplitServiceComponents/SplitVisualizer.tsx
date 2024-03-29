@@ -2,19 +2,18 @@ import { Ord } from '@/interfaces/nintondo-manager-provider';
 import BigArrowRight from '@/assets/BigArrowRight.svg?react';
 import { FC } from 'react';
 import cn from 'classnames';
+import { isValidBitcoinAddress } from '@/utils';
 
 interface SplitVisualizerProps {
   selectedOrds: Ord[];
   setSelectedOrds: (ords: Ord[]) => void;
   removeSelectedOrdHandler: (ord: Ord) => void;
-  updateSend: (ord: Ord) => void;
 }
 
 const SplitVisualizer: FC<SplitVisualizerProps> = ({
   selectedOrds,
   setSelectedOrds,
   removeSelectedOrdHandler,
-  updateSend,
 }) => {
   const switchToInscription = (ord: Ord, direction: 'next' | 'previous') => {
     setSelectedOrds(
@@ -32,6 +31,10 @@ const SplitVisualizer: FC<SplitVisualizerProps> = ({
         return o;
       }),
     );
+  };
+
+  const updateSend = (ord: Ord) => {
+    setSelectedOrds(selectedOrds.map((o) => (o.txid === ord.txid ? { ...o, send: ord.send } : o)));
   };
 
   if (!selectedOrds.length)
@@ -72,17 +75,17 @@ const SplitVisualizer: FC<SplitVisualizerProps> = ({
                   onClick={() =>
                     updateSend({
                       ...f,
-                      sendToAddress: f.sendToAddress === undefined ? '' : undefined,
+                      send: f.send ? false : true,
                     })
                   }
                   className='cursor-pointer hover:text-[#53DCFF] transition-all'
                 >
-                  {f.sendToAddress === undefined ? 'Split' : 'Send'}
+                  {f.send ? 'Split' : 'Send'}
                 </div>
               </div>
             </div>
             <BigArrowRight className='h-4' />
-            {f.sendToAddress === undefined ? (
+            {!f.send ? (
               <div className='flex flex-col p-3 m-3 max-w-fit rounded-lg gap-5'>
                 <div className='flex flex-col gap-1 bg-[#1A1A1A] p-3 rounded-lg items-center'>
                   <div className='p-2 flex items-center gap-3'>
@@ -126,7 +129,33 @@ const SplitVisualizer: FC<SplitVisualizerProps> = ({
                 </div>
               </div>
             ) : (
-              <div></div>
+              <div className='flex flex-col p-3 w-3/5 gap-1'>
+                <span className='text-sm'>Enter receivers address</span>
+                <input
+                  type='text'
+                  className={cn('p-2 bg-black border-2 border-[#191919] rounded-lg', {
+                    'border-red-500': !f.verifiedSendAddress && f.send,
+                    'border-lime-500': f.verifiedSendAddress && f.send,
+                  })}
+                  value={f.sendToAddress}
+                  onChange={(e) => {
+                    setSelectedOrds(
+                      selectedOrds.map((o) =>
+                        o.txid === f.txid
+                          ? {
+                              ...o,
+                              sendToAddress: e.target.value.trim(),
+                              verifiedSendAddress: isValidBitcoinAddress(e.target.value.trim()),
+                            }
+                          : o,
+                      ),
+                    );
+                    setTimeout(() => {
+                      console.log(selectedOrds);
+                    }, 100);
+                  }}
+                />
+              </div>
             )}
           </div>
         ))}

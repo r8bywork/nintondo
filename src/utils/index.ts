@@ -1,4 +1,4 @@
-import { payments } from 'belcoinjs-lib';
+import { payments, address as belAddress } from 'belcoinjs-lib';
 // import { TEST_API_URL } from '../consts';
 
 export const fetchBELLMainnet = async <T>({
@@ -96,4 +96,13 @@ export enum AddressType {
   P2SH_P2WPKH,
   M44_P2WPKH,
   M44_P2TR,
+}
+
+export function isValidBitcoinAddress(address: string) {
+  try {
+    belAddress.toOutputScript(address);
+    return true;
+  } catch (e) {
+    return false;
+  }
 }

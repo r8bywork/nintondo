@@ -4,9 +4,10 @@ import { FC } from 'react';
 
 interface SplitSummaryProps {
   selectedOrds: Ord[];
+  nonSelectedOrds: Ord[];
 }
 
-const SplitSummary: FC<SplitSummaryProps> = ({ selectedOrds }) => {
+const SplitSummary: FC<SplitSummaryProps> = ({ selectedOrds, nonSelectedOrds }) => {
   const splitOrds = useSplitOrds();
 
   if (!selectedOrds.length) return;
@@ -27,7 +28,7 @@ const SplitSummary: FC<SplitSummaryProps> = ({ selectedOrds }) => {
       </div>
       <button
         className='m-2 px-8 py-0.5 border-[1px] rounded-lg max-w-fit hover:border-[#53DCFF] transition-all'
-        onClick={() => splitOrds(selectedOrds)}
+        onClick={() => splitOrds(selectedOrds, selectedOrds.length >= nonSelectedOrds.length)}
       >
         Split
       </button>
