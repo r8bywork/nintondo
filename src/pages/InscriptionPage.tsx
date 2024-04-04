@@ -8,6 +8,7 @@ import { InscriptionInfoFields } from '../settings/fields.tsx';
 import { useExplorerGetInscriptionInfo } from '../hooks/marketinfo.ts';
 import { useEffect, useState } from 'react';
 import { InscriptionInfo } from '../interfaces/inscriptions.ts';
+import { CONTENT_URL } from '@/consts/index.ts';
 
 const InscriptionPage = () => {
   const { hash } = useParams();
@@ -23,7 +24,7 @@ const InscriptionPage = () => {
           setData([reqData] as InscriptionInfo[]);
         }
       });
-      fetch(`http://0.0.0.0:8111/pub/content/${hash}`)
+      fetch(`${CONTENT_URL}/${hash}`)
         .then((response) => {
           const contentType = response.headers.get('content-type');
           if (

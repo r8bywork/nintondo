@@ -53,7 +53,7 @@ const useNintondoManager = () => {
     if (await checkStorage()) return;
     const connectedAddress = address ?? (await connectWallet());
     const message = `
-Welcome to Belmarket!
+Welcome to Nintondo!
 
 If you sign you agree to our policy.
       

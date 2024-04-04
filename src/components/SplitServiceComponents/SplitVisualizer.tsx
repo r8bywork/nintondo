@@ -3,6 +3,7 @@ import BigArrowRight from '@/assets/BigArrowRight.svg?react';
 import { FC } from 'react';
 import cn from 'classnames';
 import { isValidBitcoinAddress } from '@/utils';
+import { PREVIEW_URL } from '@/consts';
 
 interface SplitVisualizerProps {
   selectedOrds: Ord[];
@@ -100,7 +101,7 @@ const SplitVisualizer: FC<SplitVisualizerProps> = ({
                     <div className='flex gap-2 items-center'>
                       <div className='w-20 h-20 overflow-hidden rounded-lg relative group'>
                         <img
-                          src={`http://localhost:8111/pub/preview/${
+                          src={`${PREVIEW_URL}/${
                             f.inscriptions[f.inscriptionIndex ?? 0].inscription_id
                           }`}
                           className='object-cover cursor-pointer'

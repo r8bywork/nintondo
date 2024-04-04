@@ -18,6 +18,7 @@ import { selectTypeFilter } from '../redux/slices/typeFiltersSlice.ts';
 import { selectSortByFilter } from '../redux/slices/sortByFiltersSlice.ts';
 import Skeleton from '../components/Placeholders/Skeleton.tsx';
 import { createHref } from '../utils';
+import { PREVIEW_URL } from '@/consts/index.ts';
 const InscriptionsPage = () => {
   const navigate = useNavigate();
   const [inscriptions, setInscriptions] = useState<InscriptionCards>();
@@ -107,7 +108,7 @@ const InscriptionsPage = () => {
                 {inscriptions?.inscriptions.map((card, index) => (
                   <Card
                     onClick={() => navigate(`/marketplace/inscriptions/${card.id}`)}
-                    image={`http://0.0.0.0:8111/pub/preview/${card.id}`}
+                    image={`${PREVIEW_URL}/${card.id}`}
                     key={index}
                     text={card.number}
                     date={card.created}

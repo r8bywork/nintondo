@@ -1,5 +1,5 @@
 import { payments, address as belAddress } from 'belcoinjs-lib';
-import { TEST_API_URL } from '../consts';
+import { HOST } from '../consts';
 
 export const fetchBELLMainnet = async <T>({
   path,
@@ -45,7 +45,7 @@ export const fetchMarketInfo = async <T>({
   json = true,
   ...props
 }: fetchProps): Promise<T | undefined> => {
-  const url = `${'http://0.0.0.0:8111/'}${path}`;
+  const url = `${HOST}/${path}`;
   const res = await fetch(url.toString(), { ...props });
 
   if (!json) return (await res.text()) as T;
