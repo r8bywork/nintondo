@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import UtxoSelector from '@/components/SplitServiceComponents/UtxoSelector';
 import SplitVisualizer from '@/components/SplitServiceComponents/SplitVisualizer';
 import SplitSummary from '@/components/SplitServiceComponents/SplitSummary';
+import { NINTONDO_API_URL } from '@/consts';
 
 const SplitServicePage = () => {
   const { address, verifiedAddress } = useNintondoManagerContext();
@@ -14,17 +15,15 @@ const SplitServicePage = () => {
   const [selectedOrds, setSelectedOrds] = useState<Ord[]>([]);
   const [selectedAll, setSelectedAll] = useState<boolean>(false);
 
-  const [alreadyDidSplit, setAlreadyDidSplit] = useState<boolean>(false);
-
   const getUserInscriptions = useCallback(async (): Promise<Ord[]> => {
-    const response = (await axios.get(`http://localhost:3001/offset_ords/address/${address}`)).data;
+    const response = (await axios.get(`${NINTONDO_API_URL}/offset_ords/address/${address}`)).data;
     return response.ords as Ord[];
   }, [address]);
 
   const selectedOrdHandler = (ord: Ord) => {
     setSelectedOrds((prev) => [...prev, ord]);
     setOrds((prev) => {
-      const index = prev.findIndex((f) => f.txid === ord.txid);
+      const index = prev.findIndex((f) => f.txid === ord.txid && f.vout === ord.vout);
       return [...prev.slice(0, index), ...prev.slice(index + 1)];
     });
   };
@@ -38,7 +37,7 @@ const SplitServicePage = () => {
     setSelectedAll(false);
     setOrds((prev) => [...prev, ord]);
     setSelectedOrds((prev) => {
-      const index = prev.findIndex((f) => f.txid === ord.txid);
+      const index = prev.findIndex((f) => f.txid === ord.txid && f.vout === ord.vout);
       return [...prev.slice(0, index), ...prev.slice(index + 1)];
     });
   };
@@ -55,11 +54,6 @@ const SplitServicePage = () => {
       setLoading(false);
     })();
   }, [address, verifiedAddress]);
-
-  useEffect(() => {
-    const splittedAddress = localStorage.getItem('splitedAddress');
-    if (splittedAddress === address) setAlreadyDidSplit(true);
-  }, [address]);
 
   if (!verifiedAddress)
     return (
@@ -79,7 +73,7 @@ const SplitServicePage = () => {
       </div>
     );
 
-  if ((!ords.length && !selectedOrds.length) || alreadyDidSplit)
+  if (!ords.length && !selectedOrds.length)
     return (
       <div className={'bg-black'}>
         <div className='h-screen max-w-[1700px] mx-auto flex pt-[150px] items-center justify-center text-white'>
@@ -109,10 +103,7 @@ const SplitServicePage = () => {
             removeSelectedOrdHandler={removeSelectedOrdHandler}
           />
         </div>
-        <SplitSummary
-          selectedOrds={selectedOrds}
-          nonSelectedOrds={ords}
-        />
+        <SplitSummary selectedOrds={selectedOrds} />
       </div>
     </div>
   );

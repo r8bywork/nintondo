@@ -1,9 +1,8 @@
 import { Ord } from '@/interfaces/nintondo-manager-provider';
 import BigArrowRight from '@/assets/BigArrowRight.svg?react';
 import { FC } from 'react';
-import cn from 'classnames';
-import { isValidBitcoinAddress } from '@/utils';
-import { PREVIEW_URL } from '@/consts';
+import SplitUtxo from './components/SplitUtxo';
+import SendUtxo from './components/SendUtxo';
 
 interface SplitVisualizerProps {
   selectedOrds: Ord[];
@@ -19,7 +18,7 @@ const SplitVisualizer: FC<SplitVisualizerProps> = ({
   const switchToInscription = (ord: Ord, direction: 'next' | 'previous') => {
     setSelectedOrds(
       selectedOrds.map((o) => {
-        if (o.txid === ord.txid) {
+        if (o.txid === ord.txid && o.vout === ord.vout) {
           const maxIndex = o.inscriptions.length - 1;
           let newIndex = o.inscriptionIndex ?? 0;
           if (direction === 'next') {
@@ -35,7 +34,11 @@ const SplitVisualizer: FC<SplitVisualizerProps> = ({
   };
 
   const updateSend = (ord: Ord) => {
-    setSelectedOrds(selectedOrds.map((o) => (o.txid === ord.txid ? { ...o, send: ord.send } : o)));
+    setSelectedOrds(
+      selectedOrds.map((o) =>
+        o.txid === ord.txid && o.vout === ord.vout ? { ...o, send: ord.send } : o,
+      ),
+    );
   };
 
   if (!selectedOrds.length)
@@ -86,78 +89,20 @@ const SplitVisualizer: FC<SplitVisualizerProps> = ({
               </div>
             </div>
             <BigArrowRight className='h-4' />
-            {!f.send ? (
-              <div className='flex flex-col p-3 m-3 max-w-fit rounded-lg gap-5'>
-                <div className='flex flex-col gap-1 bg-[#1A1A1A] p-3 rounded-lg items-center'>
-                  <div className='p-2 flex items-center gap-3'>
-                    {f.inscriptions.length > 1 && (
-                      <span
-                        onClick={() => switchToInscription(f, 'next')}
-                        className='cursor-pointer'
-                      >
-                        &#10094;
-                      </span>
-                    )}
-                    <div className='flex gap-2 items-center'>
-                      <div className='w-20 h-20 overflow-hidden rounded-lg relative group'>
-                        <img
-                          src={`${PREVIEW_URL}/${
-                            f.inscriptions[f.inscriptionIndex ?? 0].inscription_id
-                          }`}
-                          className='object-cover cursor-pointer'
-                        />
-                      </div>
-                      <div className={cn('flex flex-col')}>
-                        <span>
-                          Number: #{f.inscriptions[f.inscriptionIndex ?? 0].inscription_number}
-                        </span>
-                        <span>Value: 0.00001 BEL</span>
-                      </div>
-                    </div>
-                    {f.inscriptions.length > 1 && (
-                      <span
-                        onClick={() => switchToInscription(f, 'previous')}
-                        className='cursor-pointer'
-                      >
-                        &#10095;
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className='flex flex-col gap-1 bg-[#1A1A1A] p-3 rounded-lg'>
-                  <span>Retrievable balance:</span>
-                  <p>Value: {(f.available_to_free / 10 ** 8).toFixed(4)} BEL</p>
-                </div>
-              </div>
-            ) : (
-              <div className='flex flex-col p-3 w-3/5 gap-1'>
-                <span className='text-sm'>Enter receivers address</span>
-                <input
-                  type='text'
-                  className={cn('p-2 bg-black border-2 border-[#191919] rounded-lg', {
-                    'border-red-500': !f.verifiedSendAddress && f.send,
-                    'border-lime-500': f.verifiedSendAddress && f.send,
-                  })}
-                  value={f.sendToAddress}
-                  onChange={(e) => {
-                    setSelectedOrds(
-                      selectedOrds.map((o) =>
-                        o.txid === f.txid
-                          ? {
-                              ...o,
-                              sendToAddress: e.target.value.trim(),
-                              verifiedSendAddress: isValidBitcoinAddress(e.target.value.trim()),
-                            }
-                          : o,
-                      ),
-                    );
-                    setTimeout(() => {
-                      console.log(selectedOrds);
-                    }, 100);
-                  }}
+            <div className='h-60 w-96 flex justify-center items-center'>
+              {!f.send ? (
+                <SplitUtxo
+                  ord={f}
+                  switchToInscription={switchToInscription}
                 />
-              </div>
-            )}
+              ) : (
+                <SendUtxo
+                  selectedOrds={selectedOrds}
+                  ord={f}
+                  setSelectedOrds={setSelectedOrds}
+                />
+              )}
+            </div>
           </div>
         ))}
       </div>

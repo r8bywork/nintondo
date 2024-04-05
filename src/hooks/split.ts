@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 export const useSplitOrds = () => {
   const { address, verifiedAddress, signPsbtInputs } = useNintondoManagerContext();
 
-  return async (ords: Ord[], all: boolean = false) => {
+  return async (ords: Ord[]) => {
     if (!address || !verifiedAddress) return;
 
     const psbt = new Psbt({ network: networks.bitcoin });
@@ -146,8 +146,5 @@ export const useSplitOrds = () => {
     const hex = signedPsbt.finalizeAllInputs().extractTransaction(true).toHex();
     const result = await pushTx(hex);
     toast((result?.length ?? 'error') === 64 ? 'Success' : result!);
-    if ((result?.length ?? 'error') === 64 && all) {
-      localStorage.setItem('splitedAddress', address);
-    }
   };
 };

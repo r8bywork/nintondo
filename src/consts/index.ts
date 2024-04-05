@@ -23,4 +23,3 @@ export const DEFAULT_FEE_RATE = 100;
 export const ORD_VALUE = 1000;
 
 export const FEE_ADDRESS = 'BMPNoA3NXhWoL89AkvFpYHEv8orNpUn5qq';
-export const BURN_ADDRESS = 'BHZELfz5GGTxZDYVzfv9XFcg2hBVTctHjS';
