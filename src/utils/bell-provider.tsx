@@ -6,6 +6,7 @@ import { sha256 } from '@noble/hashes/sha256';
 import { AddressType, getAddress } from '.';
 import { INintondoManagerProvider, SignPsbtOptions } from '@/interfaces/nintondo-manager-provider';
 import axios from 'axios';
+import { BACKEND_URL } from '@/consts';
 
 const ECPair = ECPairFactory(tinysecp);
 const useNintondoManager = () => {
@@ -78,7 +79,7 @@ ${connectedAddress}
           setVerifiedAddress(true);
 
           await axios.post(
-            'http://192.168.0.108:8888/auth/login',
+            `${BACKEND_URL}/auth/login`,
             {
               address,
               // eslint-disable-next-line camelcase
