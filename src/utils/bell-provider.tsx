@@ -5,6 +5,7 @@ import * as tinysecp from 'bells-secp256k1';
 import { sha256 } from '@noble/hashes/sha256';
 import { AddressType, getAddress } from '.';
 import { INintondoManagerProvider, SignPsbtOptions } from '@/interfaces/nintondo-manager-provider';
+import axios from 'axios';
 
 const ECPair = ECPairFactory(tinysecp);
 const useNintondoManager = () => {
@@ -56,11 +57,11 @@ const useNintondoManager = () => {
 Welcome to Nintondo!
 
 If you sign you agree to our policy.
-      
+
 This request will not trigger a blockchain transaction.
-      
+
 Your authentication status will reset after 24 hours.
-      
+
 Wallet address:
 ${connectedAddress}
     `;
@@ -75,7 +76,30 @@ ${connectedAddress}
         const publicAddress = getAddress(publicKeyBuffer, AddressType.P2PKH);
         if (publicAddress === connectedAddress) {
           setVerifiedAddress(true);
-          localStorage.setItem('verifiedAddress', connectedAddress);
+
+          const postResult = await axios.post('http://localhost:8888/auth/login', {
+            address,
+            // eslint-disable-next-line camelcase
+            signed_message_base64: signedMessage,
+            // eslint-disable-next-line camelcase
+            public_key_hex: await nintondo.getPublicKey(),
+          });
+
+          console.log(postResult);
+
+          if (postResult === undefined || postResult.headers === undefined) return;
+
+          // Extract the JWT token from the cookie in the response
+          const jwtToken = postResult.headers[''][0].split(';')[0].split('=')[1];
+
+          // Use the JWT token in the Authorization header for the GET request
+          const getResponse = await axios.get('http://localhost:8888/auth/verify', {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          });
+          console.log(getResponse);
+          // localStorage.setItem('verifiedAddress', connectedAddress);
         } else toast.error('Failed to verify address');
       } else toast.error('Failed to verify address');
     } catch (e) {
