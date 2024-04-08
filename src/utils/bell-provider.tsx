@@ -77,28 +77,18 @@ ${connectedAddress}
         if (publicAddress === connectedAddress) {
           setVerifiedAddress(true);
 
-          const postResult = await axios.post('http://localhost:8888/auth/login', {
-            address,
-            // eslint-disable-next-line camelcase
-            signed_message_base64: signedMessage,
-            // eslint-disable-next-line camelcase
-            public_key_hex: await nintondo.getPublicKey(),
-          });
-
-          console.log(postResult);
-
-          if (postResult === undefined || postResult.headers === undefined) return;
-
-          // Extract the JWT token from the cookie in the response
-          const jwtToken = postResult.headers[''][0].split(';')[0].split('=')[1];
-
-          // Use the JWT token in the Authorization header for the GET request
-          const getResponse = await axios.get('http://localhost:8888/auth/verify', {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
+          await axios.post(
+            'http://192.168.0.108:8888/auth/login',
+            {
+              address,
+              // eslint-disable-next-line camelcase
+              signed_message_base64: signedMessage,
+              // eslint-disable-next-line camelcase
+              public_key_hex: await nintondo.getPublicKey(),
             },
-          });
-          console.log(getResponse);
+            { withCredentials: true },
+          );
+
           // localStorage.setItem('verifiedAddress', connectedAddress);
         } else toast.error('Failed to verify address');
       } else toast.error('Failed to verify address');

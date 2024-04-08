@@ -1,5 +1,5 @@
-// const host = "http://192.168.0.102";
-export const HOST = 'http://localhost:8111';
+export const HOST = 'http://192.168.0.108:8111';
+// export const HOST = 'http://localhost:8111';
 
 export const NINTONDO_API_URL = 'https://api.nintondo.io/api';
 // export const TEST_API_URL = "http://0.0.0.0:3001";
