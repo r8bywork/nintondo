@@ -1,13 +1,30 @@
 import { useSplitOrds } from '@/hooks/split';
 import { Ord } from '@/interfaces/nintondo-manager-provider';
-import { FC } from 'react';
+import { FC, useState } from 'react';
+import toast from 'react-hot-toast';
+import Loading from 'react-loading';
 
 interface SplitSummaryProps {
   selectedOrds: Ord[];
+  updateOrds: () => Promise<void>;
+  selectedFeeRate: number;
 }
 
-const SplitSummary: FC<SplitSummaryProps> = ({ selectedOrds }) => {
+const SplitSummary: FC<SplitSummaryProps> = ({ selectedOrds, updateOrds, selectedFeeRate }) => {
   const splitOrds = useSplitOrds();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const doSplit = async () => {
+    setLoading(true);
+    if (selectedFeeRate <= 500) {
+      toast.error('Please select fee');
+      setLoading(false);
+      return;
+    }
+    const txid = await splitOrds(selectedOrds, selectedFeeRate);
+    if (txid) updateOrds();
+    setLoading(false);
+  };
 
   if (!selectedOrds.length) return;
 
@@ -25,12 +42,16 @@ const SplitSummary: FC<SplitSummaryProps> = ({ selectedOrds }) => {
           </span>
         </p>
       </div>
-      <button
-        className='m-2 px-8 py-0.5 border-[1px] rounded-lg max-w-fit hover:border-[#53DCFF] transition-all'
-        onClick={() => splitOrds(selectedOrds)}
-      >
-        Split
-      </button>
+      {loading ? (
+        <Loading type='balls' />
+      ) : (
+        <button
+          className='m-2 px-8 py-0.5 border-[1px] rounded-lg max-w-fit hover:border-[#53DCFF] transition-all'
+          onClick={doSplit}
+        >
+          Split
+        </button>
+      )}
     </div>
   );
 };

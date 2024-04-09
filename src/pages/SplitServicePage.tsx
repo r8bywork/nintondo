@@ -6,6 +6,10 @@ import UtxoSelector from '@/components/SplitServiceComponents/UtxoSelector';
 import SplitVisualizer from '@/components/SplitServiceComponents/SplitVisualizer';
 import SplitSummary from '@/components/SplitServiceComponents/SplitSummary';
 import { NINTONDO_API_URL } from '@/consts';
+import Loading from 'react-loading';
+import FeeSelector from '@/components/SplitServiceComponents/FeeSelector';
+import { Fees } from '@/interfaces/api';
+import { getFees } from '@/hooks/electrs';
 
 const SplitServicePage = () => {
   const { address, verifiedAddress } = useNintondoManagerContext();
@@ -14,6 +18,9 @@ const SplitServicePage = () => {
 
   const [selectedOrds, setSelectedOrds] = useState<Ord[]>([]);
   const [selectedAll, setSelectedAll] = useState<boolean>(false);
+  const [feeRates, setFeeRate] = useState<Fees>({ fast: 3000, slow: 200 });
+
+  const [selectedFeeRate, setSelectedFeeRate] = useState<number | string>(37);
 
   const getUserInscriptions = useCallback(async (): Promise<Ord[]> => {
     const response = (await axios.get(`${NINTONDO_API_URL}/offset_ords/address/${address}`)).data;
@@ -42,18 +49,38 @@ const SplitServicePage = () => {
     });
   };
 
+  const updateFees = useCallback(async () => {
+    const fees = await getFees();
+    if (selectedFeeRate === 37) setSelectedFeeRate(fees.fast);
+    setFeeRate(fees);
+  }, []);
+
+  const updateOrds = useCallback(async () => {
+    setLoading(true);
+    setSelectedOrds([]);
+    setOrds([]);
+    if (!address || !verifiedAddress) return;
+    let ords = await getUserInscriptions();
+    ords = ords.sort((a, b) => b.available_to_free - a.available_to_free);
+    ords = ords.filter((f) => f.status.confirmed);
+    setOrds(ords);
+    setLoading(false);
+  }, [address, verifiedAddress]);
+
   useEffect(() => {
     setSelectedOrds([]);
     setOrds([]);
-    (async () => {
-      setLoading(true);
-      if (!address || !verifiedAddress) return;
-      let ords = await getUserInscriptions();
-      ords = ords.sort((a, b) => b.available_to_free - a.available_to_free);
-      setOrds(ords);
-      setLoading(false);
-    })();
-  }, [address, verifiedAddress]);
+    updateOrds();
+  }, [updateOrds]);
+
+  useEffect(() => {
+    updateFees();
+    const interval = setInterval(async () => {
+      updateFees;
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [updateFees]);
 
   if (!verifiedAddress)
     return (
@@ -68,7 +95,7 @@ const SplitServicePage = () => {
     return (
       <div className={'bg-black'}>
         <div className='h-screen max-w-[1700px] mx-auto flex pt-[150px] items-center justify-center text-white'>
-          Loading
+          <Loading type='balls' />
         </div>
       </div>
     );
@@ -103,7 +130,20 @@ const SplitServicePage = () => {
             removeSelectedOrdHandler={removeSelectedOrdHandler}
           />
         </div>
-        <SplitSummary selectedOrds={selectedOrds} />
+        <div className='flex gap-6'>
+          <FeeSelector
+            onChange={(value) => {
+              setSelectedFeeRate(value);
+            }}
+            value={selectedFeeRate}
+            feeRates={feeRates}
+          />
+          <SplitSummary
+            selectedFeeRate={typeof selectedFeeRate === 'string' ? 0 : selectedFeeRate}
+            selectedOrds={selectedOrds}
+            updateOrds={updateOrds}
+          />
+        </div>
       </div>
     </div>
   );

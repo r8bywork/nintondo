@@ -33,3 +33,8 @@ export interface Status {
   block_hash: string;
   block_time: number;
 }
+
+export interface Fees {
+  fast: number;
+  slow: number;
+}

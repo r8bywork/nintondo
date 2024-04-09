@@ -1,12 +1,12 @@
 import { payments, address as belAddress } from 'belcoinjs-lib';
-import { HOST } from '../consts';
+import { HOST, NINTONDO_API_URL } from '../consts';
 
 export const fetchBELLMainnet = async <T>({
   path,
   json = true,
   ...props
 }: fetchProps): Promise<T | undefined> => {
-  const url = `${'http://localhost:3001'}${path}`;
+  const url = `${NINTONDO_API_URL}${path}`;
   const res = await fetch(url.toString(), { ...props });
 
   if (!json) return (await res.text()) as T;

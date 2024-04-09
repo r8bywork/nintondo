@@ -1,4 +1,4 @@
-import { DEFAULT_FEE_RATE, ORD_VALUE } from '@/consts';
+import { ORD_VALUE } from '@/consts';
 import { Ord } from '@/interfaces/nintondo-manager-provider';
 import { gptFeeCalculate } from '@/utils';
 import { useNintondoManagerContext } from '@/utils/bell-provider';
@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 export const useSplitOrds = () => {
   const { address, verifiedAddress, signPsbtInputs } = useNintondoManagerContext();
 
-  return async (ords: Ord[]) => {
+  return async (ords: Ord[], feeRate: number) => {
     if (!address || !verifiedAddress) return;
 
     const psbt = new Psbt({ network: networks.bitcoin });
@@ -29,11 +29,7 @@ export const useSplitOrds = () => {
           value: utxo.value,
         });
         if (i + 1 === ords.length) {
-          const requiredFee = gptFeeCalculate(
-            ords.length + 1,
-            psbt.txOutputs.length + 1,
-            DEFAULT_FEE_RATE,
-          );
+          const requiredFee = gptFeeCalculate(ords.length + 1, psbt.txOutputs.length + 1, feeRate);
           const utxos = await getApiUtxo(address);
           if (!utxos || !utxos.length)
             return toast.error(
@@ -85,7 +81,7 @@ export const useSplitOrds = () => {
           const lastOutputValue =
             utxo.value -
             addedValues.reduce((acc, v) => (acc += v), 0) -
-            gptFeeCalculate(ords.length, psbt.txOutputs.length + 1, DEFAULT_FEE_RATE);
+            gptFeeCalculate(ords.length, psbt.txOutputs.length + 1, feeRate);
           if (lastOutputValue >= 1000) {
             psbt.addOutput({
               address,
@@ -100,7 +96,7 @@ export const useSplitOrds = () => {
             const requiredFee = gptFeeCalculate(
               ords.length + 1,
               psbt.txOutputs.length + 1,
-              DEFAULT_FEE_RATE,
+              feeRate,
             );
             const utxos = await getApiUtxo(address);
             if (!utxos || !utxos.length)
@@ -146,5 +142,6 @@ export const useSplitOrds = () => {
     const hex = signedPsbt.finalizeAllInputs().extractTransaction(true).toHex();
     const result = await pushTx(hex);
     toast((result?.length ?? 'error') === 64 ? 'Success' : result!);
+    return result;
   };
 };

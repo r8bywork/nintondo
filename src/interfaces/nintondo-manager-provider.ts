@@ -60,3 +60,8 @@ export interface InscriptionMetaInfo {
   inscription_number: number;
   offset: number;
 }
+
+export interface Claims {
+  address: string;
+  exp: number;
+}

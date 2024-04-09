@@ -4,9 +4,15 @@ import ECPairFactory from 'belpair';
 import * as tinysecp from 'bells-secp256k1';
 import { sha256 } from '@noble/hashes/sha256';
 import { AddressType, getAddress } from '.';
-import { INintondoManagerProvider, SignPsbtOptions } from '@/interfaces/nintondo-manager-provider';
+import {
+  Claims,
+  INintondoManagerProvider,
+  SignPsbtOptions,
+} from '@/interfaces/nintondo-manager-provider';
 import axios from 'axios';
 import { BACKEND_URL } from '@/consts';
+import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
 
 const ECPair = ECPairFactory(tinysecp);
 const useNintondoManager = () => {
@@ -52,7 +58,7 @@ const useNintondoManager = () => {
   const verifyAddress = useCallback(async () => {
     if (!nintondo) return;
     await connectWallet();
-    if (await checkStorage()) return;
+    if (await checkCookies()) return;
     const connectedAddress = address ?? (await connectWallet());
     const message = `
 Welcome to Nintondo!
@@ -107,13 +113,16 @@ ${connectedAddress}
     if (address) {
       setAddress(undefined);
       setVerifiedAddress(false);
-      await checkStorage();
+      await checkCookies();
     }
   }, [address]);
 
-  const checkStorage = useCallback(async () => {
+  const checkCookies = useCallback(async () => {
     if (!nintondo) return;
-    const verifiedAddress = localStorage.getItem('verifiedAddress');
+    const token = Cookies.get('access_token');
+    if (!token) return;
+    const verifiedAddress = jwtDecode<Claims>(token).address;
+
     if (verifiedAddress !== null) {
       const publicKeyHex = await nintondo.getPublicKey();
       if (!publicKeyHex) return;
@@ -127,6 +136,8 @@ ${connectedAddress}
   }, [nintondo]);
 
   const disconnect = async () => {
+    Cookies.remove('access_token');
+    Cookies.remove('refresh_token');
     setAddress(undefined);
     setVerifiedAddress(false);
     localStorage.removeItem('verifiedAddress');
@@ -134,9 +145,9 @@ ${connectedAddress}
 
   useEffect(() => {
     (async () => {
-      await checkStorage();
+      await checkCookies();
     })();
-  }, [checkStorage, nintondo]);
+  }, [checkCookies, nintondo]);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

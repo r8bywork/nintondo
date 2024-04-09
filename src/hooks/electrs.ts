@@ -1,4 +1,4 @@
-import { ApiOrdUTXO, ApiUTXO, Inscription } from '../interfaces/api';
+import { ApiOrdUTXO, ApiUTXO, Fees, Inscription } from '../interfaces/api';
 import { fetchBELLMainnet } from '../utils';
 
 export const getUserInscriptions = async (address: string) => {
@@ -33,4 +33,15 @@ export const pushTx = async (txHex: string) => {
     json: false,
     method: 'POST',
   });
+};
+
+export const getFees = async (): Promise<Fees> => {
+  const data = (await fetchBELLMainnet({
+    path: '/fee-estimates',
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  })) as any;
+  return {
+    slow: Number((data['6'] as number)?.toFixed(0)),
+    fast: Number((data['2'] as number)?.toFixed(0)) + 1,
+  };
 };
