@@ -13,3 +13,8 @@ export interface IBuyInscription {
   txid?: string;
   confirmed: boolean;
 }
+
+export interface PushSplit {
+  transaction_hex: string;
+  utxos_txid: string[];
+}

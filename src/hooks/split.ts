@@ -1,10 +1,17 @@
-import { ORD_VALUE } from '@/consts';
+import { BACKEND_URL, ORD_VALUE } from '@/consts';
 import { Ord } from '@/interfaces/nintondo-manager-provider';
 import { gptFeeCalculate } from '@/utils';
 import { useNintondoManagerContext } from '@/utils/bell-provider';
 import { networks, Psbt } from 'belcoinjs-lib';
-import { getApiUtxo, getTransactionRawHex, pushTx } from './electrs';
+import { getApiUtxo, getTransactionRawHex } from './electrs';
 import toast from 'react-hot-toast';
+import { PushSplit } from '@/interfaces/marketapi';
+import axios from 'axios';
+
+export const pushSplit = async (data: PushSplit) => {
+  const result = await axios.post(`${BACKEND_URL}/split`, data, { withCredentials: true });
+  return result.data;
+};
 
 export const useSplitOrds = () => {
   const { address, verifiedAddress, signPsbtInputs } = useNintondoManagerContext();
@@ -140,7 +147,8 @@ export const useSplitOrds = () => {
     const signedPsbt = Psbt.fromBase64(signedPsbtBase64);
 
     const hex = signedPsbt.finalizeAllInputs().extractTransaction(true).toHex();
-    const result = await pushTx(hex);
+    // eslint-disable-next-line camelcase
+    const result = await pushSplit({ transaction_hex: hex, utxos_txid: ords.map((f) => f.txid) });
     toast((result?.length ?? 'error') === 64 ? 'Success' : result!);
     return result;
   };

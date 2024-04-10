@@ -82,8 +82,6 @@ ${connectedAddress}
       if (verified) {
         const publicAddress = getAddress(publicKeyBuffer, AddressType.P2PKH);
         if (publicAddress === connectedAddress) {
-          setVerifiedAddress(true);
-
           await axios.post(
             `${BACKEND_URL}/auth/login`,
             {
@@ -95,6 +93,9 @@ ${connectedAddress}
             },
             { withCredentials: true },
           );
+
+          const accessToken = Cookies.get('access_token');
+          if (accessToken) setVerifiedAddress(true);
 
           // localStorage.setItem('verifiedAddress', connectedAddress);
         } else toast.error('Failed to verify address');
