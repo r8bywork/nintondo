@@ -50,3 +50,42 @@
   scrollbar-width: thin;
   scrollbar-color: #62697A #080C15;
 }
+
+.custom_scrollbar_container::-webkit-scrollbar {
+  width: 0.25rem;
+  height: 0.2rem;
+}
+
+.custom_scrollbar_container::-webkit-scrollbar-track {
+  background-color: black;
+}
+
+.custom_scrollbar_container::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+.custom_scrollbar_container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

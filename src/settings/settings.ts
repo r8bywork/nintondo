@@ -5,7 +5,7 @@ import TrendingSvg from '../assets/card/rating.svg?react';
 import FullSizeSvg from '../assets/card/fullsize.svg?react';
 import ShareSvg from '../assets/card/share.svg?react';
 import ApeCard from '../assets/collection/ApeCard.png';
-import { Collection, FilterConfig, Header } from '../interfaces/intefaces.ts';
+import { Collection, FilterConfig } from '../interfaces/intefaces.ts';
 import Image from '../assets/collection/Ape.png';
 import ApeSmall from '../assets/collection/ApeSmall.png';
 import TwitterLogo from '../assets/social/twitter.svg?react';
@@ -94,16 +94,21 @@ export const linksData = [
   },
 ];
 
-export const HeaderLinks: Header[] = [
+export interface IHeader {
+  name: string;
+  url: string;
+}
+
+export const HeaderLinks: IHeader[] = [
   { name: 'wallet', url: '/wallet' },
   { name: 'markets', url: '/markets' },
   { name: 'explorer', url: '/explorer' },
   { name: 'marketplace', url: '/marketplace/inscriptions' },
 ];
 
-export const HeaderLinksMarketPlace: Header[] = [
-  { name: 'inscriptions', url: '/marketplace/inscriptions' },
-  { name: 'collections', url: '/marketplace/collections' },
+export const HeaderLinksMarketPlace: IHeader[] = [
+  { name: 'inscriptions', url: '/marketplace' },
+  { name: 'collections', url: '/collections' },
 ];
 
 export const cardConfig = [

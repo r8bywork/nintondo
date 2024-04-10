@@ -1,11 +1,12 @@
-import { TEST_API_URL, MARKET_API_URL, MARKET_HISTORY_API_URL } from '../consts';
+import { MARKET_API_URL, MARKET_HISTORY_API_URL, NINTONDO_API_URL } from '../consts';
+import { address as belAddress, payments } from 'belcoinjs-lib';
 
 export const fetchBELLMainnet = async <T>({
   path,
   json = true,
   ...props
 }: fetchProps): Promise<T | undefined> => {
-  const url = `${TEST_API_URL}${path}`;
+  const url = `${NINTONDO_API_URL}${path}`;
   const res = await fetch(url.toString(), { ...props });
 
   if (!json) return (await res.text()) as T;
@@ -109,6 +110,40 @@ export function gptFeeCalculate(inputCount: number, outputCount: number, feeRate
   return fee;
 }
 
+export function getAddress(publicKey: Uint8Array, addressType: AddressType) {
+  if (addressType === undefined) throw new Error('addressType of keyring is not specified');
+  switch (addressType) {
+    case AddressType.P2WPKH:
+      return payments.p2wpkh({ pubkey: Buffer.from(publicKey) }).address;
+    case AddressType.P2SH_P2WPKH:
+      return payments.p2sh({
+        redeem: payments.p2wpkh({ pubkey: Buffer.from(publicKey) }),
+      }).address;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    case AddressType.P2PKH as any:
+      return payments.p2pkh({ pubkey: Buffer.from(publicKey) }).address;
+    default:
+      throw new Error('Invalid AddressType');
+  }
+}
+
+export enum AddressType {
+  P2PKH,
+  P2WPKH,
+  P2TR,
+  P2SH_P2WPKH,
+  M44_P2WPKH,
+  M44_P2TR,
+}
+
+export function isValidBitcoinAddress(address: string) {
+  try {
+    belAddress.toOutputScript(address);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
 type Params = {
   nPrefix?: number;
   nSuffix?: number;

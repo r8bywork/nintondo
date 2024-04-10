@@ -8,7 +8,9 @@ import InscriptionPage from './pages/InscriptionPage.tsx';
 import CollectionPage from './pages/CollectionPage.tsx';
 import CollectionsPage from './pages/CollectionsPage.tsx';
 import { Provider } from 'react-redux';
+import SplitServicePage from './pages/SplitServicePage.tsx';
 import { store } from './redux/store/store.ts';
+  
 const App = () => {
   return (
     <Provider store={store}>
@@ -39,6 +41,10 @@ const App = () => {
             path='/marketplace/collections/:hash'
             element={<CollectionPage />}
           />
+          <Route
+            path='/split-service/*'
+            element={<SplitServicePage />}
+          />
         </Routes>
       </Router>
     </Provider>
@@ -46,3 +52,4 @@ const App = () => {
 };
 
 export default App;
+

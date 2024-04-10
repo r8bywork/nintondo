@@ -4,6 +4,9 @@ import App from './App.tsx';
 import './index.css';
 import { NintondoProvider } from './utils/bell-provider.tsx';
 import { Toaster } from 'react-hot-toast';
+import { Buffer } from 'buffer';
+
+globalThis.Buffer = Buffer;
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
