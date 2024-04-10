@@ -3,12 +3,14 @@ import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import classNames from 'classnames';
 import ContentComponent from './ContentComponent.tsx';
+import { formattedStringFromTimestamp } from '../../utils';
 
 interface CardProps {
   onClick?: () => void;
   image: string;
   text?: number;
-  date?: string;
+  date?: number;
+  owner?: string;
   tags?: {
     SvgIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
     tagText?: string;
@@ -18,17 +20,7 @@ interface CardProps {
   contentType: string;
 }
 
-const formattedString = (startDate: Date, endDate: Date) => {
-  const millisecondsPerDay = 1000 * 60 * 60 * 24;
-  const differenceInTime = Math.abs(endDate.getTime() - startDate.getTime());
-  const differenceInDays = Math.floor(differenceInTime / millisecondsPerDay);
-
-  return differenceInDays === 1 ? '1 day ago' : `${differenceInDays} days ago`;
-};
-
-const Card = ({ onClick, text, date, tags, BigCard, image, contentType }: CardProps) => {
-  const today = new Date();
-  const specifiedDate = new Date(date ? date : '');
+const Card = ({ onClick, text, date, tags, BigCard, image, contentType, owner }: CardProps) => {
   const imageSize = BigCard ? '480px' : '180px';
 
   return (
@@ -60,7 +52,7 @@ const Card = ({ onClick, text, date, tags, BigCard, image, contentType }: CardPr
             ['text-[20px]']: BigCard,
           })}
         >
-          {formattedString(specifiedDate, today)}
+          {owner ? owner : formattedStringFromTimestamp(date || Math.floor(Date.now() / 1000))}
         </span>
       </div>
       <div className={'flex'}>

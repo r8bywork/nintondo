@@ -5,25 +5,37 @@ import Title from '../components/Title.tsx';
 import Card from '../components/Card/Card.tsx';
 import Table from '../components/Table/Table.tsx';
 import { InscriptionInfoFields } from '../settings/fields.tsx';
-import { useExplorerGetInscriptionInfo } from '../hooks/marketinfo.ts';
+import {
+  useExplorerGetInscriptionInfo,
+  useExplorerGetInscriptionOwner,
+} from '../hooks/marketinfo.ts';
 import { useEffect, useState } from 'react';
-import { InscriptionInfo } from '../interfaces/inscriptions.ts';
+import { InscriptionInfo, InscriptionOwner } from '../interfaces/inscriptions.ts';
+import NewIcon from '../assets/card/fullsize.svg?react';
+import UploadIcon from '../assets/card/share.svg?react';
+import { MARKET_API_URL } from '../consts';
+import { truncate } from '../utils';
 
 const InscriptionPage = () => {
   const { hash } = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState<InscriptionInfo[]>([]);
+  const [owner, setOwner] = useState<InscriptionOwner[]>([]);
   const [image, setImage] = useState<string>('');
   const [type, setType] = useState<string>();
   const getInscriptionInfo = useExplorerGetInscriptionInfo();
+  const getInscriptionOwner = useExplorerGetInscriptionOwner();
   useEffect(() => {
     if (hash) {
-      Promise.all([getInscriptionInfo(hash)]).then(([reqData]) => {
-        if (reqData !== null) {
-          setData([reqData] as InscriptionInfo[]);
-        }
-      });
-      fetch(`http://0.0.0.0:8111/pub/content/${hash}`)
+      Promise.all([getInscriptionInfo(hash), getInscriptionOwner(hash)]).then(
+        ([reqData, reqOwner]) => {
+          if (reqData !== null) {
+            setData([reqData] as InscriptionInfo[]);
+            setOwner([reqOwner] as InscriptionOwner[]);
+          }
+        },
+      );
+      fetch(`${MARKET_API_URL}pub/content/${hash}`)
         .then((response) => {
           const contentType = response.headers.get('content-type');
           if (
@@ -68,11 +80,18 @@ const InscriptionPage = () => {
             </button>
             <Search placeholder={'Search'} />
           </div>
-          {image && data[0] && type && (
+          {image && data[0] && type && owner[0] && (
             <Card
               text={data[0].number}
-              date={data[0].created}
-              tags={[{ tagText: data[0].file_type, active: true }]}
+              owner={truncate(owner[0].owner, {
+                nPrefix: 7,
+                nSuffix: 7,
+              })}
+              tags={[
+                { tagText: data[0].file_type, active: true },
+                { SvgIcon: NewIcon },
+                { SvgIcon: UploadIcon },
+              ]}
               image={image}
               contentType={type}
               BigCard
@@ -85,9 +104,9 @@ const InscriptionPage = () => {
             <Title text={'Inscription Info'} />
           </div>
           <div className={'mt-[25px]'}>
-            {data && (
+            {data[0] && owner[0] && (
               <Table
-                data={data}
+                data={[{ ...data[0], ...owner[0] }] as InscriptionInfo[]}
                 fields={InscriptionInfoFields}
                 marketplace
               />

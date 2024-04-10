@@ -384,8 +384,18 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
     ),
   },
   {
-    value: 'owned_by',
+    value: 'owner',
     name: 'OWNED BY',
+    render: (value) => (
+      <>
+        <span className={'text-[#53DCFF]'}>
+          {truncate(value, {
+            nPrefix: 7,
+            nSuffix: 7,
+          })}
+        </span>
+      </>
+    ),
   },
   {
     value: 'file_type',
@@ -415,16 +425,16 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
     name: 'CREATED',
   },
   {
-    value: 'ctreation_block',
+    value: 'creation_block',
     name: 'CREATION BLOCK',
     render: (value) => (
       <>
-        <span className={'text-[#53DCFF]'}>{value.toLocaleString()}</span>
+        <span className={'text-[#53DCFF]'}>{value}</span>
       </>
     ),
   },
   {
-    value: 'ctreation_transaction',
+    value: 'creation_transaction',
     name: 'CREATION TRANSACTION',
     render: (value) => (
       <>
