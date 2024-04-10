@@ -5,11 +5,13 @@ import { useCallback, useEffect, useState } from 'react';
 import UtxoSelector from '@/components/SplitServiceComponents/UtxoSelector';
 import SplitVisualizer from '@/components/SplitServiceComponents/SplitVisualizer';
 import SplitSummary from '@/components/SplitServiceComponents/SplitSummary';
-import { NINTONDO_API_URL } from '@/consts';
+import { BACKEND_URL, NINTONDO_API_URL } from '@/consts';
 import Loading from 'react-loading';
 import FeeSelector from '@/components/SplitServiceComponents/FeeSelector';
 import { Fees } from '@/interfaces/api';
 import { getFees } from '@/hooks/electrs';
+import { Split } from '@/interfaces/marketapi';
+import { filterOrdsAndFindUnmatchedSplits } from '@/utils';
 
 const SplitServicePage = () => {
   const { address, verifiedAddress } = useNintondoManagerContext();
@@ -22,10 +24,19 @@ const SplitServicePage = () => {
 
   const [selectedFeeRate, setSelectedFeeRate] = useState<number | string>(37);
 
-  const getUserInscriptions = useCallback(async (): Promise<Ord[]> => {
+  const getOffsets = useCallback(async (): Promise<Ord[]> => {
     const response = (await axios.get(`${NINTONDO_API_URL}/offset_ords/address/${address}`)).data;
     return response.ords as Ord[];
   }, [address]);
+
+  const getSplits = useCallback(async () => {
+    const result = await axios.get<Split[]>(`${BACKEND_URL}/split`, { withCredentials: true });
+    return result.data;
+  }, []);
+
+  const confirmSplits = useCallback(async (txs: string[]) => {
+    await axios.put(`${BACKEND_URL}/split`, { txs }, { withCredentials: true });
+  }, []);
 
   const selectedOrdHandler = (ord: Ord) => {
     setSelectedOrds((prev) => [...prev, ord]);
@@ -60,12 +71,15 @@ const SplitServicePage = () => {
     setSelectedOrds([]);
     setOrds([]);
     if (!address || !verifiedAddress) return;
-    let ords = await getUserInscriptions();
-    ords = ords.sort((a, b) => b.available_to_free - a.available_to_free);
-    ords = ords.filter((f) => f.status.confirmed);
+    let ords = await getOffsets();
+    const splits = await getSplits();
+    const { filteredOrds, unmatchedSplits } = filterOrdsAndFindUnmatchedSplits(ords, splits);
+
+    ords = filteredOrds.sort((a, b) => b.available_to_free - a.available_to_free);
     setOrds(ords);
     setLoading(false);
-  }, [address, verifiedAddress]);
+    if (unmatchedSplits.length > 0) await confirmSplits(unmatchedSplits.map((f) => f.txid));
+  }, [address, verifiedAddress, getSplits]);
 
   useEffect(() => {
     setSelectedOrds([]);

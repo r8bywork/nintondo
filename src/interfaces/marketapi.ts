@@ -16,5 +16,10 @@ export interface IBuyInscription {
 
 export interface PushSplit {
   transaction_hex: string;
-  utxos_txid: string[];
+  locations: string[];
+}
+
+export interface Split {
+  txid: string;
+  locations: string[];
 }

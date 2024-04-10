@@ -22,7 +22,7 @@ const SplitSummary: FC<SplitSummaryProps> = ({ selectedOrds, updateOrds, selecte
       return;
     }
     const txid = await splitOrds(selectedOrds, selectedFeeRate);
-    if (txid) updateOrds();
+    if (txid?.length === 64) updateOrds();
     setLoading(false);
   };
 

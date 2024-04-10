@@ -10,7 +10,7 @@ import CollectionsPage from './pages/CollectionsPage.tsx';
 import { Provider } from 'react-redux';
 import SplitServicePage from './pages/SplitServicePage.tsx';
 import { store } from './redux/store/store.ts';
-  
+
 const App = () => {
   return (
     <Provider store={store}>
@@ -52,4 +52,3 @@ const App = () => {
 };
 
 export default App;
-

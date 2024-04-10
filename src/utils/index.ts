@@ -1,3 +1,5 @@
+import { Split } from '@/interfaces/marketapi';
+import { Ord } from '@/interfaces/nintondo-manager-provider';
 import { MARKET_API_URL, MARKET_HISTORY_API_URL, NINTONDO_API_URL } from '../consts';
 import { address as belAddress, payments } from 'belcoinjs-lib';
 
@@ -197,4 +199,25 @@ export const formattedStringFromTimestamp = (timestamp: number) => {
     : differenceInDays === 1
       ? '1 day ago'
       : `${differenceInDays} days ago`;
+};
+
+export const filterOrdsAndFindUnmatchedSplits = (
+  ords: Ord[],
+  splits: Split[],
+): { filteredOrds: Ord[]; unmatchedSplits: Split[] } => {
+  const ordLocations = new Set(ords.map((ord) => `${ord.txid}:${ord.vout}`));
+  const unmatchedSplits: Split[] = [];
+  const filteredOrds = ords.filter((ord) => {
+    const isMatched = splits.some((split) => split.locations.includes(`${ord.txid}:${ord.vout}`));
+    return !isMatched;
+  });
+
+  splits.forEach((split) => {
+    const hasMatch = split.locations.some((location) => ordLocations.has(location));
+    if (!hasMatch) {
+      unmatchedSplits.push(split);
+    }
+  });
+
+  return { filteredOrds, unmatchedSplits };
 };

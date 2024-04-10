@@ -55,7 +55,7 @@ export const useSplitOrds = () => {
               feeValues.reduce((acc, v) => (acc += v), 0) - 1000 <= requiredFee
             )
               return toast.error(
-                `You need additional ${requiredFee + 1000} BELL in order to split`,
+                `You need additional ${(requiredFee + 1000) / 10 ** 8} BELL in order to split`,
               );
             if (feeValues.reduce((acc, v) => (acc += v), 0) - 1000 > requiredFee) break;
           }
@@ -123,7 +123,7 @@ export const useSplitOrds = () => {
                 feeValues.reduce((acc, v) => (acc += v), 0) - 1000 <= requiredFee
               )
                 return toast.error(
-                  `You need additional ${requiredFee + 1000} BELL in order to split`,
+                  `You need additional ${(requiredFee + 1000) / 10 ** 8} BELL in order to split`,
                 );
               if (feeValues.reduce((acc, v) => (acc += v), 0) - 1000 > requiredFee) break;
             }
@@ -147,9 +147,12 @@ export const useSplitOrds = () => {
     const signedPsbt = Psbt.fromBase64(signedPsbtBase64);
 
     const hex = signedPsbt.finalizeAllInputs().extractTransaction(true).toHex();
-    // eslint-disable-next-line camelcase
-    const result = await pushSplit({ transaction_hex: hex, utxos_txid: ords.map((f) => f.txid) });
+    const result = await pushSplit({
+      // eslint-disable-next-line camelcase
+      transaction_hex: hex,
+      locations: ords.map((f) => `${f.txid}:${f.vout}`),
+    });
     toast((result?.length ?? 'error') === 64 ? 'Success' : result!);
-    return result;
+    return result as string;
   };
 };
