@@ -18,7 +18,6 @@ import { selectTypeFilter } from '../redux/slices/typeFiltersSlice.ts';
 import { selectSortByFilter } from '../redux/slices/sortByFiltersSlice.ts';
 import Skeleton from '../components/Placeholders/Skeleton.tsx';
 import { createHref } from '../utils';
-import { PREVIEW_URL } from '@/consts/index.ts';
 import { MARKET_API_URL } from '../consts';
 const InscriptionsPage = () => {
   const navigate = useNavigate();

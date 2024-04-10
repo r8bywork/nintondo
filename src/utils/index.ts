@@ -1,4 +1,5 @@
-import { TEST_API_URL, MARKET_API_URL, MARKET_HISTORY_API_URL } from '../consts';
+import { MARKET_API_URL, MARKET_HISTORY_API_URL, NINTONDO_API_URL } from '../consts';
+import { address as belAddress, payments } from 'belcoinjs-lib';
 
 export const fetchBELLMainnet = async <T>({
   path,
