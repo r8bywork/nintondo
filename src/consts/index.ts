@@ -5,6 +5,8 @@ export const HOST = 'http://localhost:8111';
 export const NINTONDO_API_URL = 'https://api.nintondo.io/api';
 // export const TEST_API_URL = "http://0.0.0.0:3001";
 export const TEST_API_URL = 'http://93.125.14.5:3000';
+export const MARKET_API_URL = 'http://138.201.132.34:8111/';
+export const MARKET_HISTORY_API_URL = 'http://162.55.243.24:8222/';
 // export const TEST_API_URL = "https://6552-93-125-14-5.ngrok-free.app";
 // export const TEST_API_URL = "http://192.168.0.102:3001";
 

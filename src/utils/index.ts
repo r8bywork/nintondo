@@ -1,5 +1,4 @@
-import { payments, address as belAddress } from 'belcoinjs-lib';
-import { HOST, NINTONDO_API_URL } from '../consts';
+import { TEST_API_URL, MARKET_API_URL, MARKET_HISTORY_API_URL } from '../consts';
 
 export const fetchBELLMainnet = async <T>({
   path,
@@ -45,7 +44,19 @@ export const fetchMarketInfo = async <T>({
   json = true,
   ...props
 }: fetchProps): Promise<T | undefined> => {
-  const url = `${HOST}/${path}`;
+  const url = `${MARKET_API_URL}${path}`;
+  const res = await fetch(url.toString(), { ...props });
+
+  if (!json) return (await res.text()) as T;
+
+  return await res.json();
+};
+export const fetchInscriptionOwner = async <T>({
+  path,
+  json = true,
+  ...props
+}: fetchProps): Promise<T | undefined> => {
+  const url = `${MARKET_HISTORY_API_URL}${path}`;
   const res = await fetch(url.toString(), { ...props });
 
   if (!json) return (await res.text()) as T;
@@ -172,4 +183,17 @@ export const formatBytes = (bytes: number): string => {
   else if (bytes < 1000 ** 3) return (bytes / 1000 ** 2).toFixed(2) + ' MB';
   else if (bytes < 1000 ** 4) return (bytes / 1000 ** 3).toFixed(2) + ' GB';
   else return (bytes / 1000 ** 4).toFixed(2) + ' TB';
+};
+
+export const formattedStringFromTimestamp = (timestamp: number) => {
+  const millisecondsPerDay = 1000 * 60 * 60 * 24;
+  const differenceInDays = Math.floor(
+    (Math.floor(Date.now() / 1000) - timestamp) / millisecondsPerDay,
+  );
+
+  return differenceInDays === 0
+    ? 'Today'
+    : differenceInDays === 1
+      ? '1 day ago'
+      : `${differenceInDays} days ago`;
 };

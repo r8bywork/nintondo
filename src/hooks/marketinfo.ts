@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
-import { fetchMarketInfo } from '../utils';
-import { InscriptionCards, InscriptionInfo } from '../interfaces/inscriptions.ts';
+import { fetchInscriptionOwner, fetchMarketInfo } from '../utils';
+import { InscriptionCards, InscriptionInfo, InscriptionOwner } from '../interfaces/inscriptions.ts';
 
 export const useExplorerGetInscriptionInfo = () => {
   return useCallback(async (hash: string): Promise<InscriptionInfo | undefined> => {
     return await fetchMarketInfo<InscriptionInfo>({
-      path: `pub/inscription_info/${hash}`,
+      path: `pub/${hash}/info`,
       json: true,
       method: 'GET',
     });
@@ -39,4 +39,14 @@ export const useExplorerGetInscriptionsList = () => {
     },
     [],
   );
+};
+
+export const useExplorerGetInscriptionOwner = () => {
+  return useCallback(async (hash: string): Promise<InscriptionOwner | undefined> => {
+    return await fetchInscriptionOwner<InscriptionOwner>({
+      path: `pub/${hash}/owner`,
+      json: true,
+      method: 'GET',
+    });
+  }, []);
 };
