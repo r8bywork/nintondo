@@ -20,10 +20,7 @@ const ContentComponent = ({
           <img
             src={image}
             style={{ width: imageSize, height: imageSize }}
-            onLoad={() => {
-              console.log('loaded');
-              onLoadHandler();
-            }}
+            onLoad={onLoadHandler}
             className={'rounded-[10px] mb-[18px]'}
           />
         </div>
