@@ -106,7 +106,10 @@ const Header = () => {
           <div className='text-white text-base font-bold leading-normal hover:text-yellow-500 transition-all duration-300 ease-in-out'>
             <button
               className='btn'
-              onClick={verifyAddress}
+              onClick={() => {
+                setShowPopover(false);
+                verifyAddress();
+              }}
             >
               CONNECT
             </button>

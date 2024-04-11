@@ -18,6 +18,7 @@ interface CardProps {
   }[];
   BigCard?: boolean;
   contentType: string;
+  blurImage?: boolean;
   onLoadHandler: () => void;
 }
 
@@ -31,6 +32,7 @@ const Card = ({
   contentType,
   owner,
   onLoadHandler,
+  blurImage,
 }: CardProps) => {
   const imageSize = BigCard ? '480px' : '180px';
 
@@ -46,6 +48,7 @@ const Card = ({
         imageSize={imageSize}
         image={image}
         onLoadHandler={onLoadHandler}
+        blurImage={blurImage}
       />
       <div
         className={cn('flex justify-between items-center mb-[16px]', {

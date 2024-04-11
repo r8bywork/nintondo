@@ -30,7 +30,10 @@ const useNintondoManager = () => {
   const connectWallet = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async (wallet?: any) => {
-      if (!nintondo && !wallet) return;
+      if (!nintondo && !wallet) {
+        toast.error('Please install Nintondo wallet first');
+        return;
+      }
       try {
         const receivedAddress = await (nintondo ?? wallet).connect();
         setAddress(receivedAddress);
