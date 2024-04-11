@@ -93,6 +93,7 @@ const InscriptionPage = () => {
               ]}
               image={image}
               contentType={type}
+              date={data[0].created}
               BigCard
               onLoadHandler={() => {}}
               blurImage={false}

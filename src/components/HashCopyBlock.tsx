@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import CopySvg from '../assets/copy.svg?react';
+import CopySvg from '@/assets/copy.svg?react';
 import Copy from './Buttons/Copy.tsx';
 import { ComponentType, SVGProps } from 'react';
 import { truncate } from '../utils';

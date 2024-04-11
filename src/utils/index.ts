@@ -189,14 +189,28 @@ export const formatBytes = (bytes: number): string => {
 };
 
 export const formattedStringFromTimestamp = (timestamp: number) => {
-  const millisecondsPerDay = 1000 * 60 * 60 * 24;
-  const differenceInDays = Math.floor((Date.now() - timestamp * 1000) / millisecondsPerDay);
+  const now = Date.now();
+  const millisecondsPerMinute = 1000 * 60;
+  const millisecondsPerHour = millisecondsPerMinute * 60;
+  const millisecondsPerDay = millisecondsPerHour * 24;
+  const millisecondsPerYear = millisecondsPerDay * 365;
 
-  return differenceInDays === 0
-    ? 'Today'
-    : differenceInDays === 1
-      ? '1 day ago'
-      : `${differenceInDays} days ago`;
+  const elapsed = now - timestamp * 1000;
+
+  if (elapsed < millisecondsPerDay) {
+    const hours = Math.floor(elapsed / millisecondsPerHour);
+    if (hours > 0) {
+      return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    }
+    const minutes = Math.floor(elapsed / millisecondsPerMinute);
+    return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+  } else if (elapsed >= millisecondsPerYear) {
+    const years = Math.floor(elapsed / millisecondsPerYear);
+    return `${years} year${years > 1 ? 's' : ''} ago`;
+  } else {
+    const days = Math.floor(elapsed / millisecondsPerDay);
+    return `${days} day${days > 1 ? 's' : ''} ago`;
+  }
 };
 
 export const filterOrdsAndFindUnmatchedSplits = (

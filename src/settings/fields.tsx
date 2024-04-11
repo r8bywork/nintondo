@@ -12,6 +12,8 @@ import {
 } from '../interfaces/intefaces.ts';
 import { InscriptionInfo } from '../interfaces/inscriptions.ts';
 import { convertTimestampToFormattedDate, formatBytes, truncate } from '@/utils';
+import Copy from '@/components/Buttons/Copy.tsx';
+import CopySVG from '@/assets/copyRegular.svg?react';
 
 export type Field<T extends object> = {
   [K in keyof T]: {
@@ -373,14 +375,20 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
     value: 'id',
     name: 'ID',
     render: (value) => (
-      <>
+      <div className='flex items-center gap-1'>
         <span className={'text-[#53DCFF]'}>
           {truncate(value, {
             nPrefix: 5,
             nSuffix: 5,
           })}
         </span>
-      </>
+        <Copy
+          SvgIcon={CopySVG}
+          text={value}
+          svgClassname='size-6'
+          useToast={true}
+        />
+      </div>
     ),
   },
   {
