@@ -1,21 +1,29 @@
-import { AsyncImage } from 'loadable-image';
 import ModelViewerComponent from './ModelViewerComponent.tsx';
 
 interface ContentComponentProps {
   contentType: string;
   image: string;
   imageSize: string;
+  onLoadHandler: () => void;
 }
 
-const ContentComponent = ({ contentType, image, imageSize }: ContentComponentProps) => {
+const ContentComponent = ({
+  contentType,
+  image,
+  imageSize,
+  onLoadHandler,
+}: ContentComponentProps) => {
   return (
     <>
       {contentType === 'image' ? (
         <div style={{ imageRendering: 'pixelated' }}>
-          <AsyncImage
+          <img
             src={image}
             style={{ width: imageSize, height: imageSize }}
-            loader={<div className={''}></div>}
+            onLoad={() => {
+              console.log('loaded');
+              onLoadHandler();
+            }}
             className={'rounded-[10px] mb-[18px]'}
           />
         </div>

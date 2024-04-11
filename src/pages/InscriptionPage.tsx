@@ -95,6 +95,7 @@ const InscriptionPage = () => {
               image={image}
               contentType={type}
               BigCard
+              onLoadHandler={() => {}}
             />
           )}
         </div>

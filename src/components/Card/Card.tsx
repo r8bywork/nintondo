@@ -1,7 +1,7 @@
 import CardTag from './CardTag/CardTag.tsx';
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import classNames from 'classnames';
+import cn from 'classnames';
 import ContentComponent from './ContentComponent.tsx';
 import { formattedStringFromTimestamp } from '../../utils';
 
@@ -18,9 +18,20 @@ interface CardProps {
   }[];
   BigCard?: boolean;
   contentType: string;
+  onLoadHandler: () => void;
 }
 
-const Card = ({ onClick, text, date, tags, BigCard, image, contentType, owner }: CardProps) => {
+const Card = ({
+  onClick,
+  text,
+  date,
+  tags,
+  BigCard,
+  image,
+  contentType,
+  owner,
+  onLoadHandler,
+}: CardProps) => {
   const imageSize = BigCard ? '480px' : '180px';
 
   return (
@@ -34,21 +45,22 @@ const Card = ({ onClick, text, date, tags, BigCard, image, contentType, owner }:
         contentType={contentType}
         imageSize={imageSize}
         image={image}
+        onLoadHandler={onLoadHandler}
       />
       <div
-        className={classNames('flex justify-between items-center mb-[16px]', {
+        className={cn('flex justify-between items-center mb-[16px]', {
           ['mb-[20px]']: BigCard,
         })}
       >
         <span
-          className={classNames('font-bold text-white leading-[16px] text-[16px]', {
+          className={cn('font-bold text-white leading-[16px] text-[16px]', {
             ['text-[32px] leading-[32px]']: BigCard,
           })}
         >
           {text?.toLocaleString()}
         </span>
         <span
-          className={classNames('font-normal text-[#4B4B4B] text-[14px]', {
+          className={cn('font-normal text-[#4B4B4B] text-[14px]', {
             ['text-[20px]']: BigCard,
           })}
         >

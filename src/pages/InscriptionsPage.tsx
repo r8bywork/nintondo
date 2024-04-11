@@ -19,6 +19,7 @@ import { selectSortByFilter } from '../redux/slices/sortByFiltersSlice.ts';
 import Skeleton from '../components/Placeholders/Skeleton.tsx';
 import { createHref } from '../utils';
 import { MARKET_API_URL } from '../consts';
+import CardSkeleton from '@/components/Card/CardSkeleton.tsx';
 const InscriptionsPage = () => {
   const navigate = useNavigate();
   const [inscriptions, setInscriptions] = useState<InscriptionCards>();
@@ -30,11 +31,13 @@ const InscriptionsPage = () => {
   const urlSearchParams = new URLSearchParams(window.location.search);
   const page = urlSearchParams.get('page');
   const [currentPage, setCurrentPage] = useState(Number(page ? parseInt(page, 10) - 1 : 0));
+  const [imagesLoaded, setImagesLoaded] = useState<{ [key: string]: boolean }>({});
 
   const getInscriptions = useExplorerGetInscriptionsList();
 
   useEffect(() => {
     setIsLoading(true);
+    setImagesLoaded({});
     getInscriptions(
       currentPage,
       sortBy.selectedSortByFilter,
@@ -56,6 +59,10 @@ const InscriptionsPage = () => {
     window.history.pushState({}, '', `${window.location.pathname}?${params}`);
     setCurrentPage(newPage);
     window.scrollTo({ top: 0 });
+  };
+
+  const handleImageLoad = (id: string) => {
+    setImagesLoaded((prev) => ({ ...prev, [id]: true }));
   };
 
   const handleTimeFilterChange = (filter: string) => {
@@ -107,16 +114,19 @@ const InscriptionsPage = () => {
               />
               <div className='max-w-[1250px] mx-auto flex flex-wrap pt-[10px] gap-[10px] max-lg:justify-center'>
                 {inscriptions?.inscriptions.map((card, index) => (
-                  <Card
-                    onClick={() => navigate(`/marketplace/inscriptions/${card.id}`)}
-                    image={`${MARKET_API_URL}/pub/preview/${card.id}`}
-                    key={index}
-                    text={card.number}
-                    date={card.created}
-                    tags={[{ tagText: card.file_type, active: true }]}
-                    BigCard={false}
-                    contentType={'image'}
-                  />
+                  <div key={index}>
+                    {!imagesLoaded[card.id] && <CardSkeleton />}
+                    <Card
+                      onClick={() => navigate(`/marketplace/inscriptions/${card.id}`)}
+                      image={`${MARKET_API_URL}/pub/preview/${card.id}`}
+                      onLoadHandler={() => handleImageLoad(card.id)}
+                      text={card.number}
+                      date={card.created}
+                      tags={[{ tagText: card.file_type, active: true }]}
+                      BigCard={false}
+                      contentType={'image'}
+                    />
+                  </div>
                 ))}
               </div>
               <Pagination
