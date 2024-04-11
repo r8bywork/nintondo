@@ -123,7 +123,7 @@ const InscriptionsPage = () => {
                       tags={[{ tagText: card.file_type, active: true }]}
                       BigCard={false}
                       contentType={'image'}
-                      blurImage={imagesLoaded[card.id]}
+                      blurImage={!imagesLoaded[card.id]}
                     />
                   </div>
                 ))}

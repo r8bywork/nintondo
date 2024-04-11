@@ -19,7 +19,7 @@ const ContentComponent = ({
     <>
       {contentType === 'image' ? (
         <div style={{ imageRendering: 'pixelated' }}>
-          {!blurImage && (
+          {blurImage && (
             <div
               className={
                 'flex size-[180px] rounded-[10px] bg-black/10 backdrop-blur-md bg-black absolute'
