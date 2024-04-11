@@ -203,7 +203,7 @@ export const formattedStringFromTimestamp = (timestamp: number) => {
       return `${hours} hour${hours > 1 ? 's' : ''} ago`;
     }
     const minutes = Math.floor(elapsed / millisecondsPerMinute);
-    return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    return `${minutes} min${minutes > 1 ? 's' : ''} ago`;
   } else if (elapsed >= millisecondsPerYear) {
     const years = Math.floor(elapsed / millisecondsPerYear);
     return `${years} year${years > 1 ? 's' : ''} ago`;
