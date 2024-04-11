@@ -7,14 +7,18 @@ import { getApiUtxo, getTransactionRawHex } from './electrs';
 import toast from 'react-hot-toast';
 import { PushSplit } from '@/interfaces/marketapi';
 import axios from 'axios';
-
-export const pushSplit = async (data: PushSplit) => {
-  const result = await axios.post(`${BACKEND_URL}/split`, data, { withCredentials: true });
-  return result.data;
-};
+import { useMakeAuthRequests } from './auth';
 
 export const useSplitOrds = () => {
   const { address, verifiedAddress, signPsbtInputs } = useNintondoManagerContext();
+  const makeAuthRequest = useMakeAuthRequests();
+
+  const pushSplit = async (data: PushSplit) => {
+    const result = await makeAuthRequest(() =>
+      axios.post(`${BACKEND_URL}/split`, data, { withCredentials: true }),
+    );
+    return result?.data;
+  };
 
   return async (ords: Ord[], feeRate: number) => {
     if (!address || !verifiedAddress) return;

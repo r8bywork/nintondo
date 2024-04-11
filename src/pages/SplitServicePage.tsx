@@ -12,6 +12,7 @@ import { Fees } from '@/interfaces/api';
 import { getFees } from '@/hooks/electrs';
 import { Split } from '@/interfaces/marketapi';
 import { filterOrdsAndFindUnmatchedSplits } from '@/utils';
+import { useMakeAuthRequests } from '@/hooks/auth';
 
 const SplitServicePage = () => {
   const { address, verifiedAddress } = useNintondoManagerContext();
@@ -24,18 +25,29 @@ const SplitServicePage = () => {
 
   const [selectedFeeRate, setSelectedFeeRate] = useState<number | string>(37);
 
+  const makeAuthRequests = useMakeAuthRequests();
+
   const getOffsets = useCallback(async (): Promise<Ord[]> => {
-    const response = (await axios.get(`${NINTONDO_API_URL}/offset_ords/address/${address}`)).data;
+    const response =
+      (
+        await makeAuthRequests(() =>
+          axios.get(`${NINTONDO_API_URL}/offset_ords/address/${address}`),
+        )
+      )?.data ?? [];
     return response.ords as Ord[];
   }, [address]);
 
   const getSplits = useCallback(async () => {
-    const result = await axios.get<Split[]>(`${BACKEND_URL}/split`, { withCredentials: true });
-    return result.data;
+    const result = await makeAuthRequests(() =>
+      axios.get<Split[]>(`${BACKEND_URL}/split`, { withCredentials: true }),
+    );
+    return result?.data ?? [];
   }, []);
 
   const confirmSplits = useCallback(async (txs: string[]) => {
-    await axios.put(`${BACKEND_URL}/split`, { txs }, { withCredentials: true });
+    await makeAuthRequests(() =>
+      axios.put(`${BACKEND_URL}/split`, { txs }, { withCredentials: true }),
+    );
   }, []);
 
   const selectedOrdHandler = (ord: Ord) => {

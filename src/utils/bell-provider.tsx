@@ -85,7 +85,7 @@ ${connectedAddress}
           await axios.post(
             `${BACKEND_URL}/auth/login`,
             {
-              address,
+              address: connectedAddress,
               // eslint-disable-next-line camelcase
               signed_message_base64: signedMessage,
               // eslint-disable-next-line camelcase
