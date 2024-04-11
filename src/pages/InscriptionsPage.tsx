@@ -48,7 +48,7 @@ const InscriptionsPage = () => {
         data && currentPage > data.pages ? setCurrentPage(0) : null;
       })
       .catch((error) => {
-        console.error('Ошибка при получении списка инскрипций:', error);
+        console.error('Failed to get inscription info:', error);
       });
     setIsLoading(false);
   }, [currentPage, sortBy, contentFilter, timeFilters]);
@@ -121,7 +121,7 @@ const InscriptionsPage = () => {
                 {inscriptions?.inscriptions.map((card, index) => (
                   <div key={index}>
                     <Card
-                      onClick={() => navigate(`/marketplace/inscriptions/${card.id}`)}
+                      onClick={() => navigate(`/bellinals/inscriptions/${card.id}`)}
                       image={`${MARKET_API_URL}/pub/preview/${card.id}`}
                       onLoadHandler={() => handleImageLoad(card.id)}
                       text={card.number}

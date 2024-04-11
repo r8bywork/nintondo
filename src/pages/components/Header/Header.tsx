@@ -28,7 +28,7 @@ const Header = () => {
   const [showPopover, setShowPopover] = useState<boolean>(false);
 
   useEffect(() => {
-    location.pathname.startsWith('/marketplace')
+    location.pathname.startsWith('/bellinals')
       ? setConfig(HeaderLinksMarketPlace)
       : setConfig(HeaderLinks);
   }, [location]);

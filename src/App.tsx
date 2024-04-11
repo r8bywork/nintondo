@@ -5,8 +5,8 @@ import Explorer from './pages/Explorer';
 import MainPage from './pages/MainPage';
 import InscriptionsPage from './pages/InscriptionsPage.tsx';
 import InscriptionPage from './pages/InscriptionPage.tsx';
-import CollectionPage from './pages/CollectionPage.tsx';
-import CollectionsPage from './pages/CollectionsPage.tsx';
+// import CollectionPage from './pages/CollectionPage.tsx';
+// import CollectionsPage from './pages/CollectionsPage.tsx';
 import { Provider } from 'react-redux';
 import SplitServicePage from './pages/SplitServicePage.tsx';
 import { store } from './redux/store/store.ts';
@@ -26,21 +26,21 @@ const App = () => {
             element={<Explorer />}
           />
           <Route
-            path='/marketplace/inscriptions*'
+            path='/bellinals/inscriptions*'
             element={<InscriptionsPage />}
           />
           <Route
-            path='/marketplace/inscriptions/:hash'
+            path='/bellinals/inscriptions/:hash'
             element={<InscriptionPage />}
           />
-          <Route
-            path='/marketplace/collections/*'
+          {/* <Route
+            path='/bellinals/collections/*'
             element={<CollectionsPage />}
-          />
-          <Route
-            path='/marketplace/collections/:hash'
+          /> */}
+          {/* <Route
+            path='/bellinals/collections/:hash'
             element={<CollectionPage />}
-          />
+          /> */}
           <Route
             path='/split-service/*'
             element={<SplitServicePage />}
