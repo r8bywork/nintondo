@@ -47,7 +47,7 @@ export const fetchMarketInfo = async <T>({
   json = true,
   ...props
 }: fetchProps): Promise<T | undefined> => {
-  const url = `${MARKET_API_URL}${path}`;
+  const url = `${MARKET_API_URL}/${path}`;
   const res = await fetch(url.toString(), { ...props });
 
   if (!json) return (await res.text()) as T;
@@ -59,7 +59,7 @@ export const fetchInscriptionOwner = async <T>({
   json = true,
   ...props
 }: fetchProps): Promise<T | undefined> => {
-  const url = `${MARKET_HISTORY_API_URL}${path}`;
+  const url = `${MARKET_HISTORY_API_URL}/${path}`;
   const res = await fetch(url.toString(), { ...props });
 
   if (!json) return (await res.text()) as T;
@@ -220,4 +220,19 @@ export const filterOrdsAndFindUnmatchedSplits = (
   });
 
   return { filteredOrds, unmatchedSplits };
+};
+
+export const convertTimestampToFormattedDate = (timestamp: number): string => {
+  const date = new Date(timestamp * 1000);
+  const options: Intl.DateTimeFormatOptions = {
+    timeZone: 'GMT',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  };
+  const formattedDate = date.toLocaleDateString('en-US', options) + ' GMT+3';
+  return formattedDate;
 };

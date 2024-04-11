@@ -55,6 +55,7 @@ const InscriptionsPage = () => {
     const params = createHref({ page: String(newPage + 1) }, urlSearchParams);
     window.history.pushState({}, '', `${window.location.pathname}?${params}`);
     setCurrentPage(newPage);
+    window.scrollTo({ top: 0 });
   };
 
   const handleTimeFilterChange = (filter: string) => {
@@ -108,7 +109,7 @@ const InscriptionsPage = () => {
                 {inscriptions?.inscriptions.map((card, index) => (
                   <Card
                     onClick={() => navigate(`/marketplace/inscriptions/${card.id}`)}
-                    image={`${MARKET_API_URL}pub/preview/${card.id}`}
+                    image={`${MARKET_API_URL}/pub/preview/${card.id}`}
                     key={index}
                     text={card.number}
                     date={card.created}

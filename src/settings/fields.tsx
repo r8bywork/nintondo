@@ -11,7 +11,7 @@ import {
   Collection,
 } from '../interfaces/intefaces.ts';
 import { InscriptionInfo } from '../interfaces/inscriptions.ts';
-import { formatBytes, truncate } from '../utils';
+import { convertTimestampToFormattedDate, formatBytes, truncate } from '../utils';
 
 export type Field<T extends object> = {
   [K in keyof T]: {
@@ -423,6 +423,11 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
   {
     value: 'created',
     name: 'CREATED',
+    render: (value) => (
+      <>
+        <span className={'text-[#53DCFF]'}>{convertTimestampToFormattedDate(value)}</span>
+      </>
+    ),
   },
   {
     value: 'creation_block',

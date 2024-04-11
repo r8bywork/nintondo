@@ -35,7 +35,7 @@ const InscriptionPage = () => {
           }
         },
       );
-      fetch(`${MARKET_API_URL}pub/content/${hash}`)
+      fetch(`${MARKET_API_URL}/pub/content/${hash}`)
         .then((response) => {
           const contentType = response.headers.get('content-type');
           if (
