@@ -11,7 +11,7 @@ import {
   Collection,
 } from '../interfaces/intefaces.ts';
 import { InscriptionInfo } from '../interfaces/inscriptions.ts';
-import { convertTimestampToFormattedDate, formatBytes, truncate } from '../utils';
+import { convertTimestampToFormattedDate, formatBytes, truncate } from '@/utils';
 
 export type Field<T extends object> = {
   [K in keyof T]: {
@@ -388,12 +388,7 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
     name: 'OWNED BY',
     render: (value) => (
       <>
-        <span className={'text-[#53DCFF]'}>
-          {truncate(value, {
-            nPrefix: 7,
-            nSuffix: 7,
-          })}
-        </span>
+        <span className={'text-[#53DCFF]'}>{value}</span>
       </>
     ),
   },

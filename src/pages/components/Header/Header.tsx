@@ -78,7 +78,7 @@ const Header = () => {
           className='text-yellow-500 text-2xl font-bold leading-normal text-shadow-md'
         />
         <div
-          className={cn('burger-menu', { open: isMenuOpen }, 'md:hidden')}
+          className={cn('burger-menu', { open: isMenuOpen }, 'lg:hidden')}
           onClick={toggleMenu}
         >
           <span></span>
@@ -87,7 +87,7 @@ const Header = () => {
         </div>
       </div>
       <nav
-        className={cn('max-md:pb-[20px] md:flex md:items-center', {
+        className={cn('max-lg:pb-[20px] lg:flex lg:items-center', {
           hidden: !isMenuOpen,
         })}
       >

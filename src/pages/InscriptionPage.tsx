@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import LeftArrow from '../assets/arrowleft.svg?react';
 import Search from './components/Search/Search.tsx';
@@ -9,12 +10,10 @@ import {
   useExplorerGetInscriptionInfo,
   useExplorerGetInscriptionOwner,
 } from '../hooks/marketinfo.ts';
-import { useEffect, useState } from 'react';
 import { InscriptionInfo, InscriptionOwner } from '../interfaces/inscriptions.ts';
 import NewIcon from '../assets/card/fullsize.svg?react';
 import UploadIcon from '../assets/card/share.svg?react';
-import { MARKET_API_URL } from '../consts';
-import { truncate } from '../utils';
+import { MARKET_API_URL } from '@/consts';
 
 const InscriptionPage = () => {
   const { hash } = useParams();
@@ -29,9 +28,13 @@ const InscriptionPage = () => {
     if (hash) {
       Promise.all([getInscriptionInfo(hash), getInscriptionOwner(hash)]).then(
         ([reqData, reqOwner]) => {
-          if (reqData !== null) {
+          if (reqData && reqOwner !== null) {
             setData([reqData] as InscriptionInfo[]);
-            setOwner([reqOwner] as InscriptionOwner[]);
+            if (typeof reqOwner === 'string' && reqOwner === 'Not found') {
+              setOwner([{ owner: reqOwner }] as InscriptionOwner[]);
+            } else {
+              setOwner([reqOwner] as InscriptionOwner[]);
+            }
           }
         },
       );
@@ -80,13 +83,9 @@ const InscriptionPage = () => {
             </button>
             <Search placeholder={'Search'} />
           </div>
-          {image && data[0] && type && owner[0] && (
+          {image && data[0] && owner[0] && type && (
             <Card
               text={data[0].number}
-              owner={truncate(owner[0].owner, {
-                nPrefix: 7,
-                nSuffix: 7,
-              })}
               tags={[
                 { tagText: data[0].file_type, active: true },
                 { SvgIcon: NewIcon },

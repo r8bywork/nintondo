@@ -17,8 +17,8 @@ import { selectTimeFilter } from '../redux/slices/timeFilterSlice.ts';
 import { selectTypeFilter } from '../redux/slices/typeFiltersSlice.ts';
 import { selectSortByFilter } from '../redux/slices/sortByFiltersSlice.ts';
 import Skeleton from '../components/Placeholders/Skeleton.tsx';
-import { createHref } from '../utils';
-import { MARKET_API_URL } from '../consts';
+import { createHref } from '@/utils';
+import { MARKET_API_URL } from '@/consts';
 const InscriptionsPage = () => {
   const navigate = useNavigate();
   const [inscriptions, setInscriptions] = useState<InscriptionCards>();
@@ -52,6 +52,12 @@ const InscriptionsPage = () => {
       });
     setIsLoading(false);
   }, [currentPage, sortBy, contentFilter, timeFilters]);
+
+  useEffect(() => {
+    setCurrentPage(0);
+    const params = createHref({ page: '1' }, urlSearchParams);
+    window.history.pushState({}, '', `${window.location.pathname}?${params}`);
+  }, [sortBy, contentFilter, timeFilters]);
 
   const onPageChange = (newPage: number) => {
     const params = createHref({ page: String(newPage + 1) }, urlSearchParams);
@@ -103,7 +109,7 @@ const InscriptionsPage = () => {
             />
           </div>
         </div>
-        <div className='flex-grow overflow-y-auto'>
+        <div className='flex-grow overflow-y-auto px-[15px]'>
           {inscriptions && !isLoading ? (
             <>
               <FoundCounter
@@ -128,19 +134,21 @@ const InscriptionsPage = () => {
                   </div>
                 ))}
               </div>
-              <Pagination
-                activeClassName='bg-[#FFBB00] text-black'
-                leftBtnPlaceholder={<Arrow />}
-                rightBtnPlaceholder={<Arrow className={'rotate-180 flex'} />}
-                buttonsClassName='flex items-center justify-center w-auto min-w-[2.25rem] px-[6px] h-9 bg-[#191919] rounded-full'
-                currentPage={currentPage}
-                arrowsClassName='h-full flex items-center p-[10px] bg-[#191919] rounded-[26px]'
-                className={
-                  'text-white flex justify-center pt-[30px] pb-[30px] items-center gap-x-[10px] text-center align-middle'
-                }
-                pageCount={inscriptions.pages}
-                onPageChange={onPageChange}
-              />
+              {inscriptions.count >= 18 && (
+                <Pagination
+                  activeClassName='bg-[#FFBB00] text-black'
+                  leftBtnPlaceholder={<Arrow />}
+                  rightBtnPlaceholder={<Arrow className={'rotate-180 flex'} />}
+                  buttonsClassName='flex items-center justify-center w-auto min-w-[2.25rem] px-[6px] h-9 bg-[#191919] rounded-full'
+                  currentPage={currentPage}
+                  arrowsClassName='h-full flex items-center p-[10px] bg-[#191919] rounded-[26px]'
+                  className={
+                    'text-white flex justify-center pt-[30px] pb-[30px] items-center gap-x-[10px] text-center align-middle'
+                  }
+                  pageCount={inscriptions.pages}
+                  onPageChange={onPageChange}
+                />
+              )}
             </>
           ) : (
             <Skeleton classNames='h-[80dvh]' />
