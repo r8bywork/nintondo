@@ -1,4 +1,5 @@
 import ModelViewerComponent from './ModelViewerComponent.tsx';
+import JsonViewer from 'components/Card/JsonViewer.tsx';
 
 interface ContentComponentProps {
   contentType: string;
@@ -18,6 +19,7 @@ const ContentComponent = ({
       {contentType === 'image' ? (
         <div style={{ imageRendering: 'pixelated' }}>
           <img
+            alt={'image'}
             src={image}
             style={{ width: imageSize, height: imageSize }}
             onLoad={onLoadHandler}
@@ -33,12 +35,13 @@ const ContentComponent = ({
         <div
           className='mb-[18px] text-white flex flex-col overflow-hidden'
           style={{
-            width: imageSize,
+            maxWidth: imageSize,
             height: imageSize,
             overflowWrap: 'anywhere',
+            wordBreak: 'break-word',
           }}
         >
-          <pre className={'whitespace-pre-wrap'}>{image}</pre>
+          <JsonViewer jsonString={image} />
         </div>
       )}
     </>

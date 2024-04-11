@@ -11,7 +11,8 @@ import {
   Collection,
 } from '../interfaces/intefaces.ts';
 import { InscriptionInfo } from '../interfaces/inscriptions.ts';
-import { convertTimestampToFormattedDate, formatBytes, truncate } from '../utils';
+import { convertTimestampToFormattedDate, formatBytes, truncate } from '@/utils';
+import Tooltip from 'components/Tooltip.tsx';
 
 export type Field<T extends object> = {
   [K in keyof T]: {
@@ -375,10 +376,12 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
     render: (value) => (
       <>
         <span className={'text-[#53DCFF]'}>
-          {truncate(value, {
-            nPrefix: 5,
-            nSuffix: 5,
-          })}
+          <Tooltip text={value}>
+            {truncate(value, {
+              nPrefix: 5,
+              nSuffix: 5,
+            })}
+          </Tooltip>
         </span>
       </>
     ),
@@ -389,10 +392,12 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
     render: (value) => (
       <>
         <span className={'text-[#53DCFF]'}>
-          {truncate(value, {
-            nPrefix: 7,
-            nSuffix: 7,
-          })}
+          <Tooltip text={value}>
+            {truncate(value, {
+              nPrefix: 7,
+              nSuffix: 7,
+            })}
+          </Tooltip>
         </span>
       </>
     ),
@@ -444,10 +449,12 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
     render: (value) => (
       <>
         <span className={'text-[#53DCFF]'}>
-          {truncate(value, {
-            nPrefix: 5,
-            nSuffix: 5,
-          })}
+          <Tooltip text={value}>
+            {truncate(value, {
+              nPrefix: 5,
+              nSuffix: 5,
+            })}
+          </Tooltip>
         </span>
       </>
     ),

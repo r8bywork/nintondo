@@ -1,9 +1,9 @@
 import CardTag from './CardTag/CardTag.tsx';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import cn from 'classnames';
 import ContentComponent from './ContentComponent.tsx';
-import { formattedStringFromTimestamp } from '../../utils';
+import { formattedStringFromTimestamp } from '@/utils';
 
 interface CardProps {
   onClick?: () => void;
@@ -32,7 +32,18 @@ const Card = ({
   owner,
   onLoadHandler,
 }: CardProps) => {
-  const imageSize = BigCard ? '480px' : '180px';
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Определяем размер изображения в зависимости от ширины окна и свойства BigCard
+  const mobileWidthThreshold = 768; // Предположим, что мобильные устройства имеют ширину экрана меньше 768px
+  const imageSize = BigCard ? (windowWidth < mobileWidthThreshold ? '350px' : '480px') : '180px';
 
   return (
     <div
@@ -64,7 +75,7 @@ const Card = ({
             ['text-[20px]']: BigCard,
           })}
         >
-          {owner ? owner : formattedStringFromTimestamp(date || Math.floor(Date.now() / 1000))}
+          {owner ? '' : formattedStringFromTimestamp(date || Math.floor(Date.now() / 1000))}
         </span>
       </div>
       <div className={'flex'}>
