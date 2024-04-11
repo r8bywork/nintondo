@@ -121,7 +121,6 @@ const InscriptionsPage = () => {
               <div className='max-w-[1250px] mx-auto flex flex-wrap pt-[10px] gap-[10px] max-lg:justify-center'>
                 {inscriptions?.inscriptions.map((card, index) => (
                   <div key={index}>
-                    {!imagesLoaded[card.id] && <CardSkeleton />}
                     <Card
                       onClick={() => navigate(`/marketplace/inscriptions/${card.id}`)}
                       image={`${MARKET_API_URL}/pub/preview/${card.id}`}
@@ -131,6 +130,7 @@ const InscriptionsPage = () => {
                       tags={[{ tagText: card.file_type, active: true }]}
                       BigCard={false}
                       contentType={'image'}
+                      blurImage={!imagesLoaded[card.id]}
                     />
                   </div>
                 ))}

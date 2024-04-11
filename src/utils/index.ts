@@ -190,9 +190,7 @@ export const formatBytes = (bytes: number): string => {
 
 export const formattedStringFromTimestamp = (timestamp: number) => {
   const millisecondsPerDay = 1000 * 60 * 60 * 24;
-  const differenceInDays = Math.floor(
-    (Math.floor(Date.now() / 1000) - timestamp) / millisecondsPerDay,
-  );
+  const differenceInDays = Math.floor((Date.now() - timestamp * 1000) / millisecondsPerDay);
 
   return differenceInDays === 0
     ? 'Today'

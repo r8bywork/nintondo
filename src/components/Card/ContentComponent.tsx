@@ -5,6 +5,7 @@ interface ContentComponentProps {
   contentType: string;
   image: string;
   imageSize: string;
+  blurImage?: boolean;
   onLoadHandler: () => void;
 }
 
@@ -13,11 +14,19 @@ const ContentComponent = ({
   image,
   imageSize,
   onLoadHandler,
+  blurImage,
 }: ContentComponentProps) => {
   return (
     <>
       {contentType === 'image' ? (
         <div style={{ imageRendering: 'pixelated' }}>
+          {blurImage && (
+            <div
+              className={
+                'flex size-[180px] rounded-[10px] bg-black/10 backdrop-blur-md bg-black absolute'
+              }
+            ></div>
+          )}
           <img
             alt={'image'}
             src={image}
