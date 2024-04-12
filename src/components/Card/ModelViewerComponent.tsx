@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import '@google/model-viewer';
 
 interface ModelViewerComponentProps {
@@ -8,12 +8,6 @@ interface ModelViewerComponentProps {
 
 const ModelViewerComponent = ({ src, imageSize }: ModelViewerComponentProps) => {
   const modelViewerRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    if (modelViewerRef.current) {
-      console.log(modelViewerRef.current);
-    }
-  }, []);
 
   return (
     <model-viewer

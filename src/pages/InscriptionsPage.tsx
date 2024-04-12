@@ -6,80 +6,112 @@ import Svg from '../assets/filters/Plus.tsx';
 import TimeSvg from '../assets/filters/Time.tsx';
 import FoundCounter from '../components/FoundCounter.tsx';
 import { useExplorerGetInscriptionsList } from '../hooks/marketinfo.ts';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { InscriptionCards } from '../interfaces/inscriptions.ts';
 import Pagination from '../components/Table/Pagination.tsx';
 import Arrow from '../assets/TableArrow.svg?react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../redux/store/store.ts';
-import { selectTimeFilter } from '../redux/slices/timeFilterSlice.ts';
-import { selectTypeFilter } from '../redux/slices/typeFiltersSlice.ts';
-import { selectSortByFilter } from '../redux/slices/sortByFiltersSlice.ts';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Skeleton from '../components/Placeholders/Skeleton.tsx';
-import { createHref } from '@/utils';
 import { MARKET_API_URL } from '@/consts';
+
+interface Filters {
+  currentPage: number;
+  sortBy: string;
+  contentType: string;
+  timeFilter: string;
+}
+
 const InscriptionsPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [inscriptions, setInscriptions] = useState<InscriptionCards>();
-  const timeFilters = useSelector((state: RootState) => state.timeFilters);
-  const contentFilter = useSelector((state: RootState) => state.typeFilters);
-  const sortBy = useSelector((state: RootState) => state.sortByFilters);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const dispatch: AppDispatch = useDispatch();
   const urlSearchParams = new URLSearchParams(window.location.search);
-  const page = urlSearchParams.get('page');
-  const [currentPage, setCurrentPage] = useState(Number(page ? parseInt(page, 10) - 1 : 0));
   const [imagesLoaded, setImagesLoaded] = useState<{ [key: string]: boolean }>({});
+
+  const parseSearchParams = useCallback(
+    (searchParams: URLSearchParams) => ({
+      currentPage: parseInt(searchParams.get('currentPage') || '1', 10) - 1,
+      sortBy: searchParams.get('sortBy') || 'newest',
+      contentType: searchParams.get('contentType') || 'all',
+      timeFilter: searchParams.get('timeFilter') || 'all',
+    }),
+    [],
+  );
+
+  const [filters, setFilter] = useState<Filters>(
+    parseSearchParams(new URLSearchParams(location.search)),
+  );
 
   const getInscriptions = useExplorerGetInscriptionsList();
 
+  const createHref = (newFilters: Partial<Filters>, currentParams: URLSearchParams) => {
+    const params = new URLSearchParams(currentParams);
+    Object.entries(newFilters).forEach(([key, value]) => {
+      if (value !== undefined) {
+        params.set(key, value.toString());
+      }
+    });
+    return params.toString();
+  };
+
   useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const newFilters = parseSearchParams(searchParams);
+
+    setFilter(newFilters);
+
     setIsLoading(true);
     setImagesLoaded({});
     getInscriptions(
-      currentPage,
-      sortBy.selectedSortByFilter,
-      contentFilter.selectedTypeFilter,
-      timeFilters.selectedTimeFilter,
+      newFilters.currentPage,
+      newFilters.sortBy,
+      newFilters.contentType,
+      newFilters.timeFilter,
     )
       .then((data) => {
         setInscriptions(data);
-        data && currentPage > data.pages ? setCurrentPage(0) : null;
+        if (data && newFilters.currentPage > data.pages) {
+          setFilter((prev) => ({ ...prev, currentPage: 0 }));
+        }
       })
       .catch((error) => {
         console.error('Failed to get inscription info:', error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
-    setIsLoading(false);
-  }, [currentPage, sortBy, contentFilter, timeFilters]);
-
-  useEffect(() => {
-    setCurrentPage(0);
-    const params = createHref({ page: '1' }, urlSearchParams);
-    window.history.pushState({}, '', `${window.location.pathname}?${params}`);
-  }, [sortBy, contentFilter, timeFilters]);
-
-  const onPageChange = (newPage: number) => {
-    const params = createHref({ page: String(newPage + 1) }, urlSearchParams);
-    window.history.pushState({}, '', `${window.location.pathname}?${params}`);
-    setCurrentPage(newPage);
-    window.scrollTo({ top: 0 });
-  };
+  }, [location.search]);
 
   const handleImageLoad = (id: string) => {
     setImagesLoaded((prev) => ({ ...prev, [id]: true }));
   };
 
+  const onPageChange = (newPage: number) => {
+    const params = createHref({ currentPage: newPage + 1 }, urlSearchParams);
+    navigate(`?${params}`);
+    window.scrollTo({ top: 0 });
+  };
+
   const handleTimeFilterChange = (filter: string) => {
-    dispatch(selectTimeFilter(filter !== 'all' ? filter.split(' ')[1].toLowerCase() : filter));
+    const newFilter = filter.toLowerCase();
+    const params = createHref({ timeFilter: newFilter, currentPage: 1 }, urlSearchParams);
+    navigate(`?${params}`);
+    setFilter((prev) => ({ ...prev, timeFilter: newFilter }));
   };
 
   const handleTypeFilterChange = (filter: string) => {
-    dispatch(selectTypeFilter(filter.toLowerCase()));
+    const newFilter = filter.toLowerCase();
+    const params = createHref({ contentType: newFilter, currentPage: 1 }, urlSearchParams);
+    navigate(`?${params}`);
+    setFilter((prev) => ({ ...prev, contentType: newFilter }));
   };
 
   const handleSortByFilterChange = (filter: string) => {
-    dispatch(selectSortByFilter(filter.toLowerCase()));
+    const newFilter = filter.toLowerCase();
+    const params = createHref({ sortBy: newFilter, currentPage: 1 }, urlSearchParams);
+    navigate(`?${params}`);
+    setFilter((prev) => ({ ...prev, sortBy: newFilter }));
   };
 
   return (
@@ -91,21 +123,21 @@ const InscriptionsPage = () => {
             <Filter
               config={filterConfig}
               onChange={handleSortByFilterChange}
-              initialState={sortBy.selectedSortByFilter}
+              state={filters.sortBy}
             />
             <Filter
               selectAll={{ text: 'All' }}
               SvgIcon={Svg}
               config={filterTypeConfig}
               onChange={handleTypeFilterChange}
-              initialState={contentFilter.selectedTypeFilter}
+              state={filters.contentType}
             />
             <Filter
               selectAll={{ text: 'All Time' }}
               SvgIcon={TimeSvg}
               config={filterTimeConfig}
               onChange={handleTimeFilterChange}
-              initialState={timeFilters.selectedTimeFilter}
+              state={filters.timeFilter}
             />
           </div>
         </div>
@@ -121,7 +153,7 @@ const InscriptionsPage = () => {
                 {inscriptions?.inscriptions.map((card, index) => (
                   <div key={index}>
                     <Card
-                      onClick={() => navigate(`/bellinals/inscriptions/${card.id}`)}
+                      onClick={() => navigate(`/bellinals/inscription/${card.id}`)}
                       image={`${MARKET_API_URL}/pub/preview/${card.id}`}
                       onLoadHandler={() => handleImageLoad(card.id)}
                       text={card.number}
@@ -140,7 +172,7 @@ const InscriptionsPage = () => {
                   leftBtnPlaceholder={<Arrow />}
                   rightBtnPlaceholder={<Arrow className={'rotate-180 flex'} />}
                   buttonsClassName='flex items-center justify-center w-auto min-w-[2.25rem] px-[6px] h-9 bg-[#191919] rounded-full'
-                  currentPage={currentPage}
+                  currentPage={filters.currentPage}
                   arrowsClassName='h-full flex items-center p-[10px] bg-[#191919] rounded-[26px]'
                   className={
                     'text-white flex justify-center pt-[30px] pb-[30px] items-center gap-x-[10px] text-center align-middle'

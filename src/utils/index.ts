@@ -193,11 +193,14 @@ export const formattedStringFromTimestamp = (timestamp: number) => {
   const millisecondsPerMinute = 1000 * 60;
   const millisecondsPerHour = millisecondsPerMinute * 60;
   const millisecondsPerDay = millisecondsPerHour * 24;
-  const millisecondsPerYear = millisecondsPerDay * 365;
+  const millisecondsPerYear = millisecondsPerDay * 365.25; // Adjust for leap years
 
-  const elapsed = now - timestamp * 1000;
+  const elapsed = now - timestamp * 1000; // Convert timestamp to milliseconds
 
-  if (elapsed < millisecondsPerDay) {
+  if (elapsed < millisecondsPerMinute) {
+    const seconds = Math.floor(elapsed / 1000);
+    return `${seconds} sec${seconds !== 1 ? 's' : ''} ago`;
+  } else if (elapsed < millisecondsPerDay) {
     const hours = Math.floor(elapsed / millisecondsPerHour);
     if (hours > 0) {
       return `${hours} hour${hours > 1 ? 's' : ''} ago`;

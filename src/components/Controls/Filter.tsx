@@ -21,36 +21,25 @@ interface FilterProps {
   SvgIcon?: FC<SvgProps>;
   containParams?: HiddenElementStyles;
   onChange: (filter: string) => void;
-  initialState: string;
+  state: string;
 }
 
-const Filter = ({
-  config,
-  selectAll,
-  SvgIcon,
-  containParams,
-  onChange,
-  initialState,
-}: FilterProps) => {
+const Filter = ({ config, selectAll, SvgIcon, containParams, onChange, state }: FilterProps) => {
   const [filters] = useState<FilterConfig['filters']>(config.filters);
   const { containerRef, itemsPerRow } = useItemsPerRow(
     config.filters.map((elem) => elem.text),
     containParams,
   );
-  const [selectedFilter, setSelectedFilter] = useState<string>(initialState || '');
 
   const handleSelectAll = () => {
-    if (selectedFilter === 'all') {
-      setSelectedFilter(filters[0].text.toLowerCase());
+    if (state === 'all') {
       onChange(filters[0].text.toLowerCase());
     } else {
-      setSelectedFilter('all');
       onChange('all');
     }
   };
 
   const handleFilterClick = (filterText: string) => {
-    setSelectedFilter(filterText.toLowerCase());
     onChange(filterText);
   };
 
@@ -66,6 +55,7 @@ const Filter = ({
       >
         {Array(itemsCount)
           .fill(null)
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           .map((_) => {
             const filter = filterIndex < filters.length ? filters[filterIndex++] : null;
             return (
@@ -73,7 +63,7 @@ const Filter = ({
                 <FilterTag
                   key={filter.text}
                   activeColor={config.activeColor}
-                  active={selectedFilter === filter.text.toLowerCase() || selectedFilter === 'all'}
+                  active={state === filter.text.toLowerCase() || state === 'all'}
                   text={filter.text}
                   onClick={() => handleFilterClick(filter?.text)}
                   styles={config.styles}
@@ -97,13 +87,13 @@ const Filter = ({
           {SvgIcon && (
             <SvgIcon
               className={'mr-[10px]'}
-              activecolor={selectedFilter === 'all' ? config.activeColor : ''}
+              activecolor={state === 'all' ? config.activeColor : ''}
             />
           )}
           <FilterTag
             text={selectAll.text}
             activeColor={config.activeColor}
-            active={selectedFilter === 'all'}
+            active={state === 'all'}
             onClick={handleSelectAll}
           />
         </div>

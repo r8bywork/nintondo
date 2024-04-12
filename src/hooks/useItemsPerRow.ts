@@ -34,12 +34,12 @@ const useItemsPerRow = (
           return hiddenElement;
         });
 
-        const itemWidths = hiddenElements.map((element) => element.offsetWidth + 12);
+        const itemWidths = hiddenElements.map((element) => element.offsetWidth + 15);
 
         if (containerRef.current) {
           let currentRowWidth = 0;
           let currentRowCount = 0;
-          let newRowItems: number[] = [];
+          const newRowItems: number[] = [];
 
           itemWidths.forEach((width, index) => {
             currentRowWidth += width;

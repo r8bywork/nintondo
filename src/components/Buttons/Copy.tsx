@@ -11,16 +11,20 @@ interface CopyProps {
 
 export const Copy = ({ text, SvgIcon, svgClassname, useToast = false }: CopyProps) => {
   const [showTooltip, setShowTooltip] = useState(false);
+  const [copyLocked, setCopyLocked] = useState(false);
 
   const copyToClipboard = () => {
+    if (copyLocked) return;
+    setCopyLocked(true);
+    navigator.clipboard.writeText(text ?? '');
     if (useToast) {
       toast('Copied!');
-      return;
+    } else {
+      setShowTooltip(true);
     }
-    navigator.clipboard.writeText(text ?? '');
-    setShowTooltip(true);
     setTimeout(() => {
       setShowTooltip(false);
+      setCopyLocked(false);
     }, 2000);
   };
   return (

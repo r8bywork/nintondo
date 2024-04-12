@@ -77,7 +77,7 @@ const InscriptionPage = () => {
           <div className={'flex mb-[22px]'}>
             <button
               className='bg-[#FFFFFF] px-[20px] mr-[13px] rounded-[17px]'
-              onClick={() => navigate('/bellinals/inscriptions')}
+              onClick={() => navigate(-1)}
             >
               <LeftArrow />
             </button>

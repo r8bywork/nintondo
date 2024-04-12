@@ -7,47 +7,47 @@ import InscriptionsPage from './pages/InscriptionsPage.tsx';
 import InscriptionPage from './pages/InscriptionPage.tsx';
 // import CollectionPage from './pages/CollectionPage.tsx';
 // import CollectionsPage from './pages/CollectionsPage.tsx';
-import { Provider } from 'react-redux';
+// import { Provider } from 'react-redux';
 import SplitServicePage from './pages/SplitServicePage.tsx';
-import { store } from './redux/store/store.ts';
+// import { store } from './redux/store/store.ts';
 
 const App = () => {
   return (
-    <Provider store={store}>
-      <Router>
-        <Header />
-        <Routes>
-          <Route
-            path='/:anchor?'
-            element={<MainPage />}
-          />
-          <Route
-            path='/explorer/*'
-            element={<Explorer />}
-          />
-          <Route
-            path='/bellinals/inscriptions*'
-            element={<InscriptionsPage />}
-          />
-          <Route
-            path='/bellinals/inscriptions/:hash'
-            element={<InscriptionPage />}
-          />
-          {/* <Route
+    // <Provider store={store}>
+    <Router>
+      <Header />
+      <Routes>
+        <Route
+          path='/:anchor?'
+          element={<MainPage />}
+        />
+        <Route
+          path='/explorer/*'
+          element={<Explorer />}
+        />
+        <Route
+          path='/bellinals/inscriptions/*'
+          element={<InscriptionsPage />}
+        />
+        <Route
+          path='/bellinals/inscription/:hash'
+          element={<InscriptionPage />}
+        />
+        {/* <Route
             path='/bellinals/collections/*'
             element={<CollectionsPage />}
           /> */}
-          {/* <Route
+        {/* <Route
             path='/bellinals/collections/:hash'
             element={<CollectionPage />}
           /> */}
-          <Route
-            path='/split-service/*'
-            element={<SplitServicePage />}
-          />
-        </Routes>
-      </Router>
-    </Provider>
+        <Route
+          path='/split-service/*'
+          element={<SplitServicePage />}
+        />
+      </Routes>
+    </Router>
+    // </Provider>
   );
 };
 

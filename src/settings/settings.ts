@@ -297,7 +297,7 @@ export const filterTypeConfig: FilterConfig = {
     { text: 'HTML' },
     { text: 'JavaScript' },
     { text: 'Markdown' },
-    { text: 'Parents' },
+    // { text: 'Parents' },
     { text: '3D' },
   ],
 };
@@ -305,7 +305,7 @@ export const filterTypeConfig: FilterConfig = {
 export const filterTimeConfig: FilterConfig = {
   activeColor: '#B75BFF',
   styles: { boxShadow: '0 0 12px 0 rgba(183, 91, 255, 0.5)' },
-  filters: [{ text: '1 Hour' }, { text: '1 Day' }, { text: '1 Week' }, { text: '1 Month' }],
+  filters: [{ text: 'Hour' }, { text: 'Day' }, { text: 'Week' }, { text: 'Month' }],
 };
 
 export const inscriptionInfo = [
