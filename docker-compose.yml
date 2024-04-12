@@ -1,30 +1,30 @@
 version: '3.8'
 
 services:
-  # reverse-proxy:
-  #   image: traefik
-  #   ports:
-  #     - '80:80'
-  #     - '443:443'
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock:ro
-  #     - ./traefik.yml:/etc/traefik/traefik.yml:ro
-  #     - letsencrypt:/letsencrypt
-  #   labels:
-  #     - 'traefik.http.middlewares.testHeader.headers.customrequestheaders.Cache-Control=no-cache'
-  #     - 'traefik.http.middlewares.testHeader.headers.customrequestheaders.Pragma=no-cache'
+  reverse-proxy:
+    image: traefik
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - letsencrypt:/letsencrypt
+    labels:
+      - 'traefik.http.middlewares.testHeader.headers.customrequestheaders.Cache-Control=no-cache'
+      - 'traefik.http.middlewares.testHeader.headers.customrequestheaders.Pragma=no-cache'
   api:
     ports:
       - '4173:4173'
     build: .
-# labels:
-#   - 'traefik.enable=true'
-#   - 'traefik.http.routers.webserver.rule=Host(`nintondo.io`)'
-#   - 'traefik.http.routers.webserver.tls=true'
-#   - 'traefik.http.routers.webserver.tls.certresolver=myresolver'
-#   - 'traefik.http.routers.webserver.entrypoints=web,websecure'
-#   - 'traefik.http.services.webserver.loadbalancer.server.port=4173'
-# depends_on:
-# - reverse-proxy
-# volumes:
-#   letsencrypt:
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.webserver.rule=Host(`nintondo.io`)'
+      - 'traefik.http.routers.webserver.tls=true'
+      - 'traefik.http.routers.webserver.tls.certresolver=myresolver'
+      - 'traefik.http.routers.webserver.entrypoints=web,websecure'
+      - 'traefik.http.services.webserver.loadbalancer.server.port=4173'
+    depends_on:
+      - reverse-proxy
+volumes:
+  letsencrypt:
