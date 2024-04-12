@@ -11,7 +11,12 @@ import {
   Collection,
 } from '../interfaces/intefaces.ts';
 import { InscriptionInfo } from '../interfaces/inscriptions.ts';
-import { convertTimestampToFormattedDate, formatBytes, truncate } from '@/utils';
+import {
+  convertTimestampToFormattedDate,
+  formatBytes,
+  formattedStringFromTimestamp,
+  truncate,
+} from '@/utils';
 import Copy from '@/components/Buttons/Copy.tsx';
 import CopySVG from '@/assets/copyRegular.svg?react';
 
@@ -376,7 +381,7 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
     name: 'ID',
     render: (value) => (
       <div className='flex items-center gap-1'>
-        <span className={'text-[#53DCFF]'}>
+        <span className={'text-white'}>
           {truncate(value, {
             nPrefix: 5,
             nSuffix: 5,
@@ -419,16 +424,15 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
   {
     value: 'file_size',
     name: 'FILE SIZE',
-    render: (value) => (
-      <span className={'text-[#4b4b4b] items-center flex'}>{formatBytes(value)}</span>
-    ),
+    render: (value) => <span className={'text-white items-center flex'}>{formatBytes(value)}</span>,
   },
   {
     value: 'created',
     name: 'CREATED',
     render: (value) => (
       <>
-        <span className={'text-[#53DCFF]'}>{convertTimestampToFormattedDate(value)}</span>
+        <span className='text-white'>{convertTimestampToFormattedDate(value)}</span>{' '}
+        <span className={'text-[#4b4b4b] text-sm'}>{formattedStringFromTimestamp(value)}</span>
       </>
     ),
   },
