@@ -1,8 +1,8 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DownloadLink from '../components/Buttons/DownloadLink.tsx';
 import Text from '../components/LandingTextBlocks/Text.tsx';
 import WalletInfo from '../components/LandingTextBlocks/WalletInfo.tsx';
-import { buttons, linksData } from '../settings/settings';
+import { buttons } from '../settings/settings';
 import './styles/MainPage.css';
 import { useParams } from 'react-router-dom';
 const MainPage = () => {
@@ -72,7 +72,7 @@ const MainPage = () => {
         </div>
         <div className={'flex-wrap flex'}>
           <div className={'w-[1080px] mx-auto'}>
-            <div
+            {/* <div
               id={'markets'}
               className={'text-white'}
               ref={blocks.markets as React.RefObject<HTMLDivElement>}
@@ -102,7 +102,7 @@ const MainPage = () => {
                   </Fragment>
                 ))}
               </div>
-            </div>
+            </div> */}
             <span className={'text-white text-[18px] inline-block mb-[40px]'}>
               We want to clarify that the information provided about cryptocurrencies and the links
               to various exchanges on our website are for informational purposes only. We do not

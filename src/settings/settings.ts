@@ -101,14 +101,14 @@ export interface IHeader {
 
 export const HeaderLinks: IHeader[] = [
   { name: 'wallet', url: '/wallet' },
-  { name: 'markets', url: '/markets' },
+  // { name: 'markets', url: '/markets' },
   { name: 'explorer', url: '/explorer' },
   { name: 'bellinals', url: '/bellinals/inscriptions' },
 ];
 
 export const HeaderLinksMarketPlace: IHeader[] = [
   { name: 'wallet', url: '/wallet' },
-  { name: 'markets', url: '/markets' },
+  // { name: 'markets', url: '/markets' },
   { name: 'explorer', url: '/explorer' },
   { name: 'bellinals', url: '/bellinals/inscriptions' },
   // { name: 'inscriptions', url: '/marketplace' },
