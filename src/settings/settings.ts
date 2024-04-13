@@ -56,12 +56,12 @@ export const buttons = [
   {
     text: 'Chrome extension',
     svg: ChromeIcon,
-    url: 'https://github.com/Nintondo/extension/releases/download/0.1.1/chrome-0.1.1.zip',
+    url: 'https://github.com/Nintondo/extension/releases/download/0.2.3/chrome-0.2.3.zip',
   },
   {
     text: 'Firefox extension',
     svg: FirefoxIcon,
-    url: 'https://github.com/Nintondo/extension/releases/download/0.1.1/firefox-0.1.1.xpi',
+    url: 'https://github.com/Nintondo/extension/releases/download/0.2.3/firefox-0.2.3.xpi',
   },
 ];
 

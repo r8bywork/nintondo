@@ -1,7 +1,7 @@
 // export const HOST = 'http://192.168.0.108:8111';
 // export const HOST = 'http://localhost:8111';
 // export const HOST = 'https://static.nintondo.io';
-export const HOST = 'https://content.nintondo.io';
+export const HOST = 'https://content.nintondo.io/api';
 
 export const NINTONDO_API_URL = 'https://electrs.nintondo.io/api';
 // export const TEST_API_URL = "http://0.0.0.0:3001";
@@ -36,4 +36,4 @@ export const ORD_VALUE = 1000;
 
 export const FEE_ADDRESS = 'BMPNoA3NXhWoL89AkvFpYHEv8orNpUn5qq';
 
-export const BACKEND_URL = 'http://localhost:8888';
+export const BACKEND_URL = 'https://content.nintondo.io/social';
