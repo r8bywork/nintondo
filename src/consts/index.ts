@@ -10,7 +10,7 @@ export const TEST_API_URL = 'http://93.125.14.5:3000';
 // export const MARKET_API_URL = 'http://138.201.132.34:8111';
 // export const MARKET_HISTORY_API_URL = 'http://162.55.243.24:8222';
 
-export const MARKET_API_URL = 'https://content.nintondo.io';
+export const MARKET_API_URL = 'https://content.nintondo.io/api';
 export const MARKET_HISTORY_API_URL = 'https://history.nintondo.io';
 
 // export const MARKET_API_URL = 'http://localhost:8111';
