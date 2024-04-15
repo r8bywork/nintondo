@@ -140,11 +140,10 @@ ${connectedAddress}
   }, [nintondo]);
 
   const disconnect = async () => {
-    Cookies.remove('access_token');
-    Cookies.remove('refresh_token');
+    Cookies.remove('access_token', { path: '/', domain: 'nintondo.io' });
+    Cookies.remove('refresh_token', { path: '/', domain: 'nintondo.io' });
     setAddress(undefined);
     setVerifiedAddress(false);
-    localStorage.removeItem('verifiedAddress');
   };
 
   useEffect(() => {
