@@ -2,6 +2,7 @@ import { Split } from '@/interfaces/marketapi';
 import { Ord } from '@/interfaces/nintondo-manager-provider';
 import { MARKET_API_URL, MARKET_HISTORY_API_URL, NINTONDO_API_URL } from '../consts';
 import { address as belAddress, payments } from 'belcoinjs-lib';
+import { Filters } from '@/interfaces/intefaces.ts';
 
 export const fetchBELLMainnet = async <T>({
   path,
@@ -158,15 +159,25 @@ export const truncate = (str: string, { nPrefix = 4, nSuffix = 4 }: Params = {})
     : str;
 };
 
-export const createHref = (query: Record<string, string>, params: URLSearchParams) => {
-  const queryParams = new URLSearchParams(params);
-  Object.entries(query).map(([key, value]) => {
+export const createHref = (newFilters: Partial<Filters>, currentParams: URLSearchParams) => {
+  const params = new URLSearchParams(currentParams);
+  Object.entries(newFilters).forEach(([key, value]) => {
     if (value !== undefined) {
-      queryParams.set(key, value);
+      params.set(key, value.toString());
     }
   });
-  return queryParams.toString();
+  return params.toString();
 };
+
+// export const createHref = (query: Record<string, string>, params: URLSearchParams) => {
+//   const queryParams = new URLSearchParams(params);
+//   Object.entries(query).map(([key, value]) => {
+//     if (value !== undefined) {
+//       queryParams.set(key, value);
+//     }
+//   });
+//   return queryParams.toString();
+// };
 
 export const scrollToTopExplorerTable = () => {
   const tableTop = document.getElementById('explorer')?.getBoundingClientRect();

@@ -5,13 +5,31 @@ export interface Header {
   url: string;
 }
 
+export interface Filters {
+  currentPage: number;
+  sortBy: string;
+  contentType: string;
+  timeFilter: string;
+  from: string;
+  to: string;
+}
+
+export interface FilterTag {
+  text: string;
+  type?: 'tag';
+}
+
+export interface FilterRange {
+  type: 'range';
+  max: number | 'max';
+}
+
+export type Filter = FilterTag | FilterRange;
+
 export interface FilterConfig {
   activeColor: string;
   styles?: CSSProperties;
-  filters: {
-    text: string;
-    // isActive: boolean;
-  }[];
+  filters: Filter[];
 }
 
 export interface AddressStats {

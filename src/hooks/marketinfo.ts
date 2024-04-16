@@ -29,8 +29,12 @@ export const useExplorerGetInscriptionsList = () => {
       sortBy?: string,
       contentFilter?: string,
       timeFilter?: string,
+      from?: string,
+      to?: string,
     ): Promise<InscriptionCards | undefined> => {
-      const url = `pub/search?&page=${page}&sort_by=${sortBy}&content_filter=${contentFilter}&time_filter=${timeFilter}`;
+      const url = `pub/search?&page=${page}&sort_by=${sortBy}&content_filter=${contentFilter}&time_filter=${timeFilter}&from=${from}&to=${
+        to === 'max' ? '18446744073709551615' : to
+      }`;
       return await fetchMarketInfo<InscriptionCards>({
         path: url,
         json: true,

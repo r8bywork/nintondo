@@ -297,7 +297,6 @@ export const filterTypeConfig: FilterConfig = {
     { text: 'HTML' },
     { text: 'JavaScript' },
     { text: 'Markdown' },
-    // { text: 'Parents' },
     { text: '3D' },
   ],
 };
@@ -306,6 +305,12 @@ export const filterTimeConfig: FilterConfig = {
   activeColor: '#B75BFF',
   styles: { boxShadow: '0 0 12px 0 rgba(183, 91, 255, 0.5)' },
   filters: [{ text: 'Hour' }, { text: 'Day' }, { text: 'Week' }, { text: 'Month' }],
+};
+
+export const filterRangeConfig: FilterConfig = {
+  activeColor: '#53DCFF',
+  styles: { boxShadow: '0 0 12px 0 rgba(183, 91, 255, 0.5)' },
+  filters: [{ type: 'range', max: 'max' }],
 };
 
 export const inscriptionInfo = [
