@@ -36,4 +36,5 @@ export const ORD_VALUE = 1000;
 
 export const FEE_ADDRESS = 'BMPNoA3NXhWoL89AkvFpYHEv8orNpUn5qq';
 
-export const BACKEND_URL = 'https://content.nintondo.io/social';
+export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL ?? 'https://content.nintondo.io/social';
+export const DOMAIN: string = import.meta.env.VITE_DOMAIN ?? 'nintondo.io';

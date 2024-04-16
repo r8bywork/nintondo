@@ -17,7 +17,7 @@ const SplitSummary: FC<SplitSummaryProps> = ({ selectedOrds, updateOrds, selecte
   const doSplit = async () => {
     setLoading(true);
     if (selectedFeeRate <= 500) {
-      toast.error('Please select fee');
+      toast.error('Fee is too low');
       setLoading(false);
       return;
     }
