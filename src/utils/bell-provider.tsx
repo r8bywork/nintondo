@@ -10,7 +10,7 @@ import {
   SignPsbtOptions,
 } from '@/interfaces/nintondo-manager-provider';
 import axios from 'axios';
-import { BACKEND_URL } from '@/consts';
+import { BACKEND_URL, DOMAIN } from '@/consts';
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 
@@ -140,8 +140,11 @@ ${connectedAddress}
   }, [nintondo]);
 
   const disconnect = async () => {
-    Cookies.remove('access_token', { path: '/', domain: 'nintondo.io' });
-    Cookies.remove('refresh_token', { path: '/', domain: 'nintondo.io' });
+    Cookies.remove('access_token', {
+      path: '/',
+      domain: DOMAIN.includes(':') ? DOMAIN.slice(0, 9) : DOMAIN,
+    });
+    Cookies.remove('refresh_token', { path: '/', domain: DOMAIN });
     setAddress(undefined);
     setVerifiedAddress(false);
   };

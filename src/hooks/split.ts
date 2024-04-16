@@ -156,7 +156,9 @@ export const useSplitOrds = () => {
       transaction_hex: hex,
       locations: ords.map((f) => `${f.txid}:${f.vout}`),
     });
-    toast((result?.length ?? 'error') === 64 ? 'Success' : result!);
+    if (result?.length === 64) {
+      toast('Success');
+    }
     return result as string;
   };
 };

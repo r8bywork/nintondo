@@ -24,7 +24,7 @@ export const useMakeAuthRequests = () => {
             fail();
           }
         } else {
-          fail();
+          toast.error('Please try again later');
         }
       }
     },
