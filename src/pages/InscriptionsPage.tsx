@@ -43,28 +43,28 @@ const InscriptionsPage = () => {
             <Filter
               config={filterConfig}
               onChange={handleSortByFilterChange}
-              state={filters.sortBy}
+              state={filters.sortBy ?? ''}
             />
             <Filter
               selectAll={{ text: 'All' }}
               SvgIcon={Svg}
               config={filterTypeConfig}
               onChange={handleTypeFilterChange}
-              state={filters.contentType}
+              state={filters.contentType ?? ''}
             />
             <Filter
               selectAll={{ text: 'All Time' }}
               SvgIcon={TimeSvg}
               config={filterTimeConfig}
               onChange={handleTimeFilterChange}
-              state={filters.timeFilter}
+              state={filters.timeFilter ?? ''}
             />
             <Filter
               selectAll={{ text: 'Range' }}
               SvgIcon={RangeSvg}
               config={filterRangeConfig}
               onChange={handleRangeFilterChange}
-              state={[filters.from, filters.to]}
+              state={[filters.from, filters.to] as string[]}
             />
           </div>
         </div>
