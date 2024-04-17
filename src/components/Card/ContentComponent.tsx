@@ -18,7 +18,10 @@ const ContentComponent = ({
   return (
     <>
       {contentType === 'image' ? (
-        <div style={{ imageRendering: 'pixelated' }}>
+        <div
+          className='flex justify-center'
+          style={{ imageRendering: 'pixelated' }}
+        >
           {blurImage && (
             <div
               className={

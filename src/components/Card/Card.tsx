@@ -81,7 +81,7 @@ const Card = ({
             (BigCard
               ? convertTimestampToFormattedDate(date ?? 0)
               : formattedStringFromTimestamp(date ?? 0))} */}
-          {(owner && '') || formattedStringFromTimestamp(date ?? 0)}
+          {(owner && '') || (!BigCard && formattedStringFromTimestamp(date ?? 0))}
         </span>
       </div>
       <div className={'flex'}>

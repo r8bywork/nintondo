@@ -24,12 +24,12 @@ export interface FilterRange {
   max: number | 'max';
 }
 
-export type Filter = FilterTag | FilterRange;
+export type IFilter = FilterTag | FilterRange;
 
 export interface FilterConfig {
   activeColor: string;
   styles?: CSSProperties;
-  filters: Filter[];
+  filters: IFilter[];
 }
 
 export interface AddressStats {

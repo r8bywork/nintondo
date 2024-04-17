@@ -2,7 +2,7 @@ import { FC, useMemo } from 'react';
 import FilterTag from './components/FilterTag';
 import FilterRange from './components/FilterRange';
 import useItemsPerRow from '@/hooks/useItemsPerRow.ts';
-import { FilterConfig, Filter } from '@/interfaces/intefaces.ts';
+import { FilterConfig, IFilter } from '@/interfaces/intefaces.ts';
 
 interface SvgProps {
   activecolor: string;
@@ -44,7 +44,7 @@ const Filter: FC<FilterProps> = ({
 
   const handleFilterClick = (filterText: string) => onChange(filterText);
 
-  const renderFilter = (filter: Filter, index: number) =>
+  const renderFilter = (filter: IFilter, index: number) =>
     filter.type === 'range' ? (
       <FilterRange
         key={`filter-range-${index}`}
