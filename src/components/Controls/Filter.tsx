@@ -56,7 +56,11 @@ const Filter: FC<FilterProps> = ({
     ) : filter.type === 'genesis' ? (
       <FilterTag
         key={`genesis-block-${index}`}
-        text={urlSearchParams.get('genesisBlock') || 'failed'}
+        text={
+          urlSearchParams.get('genesisBlock')
+            ? Number(urlSearchParams.get('genesisBlock')).toLocaleString()
+            : 'failed'
+        }
         activeColor={config.activeColor}
         active={true}
         deletable={true}

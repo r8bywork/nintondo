@@ -106,7 +106,7 @@ const InscriptionPage = () => {
           )}
         </div>
 
-        <div className={'w-full'}>
+        <div className={'w-full pb-[30px]'}>
           <div className={'max-lg:mt-[29px]'}>
             <Title text={'Inscription Info'} />
           </div>

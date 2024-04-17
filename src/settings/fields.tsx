@@ -402,9 +402,21 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
     value: 'owner',
     name: 'OWNED BY',
     render: (value) => (
-      <>
-        <span className={'text-[#53DCFF]'}>{value}</span>
-      </>
+      <div className='flex items-center gap-1'>
+        {/*<span className={'text-[#53DCFF]'}>{value}</span>*/}
+        <span className={'text-[#53DCFF]'}>
+          {truncate(value, {
+            nPrefix: 7,
+            nSuffix: 7,
+          })}
+        </span>
+        <Copy
+          SvgIcon={CopySVG}
+          text={value}
+          svgClassname='size-6'
+          useToast={true}
+        />
+      </div>
     ),
   },
   {
@@ -412,7 +424,7 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
     name: 'FILE TYPE',
     render: (value, data) => (
       <>
-        <span className={'text-[#4b4b4b] items-center flex'}>
+        <span className={'text-[#4b4b4b] max-md:text-[12px] items-center flex'}>
           <CardTag
             text={value}
             active
@@ -432,10 +444,12 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
     value: 'created',
     name: 'CREATED',
     render: (value) => (
-      <>
-        <span className='text-white'>{convertTimestampToFormattedDate(value)}</span>{' '}
+      <div className={'max-md:flex max-md:flex-col text-right'}>
+        <span className='text-white max-md:text-[16px] md:pr-[15px]'>
+          {convertTimestampToFormattedDate(value)}
+        </span>
         <span className={'text-[#4b4b4b] text-sm'}>{formattedStringFromTimestamp(value)}</span>
-      </>
+      </div>
     ),
   },
   {
@@ -447,7 +461,7 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
           className={'text-[#53DCFF]'}
           onClick={() => functions?.handleCreationBlockClick(data.creation_block)}
         >
-          {value}
+          {value.toLocaleString('en-EN')}
         </span>
       </>
     ),

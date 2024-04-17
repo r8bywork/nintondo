@@ -89,7 +89,7 @@ const Table = <T extends object>({
                 key={`card_${idx}_field_${fdx}`}
                 className='flex bg-[#191919] px-[30px] max-lg:px-[10px] last:pb-[25px] first:rounded-t-[15px] last:rounded-b-[15px] first:pt-[15px]'
               >
-                <div className='text-[#4B4B4B] py-[7px] text-[20px] border-b-[1px] border-b-[#4b4b4b]  w-full'>
+                <div className='flex items-center text-[#4B4B4B] text-[20px] border-b-[1px] border-b-[#4b4b4b] w-full'>
                   {field.name?.toString().toUpperCase()}
                 </div>
                 <div className='whitespace-nowrap py-[7px] text-white text-[20px] border-b-[1px] border-b-[#4b4b4b]'>
