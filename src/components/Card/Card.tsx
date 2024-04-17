@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import cn from 'classnames';
 import ContentComponent from './ContentComponent.tsx';
+import { formattedStringFromTimestamp } from '@/utils/index.ts';
 
 interface CardProps {
   onClick?: () => void;
@@ -24,12 +25,12 @@ interface CardProps {
 const Card = ({
   onClick,
   text,
-  // date,
+  date,
   tags,
   BigCard,
   image,
   contentType,
-  // owner,
+  owner,
   onLoadHandler,
   blurImage,
 }: CardProps) => {
@@ -80,6 +81,7 @@ const Card = ({
             (BigCard
               ? convertTimestampToFormattedDate(date ?? 0)
               : formattedStringFromTimestamp(date ?? 0))} */}
+          {(owner && '') || (!BigCard && formattedStringFromTimestamp(date ?? 0))}
         </span>
       </div>
       <div className={'flex'}>

@@ -1,17 +1,19 @@
 // export const HOST = 'http://192.168.0.108:8111';
 // export const HOST = 'http://localhost:8111';
 // export const HOST = 'https://static.nintondo.io';
-export const HOST = 'https://content.nintondo.io/api';
+export const HOST = import.meta.env.VITE_CONTENT_URL ?? 'https://content.nintondo.io/api';
 
-export const NINTONDO_API_URL = 'https://electrs.nintondo.io/api';
+export const NINTONDO_API_URL =
+  import.meta.env.VITE_ELECTRS_URL ?? 'https://electrs.nintondo.io/api';
 // export const TEST_API_URL = "http://0.0.0.0:3001";
-export const TEST_API_URL = 'http://93.125.14.5:3000';
+// export const TEST_API_URL = 'http://93.125.14.5:3000';
 
 // export const MARKET_API_URL = 'http://138.201.132.34:8111';
 // export const MARKET_HISTORY_API_URL = 'http://162.55.243.24:8222';
 
-export const MARKET_API_URL = 'https://content.nintondo.io/api';
-export const MARKET_HISTORY_API_URL = 'https://history.nintondo.io';
+export const MARKET_API_URL = import.meta.env.VITE_CONTENT_URL ?? 'https://content.nintondo.io/api';
+export const MARKET_HISTORY_API_URL =
+  import.meta.env.VITE_HISTORY_URL ?? 'https://history.nintondo.io';
 
 // export const MARKET_API_URL = 'http://localhost:8111';
 // export const MARKET_HISTORY_API_URL = 'http://localhost:8222';

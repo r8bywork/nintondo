@@ -7,7 +7,6 @@ import {
   filterTypeConfig,
 } from '../settings/settings.ts';
 import Search from './components/Search/Search.tsx';
-import Filter from '../components/Controls/Filter.tsx';
 import Svg from '../assets/filters/Plus.tsx';
 import TimeSvg from '../assets/filters/Time.tsx';
 import RangeSvg from '../assets/filters/Range.tsx';
@@ -18,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import Skeleton from '../components/Placeholders/Skeleton.tsx';
 import { MARKET_API_URL } from '@/consts';
 import { useInscriptionFilters } from '@/hooks/useInscriptionFilters.ts';
+import Filter from '@/components/Controls/Filter.tsx';
 
 const InscriptionsPage = () => {
   const navigate = useNavigate();
