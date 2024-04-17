@@ -4,11 +4,14 @@ import Arrow from '../../assets/TableArrow.svg?react';
 import { v4 as uuidv4 } from 'uuid';
 import s from './styles.module.scss';
 import Pagination from './Pagination.tsx';
+
+type FunctionMap = { [key: string]: (...args: any[]) => any };
+
 type Field<T extends object> = {
   [K in keyof T]: {
     name: string | ReactNode;
     value: K;
-    render?: (value: T[K], data: T) => ReactNode;
+    render?: (value: T[K], data: T, functions?: FunctionMap) => ReactNode;
   };
 }[keyof T];
 type table = 'additional' | 'collections';
@@ -22,6 +25,7 @@ interface Props<T extends object> {
   marketplace?: boolean;
   mode?: table;
   selectedColumns?: (keyof T)[];
+  functions?: FunctionMap;
   pagination?: {
     recordsTotal: number;
     currentPage?: number;
@@ -40,6 +44,7 @@ const Table = <T extends object>({
   title,
   onClick,
   marketplace,
+  functions,
   mode,
   selectedColumns,
   pagination,
@@ -89,7 +94,7 @@ const Table = <T extends object>({
                 </div>
                 <div className='whitespace-nowrap py-[7px] text-white text-[20px] border-b-[1px] border-b-[#4b4b4b]'>
                   {field.render
-                    ? field.render(item[field.value], item)
+                    ? field.render(item[field.value], item, functions)
                     : (item[field.value] as ReactNode)}
                 </div>
               </div>

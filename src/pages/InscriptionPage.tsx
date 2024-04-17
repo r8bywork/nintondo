@@ -14,6 +14,7 @@ import { InscriptionInfo, InscriptionOwner } from '../interfaces/inscriptions.ts
 import NewIcon from '../assets/card/fullsize.svg?react';
 import UploadIcon from '../assets/card/share.svg?react';
 import { MARKET_API_URL } from '@/consts';
+import { useInscriptionFilters } from '@/hooks/useInscriptionFilters.ts';
 
 const InscriptionPage = () => {
   const { hash } = useParams();
@@ -24,6 +25,10 @@ const InscriptionPage = () => {
   const [type, setType] = useState<string>();
   const getInscriptionInfo = useExplorerGetInscriptionInfo();
   const getInscriptionOwner = useExplorerGetInscriptionOwner();
+  const { handleCreationBlockClick } = useInscriptionFilters();
+  const functions = {
+    handleCreationBlockClick,
+  };
   useEffect(() => {
     if (hash) {
       Promise.all([getInscriptionInfo(hash), getInscriptionOwner(hash)]).then(
@@ -111,6 +116,7 @@ const InscriptionPage = () => {
                 data={[{ ...data[0], ...owner[0] }] as InscriptionInfo[]}
                 fields={InscriptionInfoFields}
                 marketplace
+                functions={functions}
               />
             )}
           </div>

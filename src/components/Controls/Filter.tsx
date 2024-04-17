@@ -3,6 +3,7 @@ import FilterTag from './components/FilterTag';
 import FilterRange from './components/FilterRange';
 import useItemsPerRow from '@/hooks/useItemsPerRow.ts';
 import { FilterConfig, Filter } from '@/interfaces/intefaces.ts';
+import classNames from 'classnames';
 
 interface SvgProps {
   activecolor: string;
@@ -38,7 +39,7 @@ const Filter: FC<FilterProps> = ({
     filters.map((elem) => ('text' in elem ? elem.text : 'Range')),
     containParams,
   );
-
+  const urlSearchParams = new URLSearchParams(window.location.search);
   // @ts-expect-error some shit
   const handleSelectAll = () => onChange(state === 'all' ? filters[0].text.toLowerCase() : 'all');
 
@@ -51,6 +52,17 @@ const Filter: FC<FilterProps> = ({
         min={state[0]}
         max={state[1]}
         onRangeChange={handleFilterClick}
+      />
+    ) : filter.type === 'genesis' ? (
+      <FilterTag
+        key={`genesis-block-${index}`}
+        text={urlSearchParams.get('genesisBlock') || 'failed'}
+        activeColor={config.activeColor}
+        active={true}
+        deletable={true}
+        styles={config.styles}
+        onDeleteClick={handleFilterClick}
+        classNames={'last:mr-[0px] mr-[12px]'}
       />
     ) : (
       <FilterTag
@@ -86,16 +98,26 @@ const Filter: FC<FilterProps> = ({
         <div className='my-[10px] w-fit items-center px-[10px] py-[7px] border-[2px] flex flex-wrap border-[#191919] rounded-[18px]'>
           {SvgIcon && (
             <SvgIcon
-              className='mr-[10px]'
+              className={classNames('mr-[10px]', {
+                ['rotate-45']: config.filters[0].type === 'genesis',
+              })}
               activecolor={
-                state === 'all' || config.filters[0].type === 'range' ? config.activeColor : ''
+                state === 'all' ||
+                config.filters[0].type === 'range' ||
+                config.filters[0].type === 'genesis'
+                  ? config.activeColor
+                  : ''
               }
             />
           )}
           <FilterTag
             text={selectAll.text}
             activeColor={config.activeColor}
-            active={state === 'all' || config.filters[0].type === 'range'}
+            active={
+              state === 'all' ||
+              config.filters[0].type === 'range' ||
+              config.filters[0].type === 'genesis'
+            }
             onClick={handleSelectAll}
           />
         </div>

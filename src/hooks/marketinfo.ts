@@ -31,10 +31,12 @@ export const useExplorerGetInscriptionsList = () => {
       timeFilter?: string,
       from?: string,
       to?: string,
+      genesisBlock?: number,
     ): Promise<InscriptionCards | undefined> => {
+      const genesisBlockUrl = genesisBlock ? `&genesis_block=${genesisBlock}` : '';
       const url = `pub/search?&page=${page}&sort_by=${sortBy}&content_filter=${contentFilter}&time_filter=${timeFilter}&from=${from}&to=${
         to === 'max' ? '18446744073709551615' : to
-      }`;
+      }${genesisBlockUrl}`;
       return await fetchMarketInfo<InscriptionCards>({
         path: url,
         json: true,

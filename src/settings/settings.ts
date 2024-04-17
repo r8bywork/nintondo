@@ -313,6 +313,12 @@ export const filterRangeConfig: FilterConfig = {
   filters: [{ type: 'range', max: 'max' }],
 };
 
+export const filterGenesisConfig: FilterConfig = {
+  activeColor: '#53DCFF',
+  styles: { boxShadow: '0 0 12px 0 rgba(183, 91, 255, 0.5)' },
+  filters: [{ text: '0', type: 'genesis' }],
+};
+
 export const inscriptionInfo = [
   {
     id: 'e1636c83d2b337db7870939f01b5be484a08345c15ece7a1922c4f4e1a33480d',

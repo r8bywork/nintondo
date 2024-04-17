@@ -1,6 +1,7 @@
 import Card from '../components/Card/Card.tsx';
 import {
   filterConfig,
+  filterGenesisConfig,
   filterRangeConfig,
   filterTimeConfig,
   filterTypeConfig,
@@ -20,7 +21,7 @@ import { useInscriptionFilters } from '@/hooks/useInscriptionFilters.ts';
 
 const InscriptionsPage = () => {
   const navigate = useNavigate();
-
+  const urlSearchParams = new URLSearchParams(window.location.search);
   const {
     imagesLoaded,
     filters,
@@ -32,6 +33,7 @@ const InscriptionsPage = () => {
     handleSortByFilterChange,
     handleRangeFilterChange,
     handleImageLoad,
+    handleDeleteGenesisBlock,
   } = useInscriptionFilters();
 
   return (
@@ -66,6 +68,15 @@ const InscriptionsPage = () => {
               onChange={handleRangeFilterChange}
               state={[filters.from, filters.to] as string[]}
             />
+            {urlSearchParams.get('genesisBlock') && (
+              <Filter
+                selectAll={{ text: 'Genesis Block' }}
+                SvgIcon={Svg}
+                config={filterGenesisConfig}
+                onChange={handleDeleteGenesisBlock}
+                state={[filters.from, filters.to] as string[]}
+              />
+            )}
           </div>
         </div>
         <div className='flex-grow overflow-y-auto px-[10px]'>

@@ -169,16 +169,6 @@ export const createHref = (newFilters: Partial<Filters>, currentParams: URLSearc
   return params.toString();
 };
 
-// export const createHref = (query: Record<string, string>, params: URLSearchParams) => {
-//   const queryParams = new URLSearchParams(params);
-//   Object.entries(query).map(([key, value]) => {
-//     if (value !== undefined) {
-//       queryParams.set(key, value);
-//     }
-//   });
-//   return queryParams.toString();
-// };
-
 export const scrollToTopExplorerTable = () => {
   const tableTop = document.getElementById('explorer')?.getBoundingClientRect();
   const headerHeight = document.getElementById('header')?.getBoundingClientRect().height;

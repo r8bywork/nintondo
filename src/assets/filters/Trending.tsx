@@ -35,7 +35,7 @@ const TrendingIcon = ({ width = '18', height = '19', className }: SvgProps) => (
           colorInterpolationFilters={'sRGB'}
         >
           <feFlood
-            flood-opacity='0'
+            floodOpacity='0'
             result='BackgroundImageFix'
           />
           <feColorMatrix

@@ -20,11 +20,13 @@ import {
 import Copy from '@/components/Buttons/Copy.tsx';
 import CopySVG from '@/assets/copyRegular.svg?react';
 
+type FunctionMap = { [key: string]: (...args: any[]) => any };
+
 export type Field<T extends object> = {
   [K in keyof T]: {
     name: string | ReactNode;
     value: K;
-    render?: (value: T[K], data: T) => ReactNode;
+    render?: (value: T[K], data: T, functions?: FunctionMap) => ReactNode;
   };
 }[keyof T];
 
@@ -439,9 +441,14 @@ export const InscriptionInfoFields: Field<InscriptionInfo>[] = [
   {
     value: 'creation_block',
     name: 'CREATION BLOCK',
-    render: (value) => (
+    render: (value, data, functions) => (
       <>
-        <span className={'text-[#53DCFF]'}>{value}</span>
+        <span
+          className={'text-[#53DCFF]'}
+          onClick={() => functions?.handleCreationBlockClick(data.creation_block)}
+        >
+          {value}
+        </span>
       </>
     ),
   },

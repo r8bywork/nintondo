@@ -12,6 +12,7 @@ export interface Filters {
   timeFilter: string;
   from: string;
   to: string;
+  genesisBlock: number;
 }
 
 export interface FilterTag {
@@ -24,7 +25,12 @@ export interface FilterRange {
   max: number | 'max';
 }
 
-export type Filter = FilterTag | FilterRange;
+export interface FilterGenesis {
+  type: 'genesis';
+  text: string;
+}
+
+export type Filter = FilterTag | FilterRange | FilterGenesis;
 
 export interface FilterConfig {
   activeColor: string;

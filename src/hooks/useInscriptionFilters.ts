@@ -11,6 +11,7 @@ interface Filters {
   timeFilter?: string;
   from?: string;
   to?: string;
+  genesisBlock?: number;
 }
 
 export const useInscriptionFilters = () => {
@@ -30,6 +31,7 @@ export const useInscriptionFilters = () => {
       timeFilter: searchParams.get('timeFilter') || 'all',
       from: searchParams.get('from') || '0',
       to: searchParams.get('to') || 'max',
+      genesisBlock: parseInt(searchParams.get('genesisBlock') || '0', 10),
     }),
     [],
   );
@@ -48,7 +50,7 @@ export const useInscriptionFilters = () => {
     setFilters(newFilters);
     setIsLoading(true);
     setImagesLoaded({});
-    console.log(newFilters);
+
     getInscriptions(
       newFilters.currentPage,
       newFilters.sortBy,
@@ -56,6 +58,7 @@ export const useInscriptionFilters = () => {
       newFilters.timeFilter,
       newFilters.from,
       newFilters.to,
+      newFilters.genesisBlock,
     )
       .then((data) => {
         setInscriptions(data);
@@ -117,6 +120,20 @@ export const useInscriptionFilters = () => {
     setFilters((prev) => ({ ...prev, from: from, to: to }));
   };
 
+  const handleCreationBlockClick = (filter: number) => {
+    const currentFilters = { ...filters, genesisBlock: filter, currentPage: 1 };
+    const params = createHref(currentFilters, new URLSearchParams());
+    navigate(`/bellinals/inscriptions?${params}`);
+    setFilters((prev) => ({ ...prev, genesisBlock: filter, currentPage: 1 }));
+  };
+
+  const handleDeleteGenesisBlock = () => {
+    const currentFilters = { ...filters, genesisBlock: undefined, currentPage: 1 };
+    const params = createHref(currentFilters, new URLSearchParams());
+    navigate(`/bellinals/inscriptions?${params}`);
+    setFilters((prev) => ({ ...prev, genesisBlock: undefined, currentPage: 1 }));
+  };
+
   return {
     imagesLoaded,
     filters,
@@ -128,5 +145,7 @@ export const useInscriptionFilters = () => {
     handleSortByFilterChange,
     handleRangeFilterChange,
     handleImageLoad,
+    handleCreationBlockClick,
+    handleDeleteGenesisBlock,
   };
 };
