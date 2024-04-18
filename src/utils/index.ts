@@ -64,6 +64,7 @@ export const fetchInscriptionOwner = async <T>({
   const url = `${MARKET_HISTORY_API_URL}/${path}`;
   const res = await fetch(url.toString(), { ...props });
 
+  if (!res.ok) return;
   if (!json) return (await res.text()) as T;
 
   return await res.json();

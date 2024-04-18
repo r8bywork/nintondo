@@ -33,14 +33,9 @@ const InscriptionPage = () => {
     if (hash) {
       Promise.all([getInscriptionInfo(hash), getInscriptionOwner(hash)]).then(
         ([reqData, reqOwner]) => {
-          if (reqData && reqOwner !== null) {
-            setData([reqData] as InscriptionInfo[]);
-            if (typeof reqOwner === 'string' && reqOwner === 'Not found') {
-              setOwner([{ owner: reqOwner }] as InscriptionOwner[]);
-            } else {
-              setOwner([reqOwner] as InscriptionOwner[]);
-            }
-          }
+          if (!reqData) return;
+          setData([reqData] as InscriptionInfo[]);
+          setOwner([{owner: reqOwner?.owner ?? "Not found"}] as InscriptionOwner[]);
         },
       );
       fetch(`${MARKET_API_URL}/pub/content/${hash}`)
