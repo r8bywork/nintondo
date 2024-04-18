@@ -9,7 +9,7 @@ interface SelectAllProps {
   className?: string;
   color: string;
   active: boolean;
-  onClick: () => void;
+  onClick?: () => void;
   rotate?: boolean;
   tagClassName?: string;
 }

@@ -182,7 +182,7 @@ const Filter: FC<FilterProps> = ({
                     config.filters[0].type === 'genesis'
                   }
                   SvgIcon={SvgIcon}
-                  onClick={handleSelectAll}
+                  onClick={mobileAlwaysActive ? handleSelectAll : undefined}
                 />
               </div>
             )}
