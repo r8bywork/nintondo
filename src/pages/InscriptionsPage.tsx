@@ -39,7 +39,7 @@ const InscriptionsPage = () => {
 
   return (
     <div className={'bg-black min-h-screen'}>
-      <div className='max-w-[1700px] max-medium:flex-col mx-auto flex pt-[150px] max-medium:pt-[100px]'>
+      <div className='max-w-[1700px] max-medium:flex-col mx-auto flex pt-[150px] max-medium:pt-[50px]'>
         <div className='w-full max-w-[421px] max-medium:max-w-none pt-[35px] px-[10px]'>
           <Search placeholder={'Search'} />
           <div

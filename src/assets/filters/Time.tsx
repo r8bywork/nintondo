@@ -47,10 +47,6 @@ const TimeSvg = ({ activecolor, className }: TimeSvgProps) => {
               in2='hardAlpha'
               operator='out'
             />
-            <feColorMatrix
-              type='matrix'
-              values='0 0 0 0 0.717647 0 0 0 0 0.356863 0 0 0 0 1 0 0 0 0 0.5 0'
-            />
             <feBlend
               mode='normal'
               in2='BackgroundImageFix'

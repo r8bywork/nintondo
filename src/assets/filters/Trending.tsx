@@ -5,12 +5,12 @@ interface SvgProps {
   className: string;
 }
 
-const TrendingIcon = ({ width = '18', height = '19', className }: SvgProps) => (
+const TrendingIcon = ({ width = '20', height = '20', className }: SvgProps) => (
   <div className={className}>
     <svg
       width={width}
       height={height}
-      viewBox='5 10 25 21'
+      viewBox='10 10 20 21'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
     >
@@ -45,7 +45,7 @@ const TrendingIcon = ({ width = '18', height = '19', className }: SvgProps) => (
             result='hardAlpha'
           />
           <feOffset />
-          <feGaussianBlur stdDeviation='6.2' />
+          <feGaussianBlur stdDeviation='3.1' />
           <feComposite
             in2='hardAlpha'
             operator='out'
