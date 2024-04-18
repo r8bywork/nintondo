@@ -79,7 +79,7 @@ const InscriptionsPage = () => {
             )}
           </div>
         </div>
-        <div className='flex-grow overflow-y-auto px-[10px]'>
+        <div className='flex-grow overflow-y-auto max-md:px-[0px] md:px-[10px]'>
           {inscriptions && !isLoading ? (
             <>
               <FoundCounter
@@ -87,7 +87,7 @@ const InscriptionsPage = () => {
                 customText={'inscriptions'}
                 classNames={'px-[15px]'}
               />
-              <div className='max-w-[1250px] mx-auto flex flex-wrap pt-[10px] gap-[10px] max-lg:justify-center'>
+              <div className='max-w-[1250px] mx-auto flex flex-wrap pt-[10px] max-md:gap-[5px] md:gap-[10px] max-lg:justify-center'>
                 {inscriptions?.inscriptions.map((card, index) => (
                   <div key={index}>
                     <Card

@@ -11,10 +11,10 @@ import {
   useExplorerGetInscriptionOwner,
 } from '../hooks/marketinfo.ts';
 import { InscriptionInfo, InscriptionOwner } from '../interfaces/inscriptions.ts';
-import NewIcon from '../assets/card/fullsize.svg?react';
 import UploadIcon from '../assets/card/share.svg?react';
 import { MARKET_API_URL } from '@/consts';
 import { useInscriptionFilters } from '@/hooks/useInscriptionFilters.ts';
+import { shareData } from '@/utils';
 
 const InscriptionPage = () => {
   const { hash } = useParams();
@@ -93,8 +93,7 @@ const InscriptionPage = () => {
               text={data[0].number}
               tags={[
                 { tagText: data[0].file_type, active: true },
-                { SvgIcon: NewIcon },
-                { SvgIcon: UploadIcon },
+                { SvgIcon: UploadIcon, onClick: shareData },
               ]}
               image={image}
               contentType={type}

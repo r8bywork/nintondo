@@ -15,6 +15,7 @@ interface CardProps {
     SvgIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
     tagText?: string;
     active?: boolean;
+    onClick?: () => void;
   }[];
   BigCard?: boolean;
   contentType: string;
@@ -50,7 +51,7 @@ const Card = ({
     <div
       className={`flex flex-col max-w-[${
         BigCard ? '500px' : '200px'
-      }] bg-[#1A1A1A] rounded-[15px] p-[10px]`}
+      }] bg-[#1A1A1A] rounded-[15px] max-md:p-[5px] md:p-[10px]`}
       onClick={onClick}
     >
       <ContentComponent
@@ -77,10 +78,6 @@ const Card = ({
             ['text-[20px]']: BigCard,
           })}
         >
-          {/* {(owner && '') ||
-            (BigCard
-              ? convertTimestampToFormattedDate(date ?? 0)
-              : formattedStringFromTimestamp(date ?? 0))} */}
           {(owner && '') || (!BigCard && formattedStringFromTimestamp(date ?? 0))}
         </span>
       </div>
@@ -93,7 +90,12 @@ const Card = ({
                   text={elem.tagText}
                   active={elem.active}
                   SvgIcon={elem.SvgIcon}
-                  classNames={BigCard ? 'text-[20px] leading-[23px]' : 'text-[14px] leading-[14px]'}
+                  onSvgClick={elem.onClick}
+                  classNames={
+                    BigCard
+                      ? 'text-[20px] leading-[23px]'
+                      : 'text-[14px] leading-[14px] max-md:mb-[5px]'
+                  }
                 />
               );
             })

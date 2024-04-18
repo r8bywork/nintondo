@@ -1,8 +1,9 @@
 import { Split } from '@/interfaces/marketapi';
 import { Ord } from '@/interfaces/nintondo-manager-provider';
-import { MARKET_API_URL, MARKET_HISTORY_API_URL, NINTONDO_API_URL } from '../consts';
+import { MARKET_API_URL, MARKET_HISTORY_API_URL, NINTONDO_API_URL } from '@/consts';
 import { address as belAddress, payments } from 'belcoinjs-lib';
 import { Filters } from '@/interfaces/intefaces.ts';
+import toast from 'react-hot-toast';
 
 export const fetchBELLMainnet = async <T>({
   path,
@@ -251,4 +252,29 @@ export const convertTimestampToFormattedDate = (timestamp: number): string => {
   };
   const formattedDate = date.toLocaleDateString('en-US', options) + ' GMT+3';
   return formattedDate;
+};
+
+export const shareData = () => {
+  const url = window.location.href;
+
+  if (navigator.share) {
+    navigator
+      .share({
+        title: 'Nintondo',
+        url: url,
+      })
+      .then(() => {
+        return 0;
+      })
+      .catch((error) => console.log('Ошибка при попытке поделиться', error));
+  } else {
+    copyToClipboard(url);
+  }
+};
+
+export const copyToClipboard = (text: string) => {
+  navigator.clipboard.writeText(text).then(
+    () => toast('Copied!'),
+    (error) => console.log(error),
+  );
 };

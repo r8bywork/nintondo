@@ -6,8 +6,9 @@ interface CardTag {
   text?: string;
   active?: boolean;
   classNames?: string;
+  onSvgClick?: () => void;
 }
-const CardTag = ({ SvgIcon, text, active, classNames }: CardTag) => {
+const CardTag = ({ SvgIcon, text, active, classNames, onSvgClick }: CardTag) => {
   return (
     <div
       className={cn(
@@ -22,12 +23,14 @@ const CardTag = ({ SvgIcon, text, active, classNames }: CardTag) => {
       )}
     >
       {SvgIcon && (
-        <SvgIcon
-          className={cn({
-            ['mr-[3px]']: text,
-            ['mr-0']: !text,
-          })}
-        />
+        <div onClick={onSvgClick}>
+          <SvgIcon
+            className={cn({
+              ['mr-[3px]']: text,
+              ['mr-0']: !text,
+            })}
+          />
+        </div>
       )}
       <span>{text}</span>
     </div>
