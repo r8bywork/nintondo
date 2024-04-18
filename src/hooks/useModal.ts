@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const useModal = (defaultValue?: boolean) => {
   const [isOpen, setIsOpen] = useState(defaultValue || false);
 
   const handleClose = () => {
     // enable scroll
-    document.body.removeAttribute('style');
+    document.body.classList.remove('mobile-scroll-disable');
 
     setIsOpen(false);
   };
@@ -13,10 +13,17 @@ export const useModal = (defaultValue?: boolean) => {
   const handleOpen = () => {
     // disable scroll from page
     // handleClos make scroll available again
-    document.body.setAttribute('style', 'overflow: hidden;');
+    document.body.classList.add('mobile-scroll-disable');
 
     setIsOpen(true);
   };
+
+  useEffect(() => {
+    return () => {
+      // force enable scroll when dismounted
+      document.body.classList.remove('mobile-scroll-disable');
+    };
+  }, []);
 
   return {
     open: handleOpen,
