@@ -108,7 +108,7 @@ const InscriptionsPage = () => {
                 customText={'inscriptions'}
                 classNames={'px-[15px]'}
               />
-              <div className='max-w-[1250px] mx-auto flex flex-wrap pt-[10px] max-md:gap-[5px] md:gap-[10px] max-lg:justify-center'>
+              <div className='max-w-[1250px] mx-auto flex flex-wrap pt-[10px] max-lowerMobile:gap-[5px] gap-[10px] max-lg:justify-center'>
                 {inscriptions?.inscriptions.map((card, index) => (
                   <div key={index}>
                     <Card
