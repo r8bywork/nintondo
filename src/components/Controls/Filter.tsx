@@ -162,6 +162,7 @@ const Filter: FC<FilterProps> = ({
         <Modal
           isOpen
           onClose={close}
+          mobileOnly
         >
           <div className='flex flex-col jusify-center gap-[6px]'>
             {selectAll && (

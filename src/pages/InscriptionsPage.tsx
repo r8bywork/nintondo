@@ -100,7 +100,7 @@ const InscriptionsPage = () => {
             )}
           </div>
         </div>
-        <div className='flex-grow overflow-y-auto max-md:px-[0px] md:px-[10px]'>
+        <div className='flex-grow overflow-y-auto max-md:px-[0px] md:px-[10px] max-medium:pt-[18px]'>
           {inscriptions && !isLoading ? (
             <>
               <FoundCounter
