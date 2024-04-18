@@ -69,6 +69,7 @@ const InscriptionsPage = () => {
                 config={filterTimeConfig}
                 onChange={handleTimeFilterChange}
                 state={filters.timeFilter ?? ''}
+                mobileAlwaysActive
               />
               {/* Trending button is visible in mobile version (viewport that has less than 850px)*/}
               <Filter
@@ -78,13 +79,13 @@ const InscriptionsPage = () => {
                 onChange={handleSortByFilterChange}
                 state={filters.sortBy ?? ''}
                 className='hidden max-medium:block'
-                mobileAlwaysActive
               />
               <Filter
                 selectAll={{ text: 'Range' }}
                 SvgIcon={RangeSvg}
                 config={filterRangeConfig}
                 onChange={handleRangeFilterChange}
+                mobileAlwaysActive
                 state={[filters.from, filters.to] as string[]}
               />
               {urlSearchParams.get('genesisBlock') && (

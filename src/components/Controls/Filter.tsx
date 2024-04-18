@@ -179,7 +179,8 @@ const Filter: FC<FilterProps> = ({
                     mobileAlwaysActive ||
                     state === 'all' ||
                     config.filters[0].type === 'range' ||
-                    config.filters[0].type === 'genesis'
+                    config.filters[0].type === 'genesis' ||
+                    selectAll.text === 'Trending'
                   }
                   SvgIcon={SvgIcon}
                   onClick={mobileAlwaysActive ? handleSelectAll : undefined}

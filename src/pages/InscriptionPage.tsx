@@ -35,7 +35,7 @@ const InscriptionPage = () => {
         ([reqData, reqOwner]) => {
           if (!reqData) return;
           setData([reqData] as InscriptionInfo[]);
-          setOwner([{owner: reqOwner?.owner ?? "Not found"}] as InscriptionOwner[]);
+          setOwner([{ owner: reqOwner?.owner ?? 'Not found' }] as InscriptionOwner[]);
         },
       );
       fetch(`${MARKET_API_URL}/pub/content/${hash}`)
