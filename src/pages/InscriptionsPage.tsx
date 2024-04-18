@@ -18,6 +18,7 @@ import Skeleton from '../components/Placeholders/Skeleton.tsx';
 import { MARKET_API_URL } from '@/consts';
 import { useInscriptionFilters } from '@/hooks/useInscriptionFilters.ts';
 import Filter from '@/components/Controls/Filter.tsx';
+import TrendingIcon from '@/assets/filters/Trending.tsx';
 
 const InscriptionsPage = () => {
   const navigate = useNavigate();
@@ -41,11 +42,17 @@ const InscriptionsPage = () => {
       <div className='max-w-[1700px] max-medium:flex-col mx-auto flex pt-[150px] max-medium:pt-[100px]'>
         <div className='w-full max-w-[421px] max-medium:max-w-none pt-[35px] px-[10px]'>
           <Search placeholder={'Search'} />
-          <div className={'mt-[35px] flex flex-col gap-[30px]'}>
+          <div
+            className={
+              'mt-[35px] flex flex-col gap-[30px] max-medium:mt-[18px] max-medium:gap-[11px]'
+            }
+          >
+            {/* Hide trending row in mobile version */}
             <Filter
               config={filterConfig}
               onChange={handleSortByFilterChange}
               state={filters.sortBy ?? ''}
+              className='max-medium:hidden'
             />
             <Filter
               selectAll={{ text: 'All' }}
@@ -53,21 +60,34 @@ const InscriptionsPage = () => {
               config={filterTypeConfig}
               onChange={handleTypeFilterChange}
               state={filters.contentType ?? ''}
+              mobileHorizontally
             />
-            <Filter
-              selectAll={{ text: 'All Time' }}
-              SvgIcon={TimeSvg}
-              config={filterTimeConfig}
-              onChange={handleTimeFilterChange}
-              state={filters.timeFilter ?? ''}
-            />
-            <Filter
-              selectAll={{ text: 'Range' }}
-              SvgIcon={RangeSvg}
-              config={filterRangeConfig}
-              onChange={handleRangeFilterChange}
-              state={[filters.from, filters.to] as string[]}
-            />
+            <div className='flex flex-col gap-[30px] max-medium:flex-row max-medium:justify-between max-medium:gap-[2px] flex-wrap'>
+              <Filter
+                selectAll={{ text: 'All Time' }}
+                SvgIcon={TimeSvg}
+                config={filterTimeConfig}
+                onChange={handleTimeFilterChange}
+                state={filters.timeFilter ?? ''}
+              />
+              {/* Trending button is visible in mobile version (viewport that has less than 850px)*/}
+              <Filter
+                selectAll={{ text: 'Trending' }}
+                SvgIcon={TrendingIcon}
+                config={filterConfig}
+                onChange={handleSortByFilterChange}
+                state={filters.sortBy ?? ''}
+                className='hidden max-medium:block'
+                mobileAlwaysActive
+              />
+              <Filter
+                selectAll={{ text: 'Range' }}
+                SvgIcon={RangeSvg}
+                config={filterRangeConfig}
+                onChange={handleRangeFilterChange}
+                state={[filters.from, filters.to] as string[]}
+              />
+            </div>
             {urlSearchParams.get('genesisBlock') && (
               <Filter
                 selectAll={{ text: 'Genesis Block' }}
@@ -75,6 +95,7 @@ const InscriptionsPage = () => {
                 config={filterGenesisConfig}
                 onChange={handleDeleteGenesisBlock}
                 state={[filters.from, filters.to] as string[]}
+                mobileHorizontally
               />
             )}
           </div>
