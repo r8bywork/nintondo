@@ -4,7 +4,7 @@
     padding: 3.5rem 6rem;
     position: absolute;
     width: 100%;
-    z-index: 1000;
+    z-index: 10;
 }
 
 .burger-menu {
