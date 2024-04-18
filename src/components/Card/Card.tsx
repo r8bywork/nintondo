@@ -51,7 +51,7 @@ const Card = ({
     <div
       className={`flex flex-col max-w-[${
         BigCard ? '500px' : '200px'
-      }] bg-[#1A1A1A] rounded-[15px] max-md:p-[5px] md:p-[10px]`}
+      }] bg-[#1A1A1A] rounded-[15px] max-lowerMobile:p-[5px] p-[10px]`}
       onClick={onClick}
     >
       <ContentComponent

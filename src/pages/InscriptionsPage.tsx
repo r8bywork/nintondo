@@ -62,7 +62,7 @@ const InscriptionsPage = () => {
               state={filters.contentType ?? ''}
               mobileHorizontally
             />
-            <div className='flex flex-col gap-[30px] max-medium:flex-row max-medium:justify-between max-medium:gap-[2px] flex-wrap'>
+            <div className='flex flex-col gap-[30px] max-medium:flex-row max-medium:justify-center max-medium:gap-[2px] max-medium:gap-y-[5px] flex-wrap'>
               <Filter
                 selectAll={{ text: 'All Time' }}
                 SvgIcon={TimeSvg}
@@ -87,17 +87,17 @@ const InscriptionsPage = () => {
                 onChange={handleRangeFilterChange}
                 state={[filters.from, filters.to] as string[]}
               />
+              {urlSearchParams.get('genesisBlock') && (
+                <Filter
+                  selectAll={{ text: 'Genesis Block' }}
+                  // SvgIcon={Svg}
+                  config={filterGenesisConfig}
+                  onChange={handleDeleteGenesisBlock}
+                  state={[filters.from, filters.to] as string[]}
+                  mobileHorizontally
+                />
+              )}
             </div>
-            {urlSearchParams.get('genesisBlock') && (
-              <Filter
-                selectAll={{ text: 'Genesis Block' }}
-                SvgIcon={Svg}
-                config={filterGenesisConfig}
-                onChange={handleDeleteGenesisBlock}
-                state={[filters.from, filters.to] as string[]}
-                mobileHorizontally
-              />
-            )}
           </div>
         </div>
         <div className='flex-grow overflow-y-auto max-md:px-[0px] md:px-[10px] max-medium:pt-[18px]'>

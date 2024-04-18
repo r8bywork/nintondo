@@ -24,7 +24,7 @@ const FilterTag = ({
   return (
     <div
       className={cn(
-        `w-fit px-[10px] py-[2px] text-[16px] items-center flex font-bold bg-${activeColor} leading-[16px] rounded-[15px] cursor-pointer select-none transition-colors`,
+        `w-fit max-md:px-[6px] px-[10px] py-[2px] text-[16px] items-center flex font-bold bg-${activeColor} leading-[16px] rounded-[15px] cursor-pointer select-none transition-colors`,
         {
           ['bg-[#4B4B4B]']: !active,
         },

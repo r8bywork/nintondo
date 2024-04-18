@@ -172,7 +172,7 @@ const Filter: FC<FilterProps> = ({
                 )}
               >
                 <SelectAll
-                  rotate={config.filters[0].type === 'genesis'}
+                  // rotate={config.filters[0].type === 'genesis'}
                   color={config.activeColor}
                   text={selectAll.text}
                   active={
@@ -197,7 +197,7 @@ const Filter: FC<FilterProps> = ({
           {selectAll && (
             <>
               <SelectAll
-                rotate={config.filters[0].type === 'genesis'}
+                // rotate={config.filters[0].type === 'genesis'}
                 color={config.activeColor}
                 text={selectAll.text}
                 active={
