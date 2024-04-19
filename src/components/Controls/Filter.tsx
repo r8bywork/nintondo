@@ -2,7 +2,7 @@ import { FC, useMemo } from 'react';
 import FilterTag from './components/FilterTag';
 import FilterRange from './components/FilterRange';
 import useItemsPerRow from '@/hooks/useItemsPerRow.ts';
-import { FilterConfig, Filter } from '@/interfaces/intefaces.ts';
+import { FilterConfig, IFilter } from '@/interfaces/intefaces.ts';
 import classNames from 'classnames';
 import { Modal } from '../Modal';
 import { useModal } from '@/hooks/useModal';
@@ -62,7 +62,7 @@ const Filter: FC<FilterProps> = ({
     close();
   };
 
-  const renderFilter = (filter: Filter, index: number, isFullWidth?: boolean) =>
+  const renderFilter = (filter: IFilter, index: number, isFullWidth?: boolean) =>
     filter.type === 'range' ? (
       <FilterRange
         key={`filter-range-${index}`}

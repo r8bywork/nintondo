@@ -1,7 +1,7 @@
 import Link from '@/components/Buttons/Link.tsx';
 import { useState, useEffect, useRef } from 'react';
 import './Header.css';
-import { IHeader, HeaderLinks, HeaderLinksMarketPlace } from '@/settings/settings.ts';
+import { HeaderLinks } from '@/settings/settings.ts';
 import cn from 'classnames';
 import { useNintondoManagerContext } from '@/utils/bell-provider.tsx';
 import { NavLink, useLocation } from 'react-router-dom';
@@ -23,15 +23,8 @@ const Header = () => {
     getPublicKey,
     disconnect,
   } = useNintondoManagerContext();
-  const [config, setConfig] = useState<IHeader[]>(HeaderLinks);
   const location = useLocation();
   const [showPopover, setShowPopover] = useState<boolean>(false);
-
-  useEffect(() => {
-    location.pathname.startsWith('/bellinals')
-      ? setConfig(HeaderLinksMarketPlace)
-      : setConfig(HeaderLinks);
-  }, [location]);
 
   useEffect(() => {
     (async () => {
@@ -91,7 +84,7 @@ const Header = () => {
           hidden: !isMenuOpen,
         })}
       >
-        {config.map((link) => (
+        {HeaderLinks.map((link) => (
           <Link
             key={link.name}
             text={link.name}

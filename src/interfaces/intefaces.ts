@@ -30,12 +30,12 @@ export interface FilterGenesis {
   text: string;
 }
 
-export type Filter = FilterTag | FilterRange | FilterGenesis;
+export type IFilter = FilterTag | FilterRange | FilterGenesis;
 
 export interface FilterConfig {
   activeColor: string;
   styles?: CSSProperties;
-  filters: Filter[];
+  filters: IFilter[];
 }
 
 export interface AddressStats {
