@@ -29,8 +29,11 @@ export const useInscriptionFilters = () => {
       sortBy: searchParams.get('sortBy') || 'newest',
       contentType: searchParams.get('contentType') || 'all',
       timeFilter: searchParams.get('timeFilter') || 'all',
-      from: searchParams.get('from') || '0',
-      to: searchParams.get('to') || 'max',
+      from: Number(searchParams.get('from')) > 0 ? searchParams.get('from') || '0' : '0',
+      to:
+        Number(searchParams.get('to')) < Number.MAX_SAFE_INTEGER
+          ? searchParams.get('to') || 'max'
+          : 'max',
       genesisBlock: parseInt(searchParams.get('genesisBlock') || '0', 10),
     }),
     [],
