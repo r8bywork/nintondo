@@ -136,40 +136,38 @@ const SplitServicePage = () => {
     );
 
   return (
-    <div className={'bg-black'}>
-      <div className='min-h-screen max-w-[1700px] mx-auto flex pt-[150px] flex-col text-white gap-4 text-white p-4'>
-        <div className='flex justify-center flex-col lg:flex-row gap-4'>
-          <UtxoSelector
-            ords={ords}
-            selectOrdHandler={selectedOrdHandler}
-            setSelectedAll={() => {
-              setSelectedAll((prev) => {
-                if (!prev) selectAll();
-                return !prev;
-              });
-            }}
-            selectedAll={selectedAll}
-          />
-          <SplitVisualizer
-            selectedOrds={selectedOrds}
-            setSelectedOrds={setSelectedOrds}
-            removeSelectedOrdHandler={removeSelectedOrdHandler}
-          />
-        </div>
-        <div className='flex gap-6'>
-          <FeeSelector
-            onChange={(value) => {
-              setSelectedFeeRate(value);
-            }}
-            value={selectedFeeRate}
-            feeRates={feeRates}
-          />
-          <SplitSummary
-            selectedFeeRate={typeof selectedFeeRate === 'string' ? 0 : selectedFeeRate}
-            selectedOrds={selectedOrds}
-            updateOrds={updateOrds}
-          />
-        </div>
+    <div className='min-h-screen max-w-[1700px] mx-auto flex pt-[150px] flex-col text-white gap-4 text-white p-4'>
+      <div className='flex justify-center flex-col lg:flex-row gap-4'>
+        <UtxoSelector
+          ords={ords}
+          selectOrdHandler={selectedOrdHandler}
+          setSelectedAll={() => {
+            setSelectedAll((prev) => {
+              if (!prev) selectAll();
+              return !prev;
+            });
+          }}
+          selectedAll={selectedAll}
+        />
+        <SplitVisualizer
+          selectedOrds={selectedOrds}
+          setSelectedOrds={setSelectedOrds}
+          removeSelectedOrdHandler={removeSelectedOrdHandler}
+        />
+      </div>
+      <div className='flex gap-6'>
+        <FeeSelector
+          onChange={(value) => {
+            setSelectedFeeRate(value);
+          }}
+          value={selectedFeeRate}
+          feeRates={feeRates}
+        />
+        <SplitSummary
+          selectedFeeRate={typeof selectedFeeRate === 'string' ? 0 : selectedFeeRate}
+          selectedOrds={selectedOrds}
+          updateOrds={updateOrds}
+        />
       </div>
     </div>
   );

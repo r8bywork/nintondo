@@ -101,7 +101,7 @@ export interface IHeader {
 
 export const HeaderLinks: IHeader[] = [
   { name: 'wallet', url: '/wallet' },
-  // { name: 'marketplace', url: '/marketplace' },
+  { name: 'marketplace', url: '/marketplace' },
   { name: 'explorer', url: '/explorer' },
   { name: 'bellinals', url: '/bellinals/inscriptions' },
 ];
