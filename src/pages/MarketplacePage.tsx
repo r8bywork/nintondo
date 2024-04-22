@@ -1,18 +1,78 @@
 // import axios from 'axios';
 // import { useState } from 'react';
 
+import TabSelect from '@/components/Controls/TabSelect';
+import FilterTag from '@/components/Controls/components/FilterTag';
+import { Listed } from '@/components/MarketplacePages/Listed';
+import { Orders } from '@/components/MarketplacePages/Orders';
+import { ReactNode, useState } from 'react';
+
+type Field = {
+  title: string;
+  component: ReactNode;
+};
+
+type MarketPlaceTabs = 'listed' | 'orders';
+
+const MARKETPLACE_COMPONENTS: Record<MarketPlaceTabs, Field> = {
+  listed: {
+    title: 'LISTED',
+    component: <Listed />,
+  },
+  orders: {
+    title: 'ORDERS',
+    component: <Orders />,
+  },
+};
+
+const FIELDS = Object.entries(MARKETPLACE_COMPONENTS).map(([key, val]) => ({
+  title: val.title,
+  value: key as MarketPlaceTabs,
+}));
+
 const MarketplacePage = () => {
+  const [activeTab, setActiveTab] = useState<MarketPlaceTabs>(FIELDS[0].value);
+
   return (
     <div className='min-h-screen max-w-[1700px] mx-auto flex pt-[150px] flex-col text-white gap-4 text-white p-4'>
-      <div>
-        <div>
-          <button>LISTED</button>
-          <button>ORDERS</button>
+      <div className='flex justify-between max-medium:flex-col gap-[30px]'>
+        <div className='flex gap-[13px] items-center'>
+          <TabSelect
+            fields={FIELDS}
+            activeTab={activeTab}
+            onHandleChange={(tab) => setActiveTab(tab as MarketPlaceTabs)}
+            buttonClassName='mt-0 max-md:mt-0 flex-1 mr-0 md:mr-0'
+            className='flex-1 gap-[13px] max-medium:gap-[30px]'
+          />
+          <div className='my-[10px] w-fit items-center px-[10px] py-[7px] border-[2px] flex flex-wrap border-[#191919] rounded-[18px] max-medium:my-[0] max-medium:hidden'>
+            <FilterTag
+              activeColor='#FFBB00'
+              active
+              text='atom'
+              classNames='text-[#000]'
+            />
+          </div>
         </div>
-        <div>
-          <p>HERE WILL BE FILTRATION</p>
+        <div className='flex gap-[13px] flex-wrap'>
+          <div className='my-[10px] w-fit items-center px-[10px] py-[7px] border-[2px] flex flex-wrap flex-1 border-[#191920] rounded-[18px] max-medium:my-[0]'>
+            <FilterTag
+              activeColor='#FFBB00'
+              active
+              text='Price: Low → High'
+              classNames='text-[#000] flex-1 align-center flex justify-center text-nowrap'
+            />
+          </div>
+          <div className='my-[10px] w-fit flex-3 items-center px-[10px] py-[7px] border-[2px] hidden flex-wrap border-[#191919] rounded-[18px] max-medium:my-[0] max-medium:flex'>
+            <FilterTag
+              activeColor='#FFBB00'
+              active
+              text='atom'
+              classNames='text-[#000] flex-1 align-center flex justify-center'
+            />
+          </div>
         </div>
       </div>
+      {MARKETPLACE_COMPONENTS[activeTab].component}
     </div>
   );
 };
