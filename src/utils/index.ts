@@ -1,6 +1,11 @@
 import { Split } from '@/interfaces/marketapi';
 import { Ord } from '@/interfaces/nintondo-manager-provider';
-import { MARKET_API_URL, MARKET_HISTORY_API_URL, NINTONDO_API_URL } from '@/consts';
+import {
+  CONTENT_API_URL,
+  MARKET_API_URL,
+  MARKET_HISTORY_API_URL,
+  NINTONDO_API_URL,
+} from '@/consts';
 import { address as belAddress, payments } from 'belcoinjs-lib';
 import { Filters } from '@/interfaces/intefaces.ts';
 import toast from 'react-hot-toast';
@@ -23,7 +28,7 @@ export const fetchMarket = async <T>({
   json = true,
   ...props
 }: fetchProps): Promise<T | undefined> => {
-  const url = `${'http://localhost:3002'}${path}`;
+  const url = `${MARKET_API_URL}${path}`;
   const res = await fetch(url.toString(), { ...props });
 
   if (!json) return (await res.text()) as T;
@@ -44,12 +49,12 @@ export const fetchExplorer = async <T>({
   return await res.json();
 };
 
-export const fetchMarketInfo = async <T>({
+export const fetchContent = async <T>({
   path,
   json = true,
   ...props
 }: fetchProps): Promise<T | undefined> => {
-  const url = `${MARKET_API_URL}/${path}`;
+  const url = `${CONTENT_API_URL}/${path}`;
   const res = await fetch(url.toString(), { ...props });
 
   if (!json) return (await res.text()) as T;

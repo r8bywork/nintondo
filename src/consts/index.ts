@@ -11,7 +11,8 @@ export const NINTONDO_API_URL =
 // export const MARKET_API_URL = 'http://138.201.132.34:8111';
 // export const MARKET_HISTORY_API_URL = 'http://162.55.243.24:8222';
 
-export const MARKET_API_URL = import.meta.env.VITE_CONTENT_URL ?? 'https://content.nintondo.io/api';
+export const CONTENT_API_URL =
+  import.meta.env.VITE_CONTENT_URL ?? 'https://content.nintondo.io/api';
 export const MARKET_HISTORY_API_URL =
   import.meta.env.VITE_HISTORY_URL ?? 'https://history.nintondo.io';
 
@@ -40,3 +41,5 @@ export const FEE_ADDRESS = 'BMPNoA3NXhWoL89AkvFpYHEv8orNpUn5qq';
 
 export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL ?? 'https://content.nintondo.io/social';
 export const DOMAIN: string = import.meta.env.VITE_DOMAIN ?? 'nintondo.io';
+
+export const MARKET_API_URL = import.meta.env.VITE_MARKET_URL ?? 'https://market.nintondo.io';

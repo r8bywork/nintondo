@@ -15,7 +15,7 @@ import Pagination from '../components/Table/Pagination.tsx';
 import Arrow from '../assets/TableArrow.svg?react';
 import { useNavigate } from 'react-router-dom';
 import Skeleton from '../components/Placeholders/Skeleton.tsx';
-import { MARKET_API_URL } from '@/consts';
+import { CONTENT_API_URL } from '@/consts';
 import { useInscriptionFilters } from '@/hooks/useInscriptionFilters.ts';
 import Filter from '@/components/Controls/Filter.tsx';
 import TrendingIcon from '@/assets/filters/Trending.tsx';
@@ -114,7 +114,7 @@ const InscriptionsPage = () => {
                   <div key={index}>
                     <Card
                       onClick={() => navigate(`/bellinals/inscription/${card.id}`)}
-                      image={`${MARKET_API_URL}/pub/preview/${card.id}`}
+                      image={`${CONTENT_API_URL}/pub/preview/${card.id}`}
                       onLoadHandler={() => handleImageLoad(card.id)}
                       text={card.number}
                       date={card.created}

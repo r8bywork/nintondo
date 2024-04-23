@@ -1,23 +1,21 @@
 import { useCallback } from 'react';
-import { fetchInscriptionOwner, fetchMarketInfo } from '../utils';
+import { fetchInscriptionOwner, fetchContent, fetchMarket } from '../utils';
 import { InscriptionCards, InscriptionInfo, InscriptionOwner } from '../interfaces/inscriptions.ts';
+import { ListedTokenCard } from '@/interfaces/marketapi.ts';
 
 export const useExplorerGetInscriptionInfo = () => {
   return useCallback(async (hash: string): Promise<InscriptionInfo | undefined> => {
-    return await fetchMarketInfo<InscriptionInfo>({
+    return await fetchContent<InscriptionInfo>({
       path: `pub/${hash}/info`,
-      json: true,
-      method: 'GET',
     });
   }, []);
 };
 
 export const useExplorerGetInscriptionImage = () => {
   return useCallback(async (hash: string): Promise<Response | undefined> => {
-    return await fetchMarketInfo<Response>({
+    return await fetchContent<Response>({
       path: `pub/preview/${hash}`,
       json: false,
-      method: 'GET',
     });
   }, []);
 };
@@ -37,10 +35,8 @@ export const useExplorerGetInscriptionsList = () => {
       const url = `pub/search?&page=${page}&sort_by=${sortBy}&content_filter=${contentFilter}&time_filter=${timeFilter}&from=${from}&to=${
         to === 'max' ? '18446744073709551615' : to
       }${genesisBlockUrl}`;
-      return await fetchMarketInfo<InscriptionCards>({
+      return await fetchContent<InscriptionCards>({
         path: url,
-        json: true,
-        method: 'GET',
       });
     },
     [],
@@ -51,8 +47,13 @@ export const useExplorerGetInscriptionOwner = () => {
   return useCallback(async (hash: string): Promise<InscriptionOwner | undefined> => {
     return await fetchInscriptionOwner<InscriptionOwner>({
       path: `pub/${hash}/owner`,
-      json: true,
-      method: 'GET',
     });
+  }, []);
+};
+
+export const useGetListedTokens = () => {
+  return useCallback(async (page: number, tick: string, filter: string) => {
+    const path = `pub/tokens?&page=${page}&tick=${tick}&filter=${filter}`;
+    return await fetchMarket<ListedTokenCard>({ path });
   }, []);
 };

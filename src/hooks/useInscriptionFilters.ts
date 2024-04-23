@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { createHref } from '@/utils';
 import { InscriptionCards } from '@/interfaces/inscriptions.ts';
-import { useExplorerGetInscriptionsList } from '@/hooks/marketinfo.ts'; // Предполагается, что эта функция уже определена
+import { useExplorerGetInscriptionsList } from '@/hooks/marketinfo.ts';
 
 interface Filters {
   currentPage: number;
@@ -80,7 +80,6 @@ export const useInscriptionFilters = () => {
   const onPageChange = (newPage: number) => {
     const params = createHref({ currentPage: newPage + 1 }, urlSearchParams);
     navigate(`?${params}`);
-    window.scrollTo({ top: 0 });
   };
 
   const handleTimeFilterChange = (filter: string) => {

@@ -12,7 +12,7 @@ import {
 } from '../hooks/marketinfo.ts';
 import { InscriptionInfo, InscriptionOwner } from '../interfaces/inscriptions.ts';
 import UploadIcon from '../assets/card/share.svg?react';
-import { MARKET_API_URL } from '@/consts';
+import { CONTENT_API_URL } from '@/consts';
 import { useInscriptionFilters } from '@/hooks/useInscriptionFilters.ts';
 import { shareData } from '@/utils';
 
@@ -38,7 +38,7 @@ const InscriptionPage = () => {
           setOwner([{ owner: reqOwner?.owner ?? 'Not found' }] as InscriptionOwner[]);
         },
       );
-      fetch(`${MARKET_API_URL}/pub/content/${hash}`)
+      fetch(`${CONTENT_API_URL}/pub/content/${hash}`)
         .then((response) => {
           const contentType = response.headers.get('content-type');
           if (

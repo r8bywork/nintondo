@@ -23,3 +23,16 @@ export interface Split {
   txid: string;
   locations: string[];
 }
+
+export interface ListedToken {
+  tick: string;
+  amount: number;
+  outpoint: string;
+  price: number;
+}
+
+export interface ListedTokenCard {
+  pages: number;
+  count: number;
+  tokens: ListedToken[];
+}
