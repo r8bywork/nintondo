@@ -1,5 +1,8 @@
+import { IToken } from '@/interfaces/intefaces';
 import { ApiOrdUTXO, ApiUTXO, Fees, Inscription } from '../interfaces/api';
 import { fetchBELLMainnet } from '../utils';
+import { useCallback } from 'react';
+import { useNintondoManagerContext } from '@/utils/bell-provider';
 
 export const getUserInscriptions = async (address: string) => {
   return await fetchBELLMainnet<Inscription[]>({
@@ -44,4 +47,15 @@ export const getFees = async (): Promise<Fees> => {
     slow: Number((data['6'] as number)?.toFixed(0)),
     fast: Number((data['2'] as number)?.toFixed(0)) + 1,
   };
+};
+
+export const useGetUserTokens = () => {
+  const { address } = useNintondoManagerContext();
+
+  return useCallback(async (): Promise<IToken[] | undefined> => {
+    if (!address) return;
+    return await fetchBELLMainnet<IToken[]>({
+      path: `/address/${address}/tokens`,
+    });
+  }, [address]);
 };

@@ -165,3 +165,15 @@ export interface Collection {
   range: number[];
   creationDate: string;
 }
+
+export interface ITransfer {
+  inscription_id: string;
+  amount: number;
+}
+
+export interface IToken {
+  tick: string;
+  balance: number;
+  transferable_balance: number;
+  transfers: ITransfer[];
+}

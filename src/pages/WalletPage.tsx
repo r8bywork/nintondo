@@ -1,5 +1,49 @@
+import { useGetUserTokens } from '@/hooks/electrs';
+import { IToken } from '@/interfaces/intefaces';
+import { useNintondoManagerContext } from '@/utils/bell-provider';
+import { useEffect, useState } from 'react';
+
 const WalletPage = () => {
-  return <div></div>;
+  const [userTokens, setUserTokens] = useState<IToken[]>([]);
+  const getUserTokens = useGetUserTokens();
+  const { verifiedAddress } = useNintondoManagerContext();
+
+  useEffect(() => {
+    getUserTokens().then((tokens) => {
+      if (tokens) setUserTokens(tokens);
+    });
+  }, [getUserTokens]);
+
+  if (!verifiedAddress)
+    return (
+      <div className={'bg-black'}>
+        <div className='h-screen max-w-[1700px] mx-auto flex pt-[150px] items-center justify-center text-white'>
+          Please connect your wallet
+        </div>
+      </div>
+    );
+
+  return (
+    <div className='min-h-screen max-w-[1700px] mx-auto flex pt-[150px] flex-col text-white gap-4 text-white p-4'>
+      {userTokens.map((f, i) => (
+        <div key={i}>
+          <p>{f.tick}</p>
+          <p>{f.balance}</p>
+          {f.transfers.map((j, k) => (
+            <div
+              key={k}
+              className='text-white'
+            >
+              {j.amount}
+            </div>
+          ))}
+          <button className='cursor-pointer bg-[#FFFF] text-black p-2 rounded-lg font-bold'>
+            Inscribe transfer
+          </button>
+        </div>
+      ))}
+    </div>
+  );
 };
 
 export default WalletPage;

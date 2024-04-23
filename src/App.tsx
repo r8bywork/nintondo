@@ -52,7 +52,7 @@ const App = () => {
           element={<SplitServicePage />}
         />
         <Route
-          path='/wallet'
+          path='/user-inscriptions'
           element={<WalletPage />}
         />
       </Routes>
