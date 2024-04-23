@@ -10,6 +10,7 @@ import InscriptionPage from './pages/InscriptionPage.tsx';
 // import { Provider } from 'react-redux';
 import SplitServicePage from './pages/SplitServicePage.tsx';
 import MarketplacePage from './pages/MarketplacePage.tsx';
+import WalletPage from './pages/WalletPage.tsx';
 // import { store } from './redux/store/store.ts';
 
 const App = () => {
@@ -49,6 +50,10 @@ const App = () => {
         <Route
           path='/split-service/*'
           element={<SplitServicePage />}
+        />
+        <Route
+          path='/wallet'
+          element={<WalletPage />}
         />
       </Routes>
     </Router>
