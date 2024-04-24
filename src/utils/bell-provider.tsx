@@ -141,7 +141,7 @@ ${connectedAddress}
 
   const inscribeTransfer = async (tick: string) => {
     if (!nintondo) return;
-    await nintondo.inscribeTransfer(tick);
+    return (await nintondo.inscribeTransfer(tick)).mintedAmount;
   };
 
   const disconnect = async () => {

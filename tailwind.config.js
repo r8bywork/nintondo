@@ -6,6 +6,7 @@ export default {
       screens: {
         medium: '850px',
         lowerMobile: '406px',
+        mobile: '450px',
       },
       rotate: {
         90: '90deg',

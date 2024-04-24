@@ -54,7 +54,7 @@ const MarketplacePage = () => {
   }, [searchParams]);
 
   return (
-    <div className='min-h-screen max-w-[1700px] mx-auto flex pt-[150px] flex-col text-white gap-4 text-white p-4'>
+    <div className='min-h-screen max-w-[1600px] mx-auto flex pt-[150px] flex-col text-white gap-4 text-white p-4'>
       <div className='flex justify-between max-medium:flex-col gap-[13px]'>
         <div className='flex gap-[13px] items-center max-medium:items-stretch max-medium:flex-col max-medium:gap-[30px]'>
           <TabSelect

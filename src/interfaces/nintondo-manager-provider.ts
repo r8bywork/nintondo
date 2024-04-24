@@ -10,7 +10,7 @@ export interface INintondoManagerProvider {
   verifyAddress: () => Promise<void>;
   getPublicKey: () => Promise<string | undefined>;
   disconnect: () => Promise<void>;
-  inscribeTransfer: (tick: string) => Promise<void>;
+  inscribeTransfer: (tick: string) => Promise<number | undefined>;
 }
 
 interface BaseUserToSignInput {

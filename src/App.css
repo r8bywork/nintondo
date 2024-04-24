@@ -95,3 +95,35 @@ input[type=number] {
     opacity: 1;
   }
 }
+
+input[type=range] {
+  -webkit-appearance: none;
+  width: 274px;
+  /* background-color: transparent; */
+  /* overflow: hidden; */
+  /* background: white; */
+  border-radius: 15px;
+  height: 3px;
+  margin-top: 9px;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  height: 1px;
+  border: none;
+  background-color: #4B4B4B;
+  border-radius: 3px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 15px;
+  width: 15px;
+  background: white;
+  border-radius: 50%;
+  margin-top: -7px;
+  /* box-shadow: -407px 0 0 400px #FFFFFF; */
+}
+
+input[type=range]:focus {
+  outline: none;
+}

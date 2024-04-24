@@ -2,6 +2,7 @@ import Token from './Token/Token';
 import Pagination from '../Table/Pagination';
 import Arrow from '@/assets/TableArrow.svg?react';
 import { ListedToken, ListedTokenCard } from '@/interfaces/marketapi';
+import { useEffect, useState } from 'react';
 // import { useTokenFilters } from '@/hooks/tokenFilters';
 
 const Listed = () => {
@@ -22,14 +23,24 @@ const Listed = () => {
     };
   };
 
+  const [tokenCard, setTokenCard] = useState<ListedTokenCard>({ count: 0, pages: 0, tokens: [] });
+  const [selectedTokens, setSelectedBuyTokens] = useState<ListedToken[]>([]);
+
+  useEffect(() => {
+    setTokenCard(generateFakeListedTokenCard(28));
+  }, []);
+
   return (
-    <div className='max-w-[1490px] mx-auto flex flex-wrap pt-[10px] max-lowerMobile:gap-[5px] gap-[10px] max-lg:justify-center'>
-      {generateFakeListedTokenCard(21).tokens.map((f, i) => (
-        <Token
-          token={f}
-          key={i}
-        />
-      ))}
+    <div className='max-w-[1490px] mx-auto flex max-mobile:gap-[5px] gap-[10px] max-lg:justify-center flex-col pb-[72px]'>
+      <div className='w-full mx-auto flex flex-wrap pt-[10px] max-mobile:gap-[5px] gap-[10px] max-lg:justify-center'>
+        {tokenCard.tokens.map((f, i) => (
+          <Token
+            checked={selectedTokens.includes(f)}
+            token={f}
+            key={i}
+          />
+        ))}
+      </div>
       <Pagination
         activeClassName='bg-[#FFBB00] text-black'
         leftBtnPlaceholder={<Arrow />}
@@ -43,6 +54,40 @@ const Listed = () => {
         pageCount={300}
         onPageChange={() => {}}
       />
+      <div className='fixed flex justify-center items-center w-screen bottom-0 left-0 h-[113px] mobile:h-[72px] backdrop-blur-sm border-t-[1px] border-[#191919]'>
+        <div className='max-w-[1490px] flex justify-between px-5 w-full flex-col mobile:flex-row'>
+          <div className='flex gap-2 font-bold text-[16px] border-[1px] border-white rounded-[30px] h-[24px] w-[336px] justify-center'>
+            {/* <input
+              type='range'
+              max={tokenCard.tokens.length}
+              min={0}
+              value={selectedTokens.length}
+              onChange={(e) => {
+                setSelectedBuyTokens(tokenCard.tokens.slice(0, Number(e.target.value)));
+              }}
+            /> */}
+            <input
+              type='range'
+              max={tokenCard.tokens.length}
+              min={0}
+              value={selectedTokens.length}
+              onChange={(e) => {
+                const tempSliderValue = Number(e.target.value);
+                setSelectedBuyTokens(tokenCard.tokens.slice(0, tempSliderValue));
+
+                const sliderEl = e.target as HTMLInputElement;
+                const progress =
+                  tokenCard.tokens.length === 0
+                    ? 0
+                    : (tempSliderValue / tokenCard.tokens.length) * 100;
+                sliderEl.style.background = `linear-gradient(to right, #FFFFFF ${progress}%, #000000 ${progress}%)`;
+              }}
+            />
+            <span className='w-[16px]'>{selectedTokens.length}</span>
+          </div>
+          <p>SHIT2</p>
+        </div>
+      </div>
     </div>
   );
 };

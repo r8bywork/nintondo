@@ -7,6 +7,12 @@ const WalletPage = () => {
   const [userTokens, setUserTokens] = useState<IToken[]>([]);
   const getUserTokens = useGetUserTokens();
   const { verifiedAddress, inscribeTransfer } = useNintondoManagerContext();
+  const [amouts, setAmounts] = useState<{ tick: string; amnt: number }[]>([]);
+
+  const inscribe = async (tick: string) => {
+    const amount = await inscribeTransfer(tick);
+    if (amount) setAmounts((prev) => [...prev, { amnt: amount, tick }]);
+  };
 
   useEffect(() => {
     getUserTokens().then((tokens) => {
@@ -39,10 +45,16 @@ const WalletPage = () => {
           ))}
           <button
             className='cursor-pointer bg-[#FFFF] text-black p-2 rounded-lg font-bold'
-            onClick={() => inscribeTransfer(f.tick)}
+            onClick={() => inscribe(f.tick)}
           >
             Inscribe transfer
           </button>
+        </div>
+      ))}
+
+      {amouts.map((f, i) => (
+        <div key={i}>
+          {f.tick} - {f.amnt}
         </div>
       ))}
     </div>
