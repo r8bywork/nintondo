@@ -139,6 +139,11 @@ ${connectedAddress}
     }
   }, [nintondo]);
 
+  const inscribeTransfer = async (tick: string) => {
+    if (!nintondo) return;
+    await nintondo.inscribeTransfer(tick);
+  };
+
   const disconnect = async () => {
     Cookies.remove('access_token', {
       path: '/',
@@ -182,6 +187,7 @@ ${connectedAddress}
     verifiedAddress,
     getPublicKey,
     disconnect,
+    inscribeTransfer,
   };
 };
 

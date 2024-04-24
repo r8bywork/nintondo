@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 const WalletPage = () => {
   const [userTokens, setUserTokens] = useState<IToken[]>([]);
   const getUserTokens = useGetUserTokens();
-  const { verifiedAddress } = useNintondoManagerContext();
+  const { verifiedAddress, inscribeTransfer } = useNintondoManagerContext();
 
   useEffect(() => {
     getUserTokens().then((tokens) => {
@@ -37,7 +37,10 @@ const WalletPage = () => {
               {j.amount}
             </div>
           ))}
-          <button className='cursor-pointer bg-[#FFFF] text-black p-2 rounded-lg font-bold'>
+          <button
+            className='cursor-pointer bg-[#FFFF] text-black p-2 rounded-lg font-bold'
+            onClick={() => inscribeTransfer(f.tick)}
+          >
             Inscribe transfer
           </button>
         </div>
