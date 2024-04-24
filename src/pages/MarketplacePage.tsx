@@ -5,16 +5,19 @@ import TabSelect from '@/components/Controls/TabSelect';
 import FilterTag from '@/components/Controls/components/FilterTag';
 import { Listed } from '@/components/MarketplacePages/Listed';
 import { Orders } from '@/components/MarketplacePages/Orders';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import ArrowDown from '../assets/marketplace/arrow-down.svg?react';
+import { TickDropdown } from '@/components/MarketplacePages/components/TickDropdown';
 
-type Field = {
+type Tab = {
   title: string;
   component: ReactNode;
 };
 
 type MarketPlaceTabs = 'listed' | 'orders';
 
-const MARKETPLACE_COMPONENTS: Record<MarketPlaceTabs, Field> = {
+const MARKETPLACE_COMPONENTS: Record<MarketPlaceTabs, Tab> = {
   listed: {
     title: 'LISTED',
     component: <Listed />,
@@ -25,54 +28,57 @@ const MARKETPLACE_COMPONENTS: Record<MarketPlaceTabs, Field> = {
   },
 };
 
-const FIELDS = Object.entries(MARKETPLACE_COMPONENTS).map(([key, val]) => ({
+const TABS = Object.entries(MARKETPLACE_COMPONENTS).map(([key, val]) => ({
   title: val.title,
   value: key as MarketPlaceTabs,
 }));
 
 const MarketplacePage = () => {
-  const [activeTab, setActiveTab] = useState<MarketPlaceTabs>(FIELDS[0].value);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const handleActiveTabChange = (tab: string) => {
+    searchParams.set('tab', tab);
+    searchParams.set('page', '1');
+
+    setSearchParams(searchParams);
+  };
+
+  const currentTab = useMemo(() => {
+    const fromSearchParams = searchParams.get('tab') || TABS[0].value;
+
+    if (!Object.keys(MARKETPLACE_COMPONENTS).includes(fromSearchParams)) {
+      return TABS[0].value;
+    }
+
+    return fromSearchParams;
+  }, [searchParams]);
 
   return (
     <div className='min-h-screen max-w-[1700px] mx-auto flex pt-[150px] flex-col text-white gap-4 text-white p-4'>
-      <div className='flex justify-between max-medium:flex-col gap-[30px]'>
-        <div className='flex gap-[13px] items-center'>
+      <div className='flex justify-between max-medium:flex-col gap-[13px]'>
+        <div className='flex gap-[13px] items-center max-medium:items-stretch max-medium:flex-col max-medium:gap-[30px]'>
           <TabSelect
-            fields={FIELDS}
-            activeTab={activeTab}
-            onHandleChange={(tab) => setActiveTab(tab as MarketPlaceTabs)}
-            buttonClassName='mt-0 max-md:mt-0 flex-1 mr-0 md:mr-0'
-            className='flex-1 gap-[13px] max-medium:gap-[30px]'
+            fields={TABS}
+            activeTab={currentTab}
+            onHandleChange={handleActiveTabChange}
+            buttonClassName='mt-0 max-md:mt-0 flex-1 mr-0 md:mr-0 py-[6px] px-[45px] max-md:mr-0'
+            className='flex-1 gap-[1px] max-medium:gap-[30px]'
           />
-          <div className='my-[10px] w-fit items-center px-[10px] py-[7px] border-[2px] flex flex-wrap border-[#191919] rounded-[18px] max-medium:my-[0] max-medium:hidden'>
-            <FilterTag
-              activeColor='#FFBB00'
-              active
-              text='atom'
-              classNames='text-[#000]'
-            />
-          </div>
+          <TickDropdown />
         </div>
         <div className='flex gap-[13px] flex-wrap'>
-          <div className='my-[10px] w-fit items-center px-[10px] py-[7px] border-[2px] flex flex-wrap flex-1 border-[#191920] rounded-[18px] max-medium:my-[0]'>
+          <button className='w-fit items-center px-[10px] py-[8px] border-[2px] flex gap-[9px] flex-wrap flex-1 border-[#fff] rounded-[18px] max-medium:my-[0]'>
+            <ArrowDown />
             <FilterTag
               activeColor='#FFBB00'
               active
               text='Price: Low → High'
               classNames='text-[#000] flex-1 align-center flex justify-center text-nowrap'
             />
-          </div>
-          <div className='my-[10px] w-fit flex-3 items-center px-[10px] py-[7px] border-[2px] hidden flex-wrap border-[#191919] rounded-[18px] max-medium:my-[0] max-medium:flex'>
-            <FilterTag
-              activeColor='#FFBB00'
-              active
-              text='atom'
-              classNames='text-[#000] flex-1 align-center flex justify-center'
-            />
-          </div>
+          </button>
         </div>
       </div>
-      {MARKETPLACE_COMPONENTS[activeTab].component}
+      {MARKETPLACE_COMPONENTS[currentTab as MarketPlaceTabs].component}
     </div>
   );
 };

@@ -10,6 +10,7 @@ interface Props {
   buttonsClassName?: string;
   activeClassName?: string;
   className?: string;
+  dotsClassName?: string;
   onPageChange: (page: number) => void;
 }
 
@@ -20,6 +21,7 @@ const Pagination: FC<Props> = ({
   className,
   rightBtnPlaceholder,
   leftBtnPlaceholder,
+  dotsClassName,
   activeClassName = '',
   currentPage = 1,
   onPageChange,
@@ -98,14 +100,18 @@ const Pagination: FC<Props> = ({
         </button>
       )}
       {shouldShowLeftPage && <LinkItem page={1} />}
-      {shouldShowLeftDots && <span className={cn(buttonsClassName, 'select-none')}>...</span>}
+      {shouldShowLeftDots && (
+        <span className={cn(buttonsClassName, dotsClassName, 'select-none')}>...</span>
+      )}
       {visiblePages().map((pageNumber) => (
         <LinkItem
           key={`page-${pageNumber}`}
           page={pageNumber + 1}
         />
       ))}
-      {shouldShowRightDots && <span className={cn(buttonsClassName, 'select-none')}>...</span>}
+      {shouldShowRightDots && (
+        <span className={cn(buttonsClassName, dotsClassName, 'select-none')}>...</span>
+      )}
       {shouldShowRightPage && <LinkItem page={pageCount + 1} />}
       {currentPage < pageCount - 1 && rightBtnPlaceholder && visiblePageButtonsCount > 4 && (
         <button
