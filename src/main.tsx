@@ -5,27 +5,30 @@ import './index.css';
 import { NintondoProvider } from './utils/bell-provider.tsx';
 import { Toaster } from 'react-hot-toast';
 import { Buffer } from 'buffer';
+import { FavoritesProvider } from './hooks/favorites.tsx';
 
 globalThis.Buffer = Buffer;
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <NintondoProvider>
-      <App />
-      <Toaster
-        position='top-center'
-        toastOptions={{
-          className: 'toast',
-          success: {
-            duration: 900,
-            className: 'toast success',
-          },
-          error: {
-            duration: 4000,
-            className: 'toast error',
-          },
-        }}
-      />
+      <FavoritesProvider>
+        <App />
+        <Toaster
+          position='top-center'
+          toastOptions={{
+            className: 'toast',
+            success: {
+              duration: 900,
+              className: 'toast success',
+            },
+            error: {
+              duration: 4000,
+              className: 'toast error',
+            },
+          }}
+        />
+      </FavoritesProvider>
     </NintondoProvider>
   </React.StrictMode>,
 );

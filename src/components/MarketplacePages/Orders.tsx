@@ -1,4 +1,4 @@
-import { Field, InlineTable, Item } from '../InlineTable/InlineTable';
+import { Field, InlineTable, ItemField } from '../InlineTable/InlineTable';
 import Pagination from '../Table/Pagination';
 import Arrow from '../../assets/TableArrow.svg?react';
 import { useSearchParams } from 'react-router-dom';
@@ -14,110 +14,86 @@ const FIELDS: Field[] = [
   { key: 'time', title: 'TIME' },
 ];
 
-const MOCK_DATA: Item[] = [
+const MOCK_DATA: ItemField[] = [
   {
-    id: '1',
-    field: {
-      txid: { value: '2e86b...2d4a7:0', bold: true },
-      event: { value: 'Unlisted' },
-      price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
-      quantity: { value: '1,517' },
-      total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
-      from: { value: 'bc1p4...y7vz2' },
-      to: { value: '-' },
-      time: { value: '4/18/2024, 5:59:58 PM' },
-    },
+    txid: { value: '2e86b...2d4a7:0', bold: true },
+    event: { value: 'Unlisted' },
+    price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
+    quantity: { value: '1,517' },
+    total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
+    from: { value: 'bc1p4...y7vz2' },
+    to: { value: '-' },
+    time: { value: '4/18/2024, 5:59:58 PM' },
   },
   {
-    id: '2',
-    field: {
-      txid: { value: '2e86b...2d4a7:0', bold: true },
-      event: { value: 'Unlisted' },
-      price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
-      quantity: { value: '1,517' },
-      total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
-      from: { value: 'bc1p4...y7vz2' },
-      to: { value: '-' },
-      time: { value: '4/18/2024, 5:59:58 PM' },
-    },
+    txid: { value: '2e86b...2d4a7:0', bold: true },
+    event: { value: 'Unlisted' },
+    price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
+    quantity: { value: '1,517' },
+    total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
+    from: { value: 'bc1p4...y7vz2' },
+    to: { value: '-' },
+    time: { value: '4/18/2024, 5:59:58 PM' },
   },
   {
-    id: '3',
-    field: {
-      txid: { value: '2e86b...2d437:0', bold: true },
-      event: { value: 'Unlisted' },
-      price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
-      quantity: { value: '1,517' },
-      total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
-      from: { value: 'bc1p4...y7vz2' },
-      to: { value: '-' },
-      time: { value: '4/18/2024, 5:59:58 PM' },
-    },
+    txid: { value: '2e86b...2d437:0', bold: true },
+    event: { value: 'Unlisted' },
+    price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
+    quantity: { value: '1,517' },
+    total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
+    from: { value: 'bc1p4...y7vz2' },
+    to: { value: '-' },
+    time: { value: '4/18/2024, 5:59:58 PM' },
   },
   {
-    id: '4',
-    field: {
-      txid: { value: '2e86b...2d427:0', bold: true },
-      event: { value: 'Unlisted' },
-      price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
-      quantity: { value: '1,517' },
-      total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
-      from: { value: 'bc1p4...y7vz2' },
-      to: { value: '-' },
-      time: { value: '4/18/2024, 5:59:58 PM' },
-    },
+    txid: { value: '2e86b...2d427:0', bold: true },
+    event: { value: 'Unlisted' },
+    price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
+    quantity: { value: '1,517' },
+    total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
+    from: { value: 'bc1p4...y7vz2' },
+    to: { value: '-' },
+    time: { value: '4/18/2024, 5:59:58 PM' },
   },
   {
-    id: '5',
-    field: {
-      txid: { value: '2e86b...2a427:0', bold: true },
-      event: { value: 'Listed', marked: true },
-      price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
-      quantity: { value: '1,517' },
-      total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
-      from: { value: 'bc1p4...y7vz2' },
-      to: { value: '-' },
-      time: { value: '4/18/2024, 5:59:58 PM' },
-    },
+    txid: { value: '2e86b...2a427:0', bold: true },
+    event: { value: 'Listed', marked: true },
+    price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
+    quantity: { value: '1,517' },
+    total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
+    from: { value: 'bc1p4...y7vz2' },
+    to: { value: '-' },
+    time: { value: '4/18/2024, 5:59:58 PM' },
   },
   {
-    id: '6',
-    field: {
-      txid: { value: '2e86b...3d427:0', bold: true },
-      event: { value: 'Listed', marked: true },
-      price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
-      quantity: { value: '1,517' },
-      total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
-      from: { value: 'bc1p4...y7vz2' },
-      to: { value: '-' },
-      time: { value: '4/18/2024, 5:59:58 PM' },
-    },
+    txid: { value: '2e86b...3d427:0', bold: true },
+    event: { value: 'Listed', marked: true },
+    price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
+    quantity: { value: '1,517' },
+    total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
+    from: { value: 'bc1p4...y7vz2' },
+    to: { value: '-' },
+    time: { value: '4/18/2024, 5:59:58 PM' },
   },
   {
-    id: '7',
-    field: {
-      txid: { value: '2e89b...3d427:0', bold: true },
-      event: { value: 'Unlisted' },
-      price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
-      quantity: { value: '1,517' },
-      total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
-      from: { value: 'bc1p4...y7vz2' },
-      to: { value: '-' },
-      time: { value: '4/18/2024, 5:59:58 PM' },
-    },
+    txid: { value: '2e89b...3d427:0', bold: true },
+    event: { value: 'Unlisted' },
+    price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
+    quantity: { value: '1,517' },
+    total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
+    from: { value: 'bc1p4...y7vz2' },
+    to: { value: '-' },
+    time: { value: '4/18/2024, 5:59:58 PM' },
   },
   {
-    id: '8',
-    field: {
-      txid: { value: '2e89b...3d427:0', bold: true },
-      event: { value: 'Unlisted' },
-      price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
-      quantity: { value: '1,517' },
-      total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
-      from: { value: 'bc1p4...y7vz2' },
-      to: { value: '-' },
-      time: { value: '4/18/2024, 5:59:58 PM' },
-    },
+    txid: { value: '2e89b...3d427:0', bold: true },
+    event: { value: 'Unlisted' },
+    price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
+    quantity: { value: '1,517' },
+    total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
+    from: { value: 'bc1p4...y7vz2' },
+    to: { value: '-' },
+    time: { value: '4/18/2024, 5:59:58 PM' },
   },
 ];
 
@@ -139,6 +115,8 @@ export const Orders = () => {
           fields={FIELDS}
           data={MOCK_DATA}
           cellClassName='pl-[73px] max-medium:pl-[35px]'
+          underClassName='font-bold'
+          keyId='txid'
         />
       </div>
       <div className='pt-[15px]'>

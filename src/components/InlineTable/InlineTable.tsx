@@ -1,31 +1,31 @@
 import classNames from 'classnames';
-import { ReactNode } from 'react';
 
 export type Field = {
   title: string;
   key: string;
   canBeSorted?: boolean;
+  Component?: JSX.ElementType;
 };
 
-export type Item = {
-  id: string;
-  field: {
-    [key: string]: {
-      value: ReactNode;
-      additional?: ReactNode;
-      under?: ReactNode;
-      marked?: boolean;
-      bold?: boolean;
-    };
+export type ItemField = {
+  [key: string]: {
+    value: string;
+    additional?: string;
+    under?: string;
+    marked?: boolean;
+    bold?: boolean;
   };
 };
 
 interface InlineTableProps {
   fields: Field[];
-  data: Item[];
+  data: ItemField[];
   firstCellClassName?: string;
   cellClassName?: string;
-  onRowClick?: () => void;
+  onRowClick?: (item: ItemField) => void;
+  underClassName?: string;
+  selectedId?: string;
+  keyId?: string;
 }
 
 export const InlineTable = ({
@@ -34,6 +34,9 @@ export const InlineTable = ({
   firstCellClassName,
   cellClassName,
   onRowClick,
+  underClassName,
+  keyId = 'id',
+  selectedId,
 }: InlineTableProps) => {
   return (
     <table className='w-full'>
@@ -56,31 +59,48 @@ export const InlineTable = ({
       <tbody>
         {data.map((item, rowIdx) => (
           <tr
-            key={item.id}
-            onClick={onRowClick}
+            className={classNames({
+              'hover:bg-[rgba(255,255,255,0.1)] cursor-pointer': Boolean(onRowClick),
+            })}
+            key={item[keyId].value}
+            onClick={() => onRowClick?.(item)}
           >
             {fields.map((field, cellIdx) => (
               <td
                 className={classNames(
-                  'text-[20px] pt-[13px] pb-[16px] border-[#4B4B4B] text-nowrap',
+                  'text-[20px] pt-[13px] pb-[16px] border-[#4B4B4B] text-nowrap leading-[21px]',
                   cellIdx === 0 ? 'text-left' : 'text-right',
-                  item.field[field.key].marked ? 'text-[#53DCFF]' : 'text-[#fff]',
                   {
                     'border-b': rowIdx !== data.length - 1,
-                    'font-bold': item.field[field.key].bold,
+                    'font-bold': item[field.key].bold,
                   },
+                  selectedId === item[keyId].value ? 'text-[#FFBB00]' : 'text-[#fff]',
                   cellIdx === 0 ? firstCellClassName : cellClassName,
                 )}
                 key={field.key}
               >
-                <p>
-                  {item.field[field.key].value}
-                  <span className='text-[#4B4B4B] font-normal'>
-                    {' '}
-                    {item.field[field.key].additional}
-                  </span>
-                </p>
-                <p className='font-bold text-[#4B4B4B]'>{item.field[field.key].under}</p>
+                {field.Component ? (
+                  <field.Component
+                    under={item[field.key].under}
+                    additional={item[field.key].additional}
+                    item={item}
+                  >
+                    {item[field.key].value}
+                  </field.Component>
+                ) : (
+                  <>
+                    <p className={classNames(item[field.key].marked && 'text-[#53DCFF]')}>
+                      {item[field.key].value}
+                      <span className='text-[#4B4B4B] font-normal'>
+                        {' '}
+                        {item[field.key].additional}
+                      </span>
+                    </p>
+                    <p className={classNames('text-[#4B4B4B] leading-[21px]', underClassName)}>
+                      {item[field.key].under}
+                    </p>
+                  </>
+                )}
               </td>
             ))}
           </tr>
