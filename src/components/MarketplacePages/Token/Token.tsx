@@ -8,9 +8,10 @@ interface TokenProps {
   token: ListedToken;
   full?: boolean;
   checked?: boolean;
+  onBuyClick?: () => void;
 }
 
-const Token: FC<TokenProps> = ({ token, full = true, checked = false }) => {
+const Token: FC<TokenProps> = ({ token, full, checked = false, onBuyClick }) => {
   return (
     <div
       className={cn(
@@ -53,7 +54,10 @@ const Token: FC<TokenProps> = ({ token, full = true, checked = false }) => {
               $ 76762
             </p>
           </div>
-          <button className='w-[180px] h-[24px] text-center border-[1px] border-[#FFFFFF] rounded-[20px] font-bold max-mobile:w-[164px]'>
+          <button
+            className='w-[180px] h-[24px] text-center border-[1px] border-[#FFFFFF] rounded-[20px] font-bold max-mobile:w-[164px]'
+            onClick={onBuyClick}
+          >
             BUY
           </button>
         </div>
