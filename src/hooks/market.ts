@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useNintondoManagerContext } from '../utils/bell-provider';
-import { ApiOrdUTXO, ApiUTXO, Inscription } from '../interfaces/api';
+import { ApiOrdUTXO, ApiUTXO } from '../interfaces/api';
 import { Psbt, Transaction, networks } from 'belcoinjs-lib';
 import { IDummyInscription } from '../interfaces/marketapi';
 import { DEFAULT_FEE_RATE, DUMMY_UTXO_VALUE, FEE_ADDRESS } from '../consts';
@@ -116,7 +116,7 @@ export const useCreateListedSignedPSBT = () => {
   const placeholderAddress = 'BRXknAc5gRVSh6Yo3Gs8hgwRPa3mumBwcm';
 
   return useCallback(
-    async (inscription: Inscription, price: number) => {
+    async (inscription: { txid: string; vout: number }, price: number) => {
       if (!address) return;
       const sellerOrdUtxoHex = await getTransactionRawHex(inscription.txid);
       if (!sellerOrdUtxoHex) return;
