@@ -43,14 +43,14 @@ const WalletPage = () => {
     });
   }, [getUserTokens]);
 
-  if (!verifiedAddress)
-    return (
-      <div className={'bg-black'}>
-        <div className='h-screen max-w-[1700px] mx-auto flex pt-[150px] items-center justify-center text-white'>
-          Please connect your wallet
-        </div>
-      </div>
-    );
+  // if (!verifiedAddress)
+  //   return (
+  //     <div className={'bg-black'}>
+  //       <div className='h-screen max-w-[1700px] mx-auto flex pt-[150px] items-center justify-center text-white'>
+  //         Please connect your wallet
+  //       </div>
+  //     </div>
+  //   );
 
   return (
     <div className='min-h-screen max-w-[1700px] mx-auto flex pt-[150px] flex-col text-white gap-4 text-white p-4'>
