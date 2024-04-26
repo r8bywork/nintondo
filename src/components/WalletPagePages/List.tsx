@@ -8,6 +8,10 @@ import PlusSVG from '@/assets/plus.svg?react';
 import { useNintondoManagerContext } from '@/utils/bell-provider';
 import { useModal } from '@/hooks/useModal';
 import { Modal } from '../Modal';
+import { useMakeAuthRequests } from '@/hooks/auth';
+import { MARKET_API_URL } from '@/consts';
+import { useCreateListedSignedPSBT } from '@/hooks/market';
+import axios from 'axios';
 
 type SelectedTransfers = {
   transfers: ITransfer[];
@@ -22,8 +26,10 @@ export const List = () => {
     transfers: [],
     total: 0,
   });
-  const { inscribeTransfer } = useNintondoManagerContext();
   const { open, close, isOpen } = useModal();
+  const { inscribeTransfer, getPublicKey } = useNintondoManagerContext();
+  const makeAuthRequest = useMakeAuthRequests();
+  const createSignedListPsbt = useCreateListedSignedPSBT();
 
   const [price, setPrice] = useState<number>(0);
   const tick = searchParams.get('tick') || '';
@@ -66,6 +72,30 @@ export const List = () => {
         };
       });
     }
+  };
+
+  const list = async () => {
+    const price = 0.2;
+    const txid = selectedTransfers.transfers[0].inscription_id.slice(0, -2);
+    const vout = selectedTransfers.transfers[0].inscription_id.slice(-1);
+    // eslint-disable-next-line camelcase
+    const public_key_hex = await getPublicKey();
+    const psbt = await createSignedListPsbt(
+      {
+        txid,
+        vout: Number(vout),
+      },
+      price,
+    );
+    const response = await makeAuthRequest(() =>
+      axios.post(
+        `${MARKET_API_URL}/tokens/list-token`,
+        // eslint-disable-next-line camelcase
+        { psbt_base64: psbt, price: price * 10 ** 8, public_key_hex },
+        { withCredentials: true },
+      ),
+    );
+    console.log(response);
   };
 
   useEffect(() => {
