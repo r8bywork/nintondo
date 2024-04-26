@@ -26,6 +26,7 @@ export const List = () => {
 
   const handleTickChange = (tick: IToken) => {
     searchParams.set('tick', tick.tick);
+    setSelectedTransfers({ transfers: [], total: 0 });
 
     setSearchParams(searchParams);
   };
@@ -124,7 +125,7 @@ export const List = () => {
         </div>
       </div>
       {selectedTick && (
-        <div className='flex flex-col gap-[40px]'>
+        <div className='flex flex-col flex-1 gap-[40px]'>
           <h1 className='text-[32px] font-bold leading-[34px]'>
             List <span className='text-[#53DCFF]'>{selectedTick?.tick}</span>
           </h1>
