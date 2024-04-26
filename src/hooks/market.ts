@@ -151,7 +151,7 @@ export const useCreateListedSignedPSBT = () => {
       });
       sellerPsbt.addOutput({
         address: address,
-        value: Number(price * 10 ** 8),
+        value: Math.floor(price * 10 ** 8),
       });
 
       const partiallySignedPsbtbase64 = await signPsbtInputs(sellerPsbt.toBase64(), {
@@ -167,7 +167,11 @@ export const useCreateListedSignedPSBT = () => {
 
       if (!partiallySignedPsbtbase64) return toast.error('Failed to sign psbt');
       sellerPsbt = Psbt.fromBase64(partiallySignedPsbtbase64);
+
+      const partialSig = sellerPsbt.data.inputs[2].partialSig;
       sellerPsbt.finalizeInput(2);
+      sellerPsbt.data.inputs[2].partialSig = partialSig;
+
       return sellerPsbt.toBase64();
     },
     [address, getTransactionRawHex, signPsbtInputs],
@@ -305,6 +309,7 @@ export const useCreateBuyingSignedPsbt = () => {
       inputsToSign.forEach((f) => {
         buyerPsbt.finalizeInput(f);
       });
+
       return buyerPsbt.toBase64();
     },
     [address, signPsbtInputs],
