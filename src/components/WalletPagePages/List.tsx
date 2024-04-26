@@ -163,7 +163,7 @@ export const List = () => {
                       </p>
                     </div>
                   </div>
-                  <div className='flex justify-between'>
+                  <div className='flex justify-between flex-1'>
                     <p className='overflow-hidden rounded-[4px] text-ellipsis text-[16px] border border-[#FFBB00] text-[#FFBB00] px-[5px]'>
                       {selectedTick.tick}
                     </p>
