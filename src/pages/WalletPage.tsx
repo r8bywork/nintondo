@@ -1,5 +1,6 @@
-import TabSelect from '@/components/Controls/TabSelect';
+// import TabSelect from '@/components/Controls/TabSelect';
 import { List } from '@/components/WalletPagePages/List';
+import { useNintondoManagerContext } from '@/utils/bell-provider';
 // import { MARKET_API_URL } from '@/consts';
 // import { useMakeAuthRequests } from '@/hooks/auth';
 // import { useGetUserTokens } from '@/hooks/electrs';
@@ -7,8 +8,8 @@ import { List } from '@/components/WalletPagePages/List';
 // import { IToken, ITransfer } from '@/interfaces/intefaces';
 // import { useNintondoManagerContext } from '@/utils/bell-provider';
 // import axios from 'axios';
-import { useMemo, ReactNode } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { ReactNode } from 'react';
+// import { useSearchParams } from 'react-router-dom';
 
 type Tab = {
   title: string;
@@ -32,42 +33,53 @@ const WALLET_PAGE_COMPONENTS: Record<WalletPageTabs, Tab> = {
   },
 };
 
-const TABS = Object.entries(WALLET_PAGE_COMPONENTS).map(([key, val]) => ({
-  title: val.title,
-  value: key as WalletPageTabs,
-}));
+// const TABS = Object.entries(WALLET_PAGE_COMPONENTS).map(([key, val]) => ({
+//   title: val.title,
+//   value: key as WalletPageTabs,
+// }));
 
 const WalletPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  // const [searchParams, setSearchParams] = useSearchParams();
+  const { verifiedAddress } = useNintondoManagerContext();
 
-  const handleActiveTabChange = (tab: string) => {
-    const searchParams = new URLSearchParams();
-    searchParams.set('tab', tab);
+  // const handleActiveTabChange = (tab: string) => {
+  //   const searchParams = new URLSearchParams();
+  //   searchParams.set('tab', tab);
 
-    setSearchParams(searchParams);
-  };
+  //   setSearchParams(searchParams);
+  // };
 
-  const currentTab = useMemo(() => {
-    const fromSearchParams = searchParams.get('tab') || TABS[0].value;
+  // const currentTab = useMemo(() => {
+  //   const fromSearchParams = searchParams.get('tab') || TABS[0].value;
 
-    if (!Object.keys(WALLET_PAGE_COMPONENTS).includes(fromSearchParams)) {
-      return TABS[0].value;
-    }
+  //   if (!Object.keys(WALLET_PAGE_COMPONENTS).includes(fromSearchParams)) {
+  //     return TABS[0].value;
+  //   }
 
-    return fromSearchParams;
-  }, [searchParams]);
+  //   return fromSearchParams;
+  // }, [searchParams]);
+
+  if (!verifiedAddress)
+    return (
+      <div className={'bg-black'}>
+        <div className='h-screen max-w-[1700px] mx-auto flex pt-[150px] items-center justify-center text-white'>
+          Please connect your wallet
+        </div>
+      </div>
+    );
 
   return (
     <div className='max-w-[1440px] px-[25px] mx-auto flex pt-[221px] max-medium:pt-[88px] flex-col text-white'>
-      <TabSelect
+      {/* <TabSelect
         fields={TABS}
         activeTab={currentTab}
         onHandleChange={handleActiveTabChange}
         buttonClassName='mt-0 max-md:mt-0 mr-0 md:mr-0 py-[6px] px-[45px] max-md:mr-0 max-md:px-5'
         className='flex-1 gap-[1px]'
-      />
+      /> */}
       <div className='pt-[33px] max-medium:pt-[52px]'>
-        {WALLET_PAGE_COMPONENTS[currentTab as WalletPageTabs].component}
+        {/* {WALLET_PAGE_COMPONENTS[currentTab as WalletPageTabs].component} */}
+        {WALLET_PAGE_COMPONENTS.list.component}
       </div>
     </div>
   );

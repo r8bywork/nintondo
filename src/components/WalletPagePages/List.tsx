@@ -31,7 +31,7 @@ export const List = () => {
   const makeAuthRequest = useMakeAuthRequests();
   const createSignedListPsbt = useCreateListedSignedPSBT();
 
-  const [price, setPrice] = useState<number>(0);
+  const [price, setPrice] = useState<number>(0.2);
   const tick = searchParams.get('tick') || '';
 
   const handleTickChange = (tick: IToken) => {
@@ -75,7 +75,6 @@ export const List = () => {
   };
 
   const list = async () => {
-    const price = 0.2;
     const txid = selectedTransfers.transfers[0].inscription_id.slice(0, -2);
     const vout = selectedTransfers.transfers[0].inscription_id.slice(-1);
     // eslint-disable-next-line camelcase
@@ -91,11 +90,15 @@ export const List = () => {
       axios.post(
         `${MARKET_API_URL}/tokens/list-token`,
         // eslint-disable-next-line camelcase
-        { psbt_base64: psbt, price: price * 10 ** 8, public_key_hex },
+        { psbt_base64: psbt, public_key_hex },
         { withCredentials: true },
       ),
     );
     console.log(response);
+  };
+
+  const handleOpenModal = () => {
+    if (selectedTransfers.transfers.length > 0) open();
   };
 
   useEffect(() => {
@@ -256,7 +259,7 @@ export const List = () => {
           <div className='flex justify-center'>
             <button
               className='max-[1200px]:flex-1 font-bold py-[6px] px-[101px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)]'
-              onClick={open}
+              onClick={handleOpenModal}
             >
               LIST {selectedTransfers.total.toLocaleString()} {selectedTick.tick}
             </button>
@@ -280,7 +283,10 @@ export const List = () => {
                 )
               }
             />
-            <button className='max-[1200px]:flex-1 font-bold py-[6px] px-[101px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)]'>
+            <button
+              onClick={list}
+              className='max-[1200px]:flex-1 font-bold py-[6px] px-[101px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)]'
+            >
               LIST {selectedTransfers.total.toLocaleString()} {selectedTick?.tick}
             </button>
           </div>
