@@ -6,6 +6,8 @@ import { useSearchParams } from 'react-router-dom';
 import ReloadSVG from '@/assets/reload.svg?react';
 import PlusSVG from '@/assets/plus.svg?react';
 import { useNintondoManagerContext } from '@/utils/bell-provider';
+import { useModal } from '@/hooks/useModal';
+import { Modal } from '../Modal';
 
 type SelectedTransfers = {
   transfers: ITransfer[];
@@ -21,7 +23,9 @@ export const List = () => {
     total: 0,
   });
   const { inscribeTransfer } = useNintondoManagerContext();
+  const { open, close, isOpen } = useModal();
 
+  const [price, setPrice] = useState<number>(0);
   const tick = searchParams.get('tick') || '';
 
   const handleTickChange = (tick: IToken) => {
@@ -32,6 +36,11 @@ export const List = () => {
   };
 
   const getUserTokens = useGetUserTokens();
+
+  const handleClose = () => {
+    setPrice(0);
+    close();
+  };
 
   const updateUserTokens = () => {
     getUserTokens().then((tokens) => {
@@ -119,7 +128,10 @@ export const List = () => {
               );
             })}
           </div>
-          <button className='font-bold py-[6px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)]'>
+          <button
+            onClick={open}
+            className='font-bold py-[6px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)]'
+          >
             LIST {selectedTransfers.total.toLocaleString()}
           </button>
         </div>
@@ -212,11 +224,37 @@ export const List = () => {
             </p>
           </div>
           <div className='flex justify-center'>
-            <button className='max-[1200px]:flex-1 font-bold py-[6px] px-[101px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)]'>
+            <button
+              className='max-[1200px]:flex-1 font-bold py-[6px] px-[101px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)]'
+              onClick={open}
+            >
               LIST {selectedTransfers.total.toLocaleString()} {selectedTick.tick}
             </button>
           </div>
         </div>
+      )}
+      {isOpen && (
+        <Modal
+          isOpen
+          onClose={handleClose}
+        >
+          <div className='flex flex-col gap-[15px] rounded-[15px] w-[400px] bg-[#191919] p-[25px]'>
+            <input
+              inputMode='numeric'
+              pattern='[0-9]*'
+              className='rounded-[50px] outline-none px-[10px] py-[3px] text-[20px] bg-[#4b4b4b]'
+              value={price}
+              onChange={(e) =>
+                setPrice((price) =>
+                  isNaN(Number(e.target.value)) ? price : Number(e.target.value),
+                )
+              }
+            />
+            <button className='max-[1200px]:flex-1 font-bold py-[6px] px-[101px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)]'>
+              LIST {selectedTransfers.total.toLocaleString()} {selectedTick?.tick}
+            </button>
+          </div>
+        </Modal>
       )}
     </div>
   );
