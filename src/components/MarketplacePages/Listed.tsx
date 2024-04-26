@@ -78,15 +78,6 @@ const Listed = () => {
       <div className='fixed flex justify-center items-center w-screen bottom-0 left-0 h-[113px] mobile:h-[72px] backdrop-blur-sm border-t-[1px] border-[#191919]'>
         <div className='max-w-[1490px] flex justify-between px-5 w-full flex-col mobile:flex-row'>
           <div className='items-center flex gap-2 font-bold text-[16px] border-[1px] border-white rounded-[30px] h-[24px] w-[336px] justify-center px-[15px]'>
-            {/* <input
-              type='range'
-              max={tokenCard.tokens.length}
-              min={0}
-              value={selectedTokens.length}
-              onChange={(e) => {
-                setSelectedBuyTokens(tokenCard.tokens.slice(0, Number(e.target.value)));
-              }}
-            /> */}
             <input
               type='range'
               className='styled-range'

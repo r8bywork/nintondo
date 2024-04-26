@@ -169,6 +169,7 @@ export interface Collection {
 export interface ITransfer {
   inscription_id: string;
   amount: number;
+  number: number;
 }
 
 export interface IToken {

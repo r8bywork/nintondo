@@ -95,7 +95,7 @@ export const TickDropdown = () => {
               <Reload />
             </button>
           </div>
-          <div className='flex flex-wrap'>
+          <div className='flex flex-wrap gap-[13px]'>
             {favorites.tick?.map((item) => (
               <button
                 onClick={() => handleTickChange(item)}

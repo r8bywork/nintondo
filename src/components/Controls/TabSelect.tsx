@@ -24,7 +24,10 @@ const TabSelect = ({
           <button
             style={
               activeTab === item.value
-                ? { background: 'var(--GRD, linear-gradient(90deg, #FFF 0%, #FB0 99.07%))' }
+                ? {
+                    background: 'var(--GRD, linear-gradient(90deg, #FFF 0%, #FB0 99.07%))',
+                    boxShadow: '0px 1px 18.2px 0px #FFD45C80',
+                  }
                 : {}
             }
             className={classNames(

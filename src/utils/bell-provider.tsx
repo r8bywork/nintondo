@@ -169,7 +169,8 @@ ${connectedAddress}
         nintondo = (window as any).nintondo;
         setNintondo(nintondo);
         setExists(nintondo !== undefined);
-      }, 1000);
+        console.log({ nintondo });
+      }, 3000);
     } else {
       setNintondo(nintondo);
       setExists(true);
