@@ -125,7 +125,7 @@ export const TickDropdown = () => {
           </div>
         </div>
       }
-      dropdownClassName='max-medium:w-full origin-top-left max-medium:origin-top'
+      dropdownClassName='max-medium:w-full origin-top-left max-medium:origin-top z-10'
     />
   );
 };

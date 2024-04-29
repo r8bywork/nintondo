@@ -44,7 +44,7 @@ export const Filter = () => {
       onOpen={handleDropdownOpen}
       onClose={handleDropdownClose}
       target={
-        <button className='w-fit items-center px-[10px] py-[8px] border-[2px] flex gap-[9px] flex-wrap flex-1 rounded-[18px] max-medium:my-[0]'>
+        <button className='items-center px-[10px] py-[8px] border-[2px] flex gap-[9px] flex-wrap w-full rounded-[18px] max-medium:my-[0]'>
           <ArrowDown className={classNames('transition', { 'rotate-180': isDropdownVisible })} />
           <FilterTag
             activeColor='#FFBB00'
@@ -73,6 +73,7 @@ export const Filter = () => {
         </div>
       }
       dropdownClassName='max-medium:w-full origin-top-left max-medium:origin-top w-full'
+      containerClassName='w-full'
     />
   );
 };
