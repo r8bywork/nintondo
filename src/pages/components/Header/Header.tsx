@@ -96,7 +96,7 @@ const Header = () => {
           />
         ))}
         {!verifiedAddress ? (
-          <div className='text-white text-base font-bold leading-normal hover:text-yellow-500 transition-all duration-300 ease-in-out'>
+          <div className='text-white hover-outline text-base font-bold leading-normal hover:text-yellow-500 transition-all duration-300 ease-in-out'>
             <button
               className='btn'
               onClick={() => {

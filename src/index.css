@@ -16,6 +16,25 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+
+  .hover-outline {
+    position: relative;
+  }
+
+  .hover-outline::before {
+    content: '';
+    position: absolute;
+    height: 2px;
+    width: 0px;
+    bottom: -4px;
+    left: 0;
+    background: rgb(251, 191, 36);
+    transition: .3s;
+  }
+  
+  .hover-outline:hover::before {
+    width: 100%;
+  }
 }
 
 /*Disable scroll only in mobile devices*/

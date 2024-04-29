@@ -13,7 +13,7 @@ const Link = ({ href, text, className, onClick }: LinkProps) => {
       <NavLink
         to={href}
         onClick={onClick}
-        className={`text-base font-bold leading-normal hover:text-yellow-500 transition-all duration-300 ease-in-out hover:underline ${className}`}
+        className={`text-base font-bold leading-normal hover:text-yellow-500 transition-all duration-300 ease-in-out hover-outline ${className}`}
         style={{
           textDecorationColor: '#FBBF24',
           textDecorationThickness: '2px',
@@ -30,7 +30,7 @@ const Link = ({ href, text, className, onClick }: LinkProps) => {
       href={href}
       target={href[2] === '#' ? '_self' : '_target'}
       onClick={onClick}
-      className={`text-base font-bold leading-normal hover:text-yellow-500 transition-all duration-300 ease-in-out hover:underline ${className}`}
+      className={`text-base font-bold leading-normal hover:text-yellow-500 transition-all duration-300 ease-in-out hover-outline ${className}`}
       style={{
         textDecorationColor: '#FBBF24',
         textDecorationThickness: '2px',
