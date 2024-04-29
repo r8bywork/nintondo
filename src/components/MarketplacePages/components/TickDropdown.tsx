@@ -41,7 +41,7 @@ export const TickDropdown = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { favorites, removeFromFavorite } = useFavorites();
 
-  const tick = searchParams.get('tick') || '';
+  const tick = searchParams.get('tick') || DATA[0].tick.value;
 
   const handleTickChange = (tick: string) => {
     searchParams.set('tick', tick);
@@ -69,7 +69,7 @@ export const TickDropdown = () => {
       onClose={handleDropdownClose}
       onOpen={handleDropdownOpen}
       target={
-        <div className='w-fit items-center px-[10px] py-[8px] border-[2px] flex flex-wrap gap-[9px] border-[#fff] rounded-[18px] max-medium:my-[0] max-medium:w-full'>
+        <div className='w-fit items-center px-[10px] py-[8px] border-[2px] flex flex-wrap gap-[9px] rounded-[18px] max-medium:my-[0] max-medium:w-full'>
           <ArrowDown className={classNames('transition', { 'rotate-180': isDropdownVisible })} />
           <FilterTag
             activeColor='#FFBB00'
@@ -125,7 +125,7 @@ export const TickDropdown = () => {
           </div>
         </div>
       }
-      dropdownClassName='max-medium:w-full'
+      dropdownClassName='max-medium:w-full origin-top-left max-medium:origin-top'
     />
   );
 };

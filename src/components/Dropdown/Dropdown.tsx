@@ -76,9 +76,9 @@ export const Dropdown = ({
       </button>
       <div
         className={classNames(
-          'absolute left-0',
+          'absolute left-0 transition duration-300 scale-0',
           {
-            hidden: !isVisible,
+            'scale-100': isVisible,
           },
           dropdownClassName,
         )}

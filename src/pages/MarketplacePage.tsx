@@ -2,13 +2,12 @@
 // import { useState } from 'react';
 
 import TabSelect from '@/components/Controls/TabSelect';
-import FilterTag from '@/components/Controls/components/FilterTag';
 import { Listed } from '@/components/MarketplacePages/Listed';
 import { Orders } from '@/components/MarketplacePages/Orders';
 import { ReactNode, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import ArrowDown from '../assets/marketplace/arrow-down.svg?react';
 import { TickDropdown } from '@/components/MarketplacePages/components/TickDropdown';
+import { Filter } from '@/components/MarketplacePages/components/Filter';
 
 type Tab = {
   title: string;
@@ -67,15 +66,7 @@ const MarketplacePage = () => {
           <TickDropdown />
         </div>
         <div className='flex gap-[13px] flex-wrap'>
-          <button className='w-fit items-center px-[10px] py-[8px] border-[2px] flex gap-[9px] flex-wrap flex-1 border-[#fff] rounded-[18px] max-medium:my-[0]'>
-            <ArrowDown />
-            <FilterTag
-              activeColor='#FFBB00'
-              active
-              text='Price: Low → High'
-              classNames='text-[#000] flex-1 align-center flex justify-center text-nowrap'
-            />
-          </button>
+          <Filter />
         </div>
       </div>
       {MARKETPLACE_COMPONENTS[currentTab as MarketPlaceTabs].component}
