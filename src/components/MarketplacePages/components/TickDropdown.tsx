@@ -2,14 +2,12 @@ import ButtonSvg from '../../../assets/Button.svg?react';
 import Reload from '../../../assets/reload.svg?react';
 import { Field, InlineTable, ItemField } from '@/components/InlineTable/InlineTable';
 import { Dropdown } from '@/components/Dropdown/Dropdown';
-import FilterTag from '@/components/Controls/components/FilterTag';
 import { useState } from 'react';
-import ArrowDown from '../../../assets/marketplace/arrow-down.svg?react';
-import classNames from 'classnames';
 import { createFavoriteWithGroup } from './Favorite';
 import { useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/favorites';
 import FilledStar from '@/assets/filled-star.svg?react';
+import { Select } from '@/components/Controls/Select';
 
 const FIELDS: Field[] = [
   { key: 'num', title: '#', Component: createFavoriteWithGroup('tick') },
@@ -68,17 +66,7 @@ export const TickDropdown = () => {
       isVisible={isDropdownVisible}
       onClose={handleDropdownClose}
       onOpen={handleDropdownOpen}
-      target={
-        <div className='w-fit items-center px-[10px] py-[8px] border-[2px] flex flex-wrap gap-[9px] rounded-[18px] max-medium:my-[0] max-medium:w-full'>
-          <ArrowDown className={classNames('transition', { 'rotate-180': isDropdownVisible })} />
-          <FilterTag
-            activeColor='#FFBB00'
-            active
-            text={tick}
-            classNames='text-[#000] text-[16px] leading-[17px] py-[2px] px-[30px] max-medium:flex-1 justify-center'
-          />
-        </div>
-      }
+      target={<Select isActive={isDropdownVisible}>{tick}</Select>}
       dropdown={
         <div className='shadow-[0_0_20px_0_rgba(0,0,0,0.3)] flex flex-col gap-[22px] rounded-[15px] p-[25px] bg-[#191919] left-0'>
           <div className='flex gap-[13px]'>

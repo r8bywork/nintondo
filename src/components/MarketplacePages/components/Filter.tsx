@@ -1,26 +1,25 @@
 import { Dropdown } from '@/components/Dropdown/Dropdown';
-import ArrowDown from '@/assets/marketplace/arrow-down.svg?react';
-import FilterTag from '@/components/Controls/components/FilterTag';
 import { useState } from 'react';
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
+import { Select } from '@/components/Controls/Select';
 
-const FILTERS = {
-  low: 'Price: Low → High',
-  high: 'Price: High → Low',
-  latest: 'List Time: Latest → Earliest',
-  earliest: 'List Time: Earliest → Latest',
-};
+interface FilterProps {
+  filters: Record<string, string>;
+  defaultFilter: keyof FilterProps['filters'];
+  filterKey: string;
+  tag?: string;
+}
 
-export const Filter = () => {
+export const Filter = ({ filters, defaultFilter, filterKey, tag }: FilterProps) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
   const filter =
-    (searchParams.get('filter') as string) in FILTERS
-      ? (searchParams.get('filter') as keyof typeof FILTERS)
-      : 'low';
+    (searchParams.get(filterKey) as string) in filters
+      ? (searchParams.get(filterKey) as keyof typeof filters)
+      : defaultFilter;
 
   const handleDropdownClose = () => {
     setIsDropdownVisible(false);
@@ -30,8 +29,8 @@ export const Filter = () => {
     setIsDropdownVisible(true);
   };
 
-  const handleSelect = (filter: keyof typeof FILTERS) => {
-    searchParams.set('filter', filter);
+  const handleSelect = (filter: keyof typeof filters) => {
+    searchParams.set(filterKey, filter);
 
     setSearchParams(searchParams);
 
@@ -44,19 +43,14 @@ export const Filter = () => {
       onOpen={handleDropdownOpen}
       onClose={handleDropdownClose}
       target={
-        <button className='items-center px-[10px] py-[8px] border-[2px] flex gap-[9px] flex-wrap w-full rounded-[18px] max-medium:my-[0]'>
-          <ArrowDown className={classNames('transition', { 'rotate-180': isDropdownVisible })} />
-          <FilterTag
-            activeColor='#FFBB00'
-            active
-            text={FILTERS[filter]}
-            classNames='text-[#000] flex-1 align-center flex justify-center text-nowrap px-[60px]'
-          />
-        </button>
+        <Select isActive={isDropdownVisible}>
+          {tag ? `${tag} ` : ''}
+          {filters[filter]}
+        </Select>
       }
       dropdown={
         <div className='border-[2px] rounded-[19px] bg-[rgba(0,0,0,0.1)] flex flex-col gap-[10px] backdrop-blur-lg px-[10px] py-[7px]'>
-          {Object.entries(FILTERS).map(([key, value]) => (
+          {Object.entries(filters).map(([key, value]) => (
             <button
               key={key}
               className={classNames(
@@ -65,7 +59,7 @@ export const Filter = () => {
                   'bg-[#FFBB00]': key === filter,
                 },
               )}
-              onClick={() => handleSelect(key as keyof typeof FILTERS)}
+              onClick={() => handleSelect(key as keyof typeof filters)}
             >
               {value}
             </button>

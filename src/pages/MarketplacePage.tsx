@@ -12,18 +12,47 @@ import { Filter } from '@/components/MarketplacePages/components/Filter';
 type Tab = {
   title: string;
   component: ReactNode;
+  filter: ReactNode;
 };
 
 type MarketPlaceTabs = 'listed' | 'orders';
+
+const SORT_FILTERS = {
+  low: 'Price: Low → High',
+  high: 'Price: High → Low',
+  latest: 'List Time: Latest → Earliest',
+  earliest: 'List Time: Earliest → Latest',
+};
+
+const EVENT_FILTERS = {
+  listed: 'Listed',
+  sold: 'Sold',
+  unlisted: 'Unlisted',
+};
 
 const MARKETPLACE_COMPONENTS: Record<MarketPlaceTabs, Tab> = {
   listed: {
     title: 'LISTED',
     component: <Listed />,
+    filter: (
+      <Filter
+        defaultFilter='low'
+        filterKey='sort'
+        filters={SORT_FILTERS}
+      />
+    ),
   },
   orders: {
     title: 'ORDERS',
     component: <Orders />,
+    filter: (
+      <Filter
+        defaultFilter='listed'
+        filterKey='event'
+        filters={EVENT_FILTERS}
+        tag='Event: '
+      />
+    ),
   },
 };
 
@@ -60,13 +89,13 @@ const MarketplacePage = () => {
             fields={TABS}
             activeTab={currentTab}
             onHandleChange={handleActiveTabChange}
-            buttonClassName='mt-0 max-md:mt-0 flex-1 mr-0 md:mr-0 py-[6px] px-[45px] max-md:mr-0'
+            buttonClassName='mt-0 max-md:mt-0 flex-1 mr-0 md:mr-0 py-[6px] px-[45px] leading-[21px] h-[33px] max-md:mr-0'
             className='flex-1 gap-[1px] max-medium:gap-[30px]'
           />
           <TickDropdown />
         </div>
         <div className='flex gap-[13px] flex-wrap'>
-          <Filter />
+          {MARKETPLACE_COMPONENTS[currentTab as MarketPlaceTabs].filter}
         </div>
       </div>
       {MARKETPLACE_COMPONENTS[currentTab as MarketPlaceTabs].component}
