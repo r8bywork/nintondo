@@ -64,7 +64,7 @@ const Token: FC<TokenProps> = ({
               </p>
             </div>
             <button
-              className='w-[180px] h-[24px] text-center border-[1px] border-[#FFFFFF] rounded-[20px] font-bold max-mobile:w-[164px]'
+              className='w-[180px] h-[24px] text-center border-[1px] border-[#FFFFFF] rounded-[20px] font-bold flex items-center justify-center max-mobile:w-[164px] transition duration-300 hover:border-[#FFBB00] hover:text-[#FFBB00]'
               onClick={onBuyClick}
             >
               BUY

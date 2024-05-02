@@ -84,13 +84,13 @@ const MarketplacePage = () => {
   return (
     <div className='min-h-screen max-w-[1600px] mx-auto flex pt-[150px] flex-col text-white gap-4 text-white p-4'>
       <div className='flex justify-between max-medium:flex-col gap-[13px]'>
-        <div className='flex gap-[13px] items-center max-medium:items-stretch max-medium:flex-col max-medium:gap-[30px]'>
+        <div className='flex gap-[13px] items-center max-medium:items-stretch max-medium:flex-col max-medium:gap-[13px]'>
           <TabSelect
             fields={TABS}
             activeTab={currentTab}
             onHandleChange={handleActiveTabChange}
             buttonClassName='mt-0 max-md:mt-0 flex-1 mr-0 md:mr-0 py-[6px] px-[45px] leading-[21px] h-[33px] max-md:mr-0'
-            className='flex-1 gap-[1px] max-medium:gap-[30px]'
+            className='flex-1 gap-[1px] max-medium:gap-[6px]'
           />
           <TickDropdown />
         </div>

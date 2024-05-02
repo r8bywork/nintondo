@@ -38,3 +38,8 @@ export interface Fees {
   fast: number;
   slow: number;
 }
+
+export interface Listed {
+  tick: string;
+  token_numbers: number[];
+}
