@@ -11,6 +11,7 @@ export interface INintondoManagerProvider {
   getPublicKey: () => Promise<string | undefined>;
   disconnect: () => Promise<void>;
   inscribeTransfer: (tick: string) => Promise<number | undefined>;
+  signMultiPsbt: (data: SignPsbtData[]) => Promise<string[] | undefined>;
 }
 
 interface BaseUserToSignInput {
@@ -65,4 +66,9 @@ export interface InscriptionMetaInfo {
 export interface Claims {
   address: string;
   exp: number;
+}
+
+export interface SignPsbtData {
+  psbtBase64: string;
+  options: SignPsbtOptions;
 }

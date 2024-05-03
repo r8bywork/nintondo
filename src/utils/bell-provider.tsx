@@ -7,6 +7,7 @@ import { AddressType, getAddress } from '.';
 import {
   Claims,
   INintondoManagerProvider,
+  SignPsbtData,
   SignPsbtOptions,
 } from '@/interfaces/nintondo-manager-provider';
 import axios from 'axios';
@@ -122,6 +123,16 @@ ${connectedAddress}
     }
   }, [address]);
 
+  const signMultiPsbt = async (data: SignPsbtData[]) => {
+    if (!nintondo) return;
+    try {
+      const result = await nintondo.multiPsbtSign(data);
+      return result as string[];
+    } catch {
+      toast.error('You rejected signing request');
+    }
+  };
+
   const checkCookies = useCallback(async () => {
     if (!nintondo) return;
     const token = Cookies.get('access_token');
@@ -190,6 +201,7 @@ ${connectedAddress}
     getPublicKey,
     disconnect,
     inscribeTransfer,
+    signMultiPsbt,
   };
 };
 

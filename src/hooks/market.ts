@@ -7,6 +7,7 @@ import { DEFAULT_FEE_RATE, DUMMY_UTXO_VALUE, FEE_ADDRESS } from '../consts';
 import { fetchBELLMainnet, gptFeeCalculate } from '../utils';
 import toast from 'react-hot-toast';
 import { getApiUtxo, getTransactionRawHex } from './electrs';
+import { SignPsbtData } from '@/interfaces/nintondo-manager-provider';
 
 export const useMakeDummyUTXOS = () => {
   const { signPsbtInputs } = useNintondoManagerContext();
@@ -105,7 +106,7 @@ export const useMakeDummyUTXOS = () => {
 
 export const useCreateListedSignedPSBT = () => {
   const { address } = useNintondoManagerContext();
-  const { signPsbtInputs } = useNintondoManagerContext();
+  const { signPsbtInputs, signMultiPsbt } = useNintondoManagerContext();
 
   const placeholderTxId = 'f56443f446775e1ce6383265f1556ee85f203902ba3313af3142f88821ed2431';
   const placeHolderTxhex =
@@ -115,66 +116,92 @@ export const useCreateListedSignedPSBT = () => {
     '0100000002522898374277a2afe45cbb7012432350d0d39e1b2f5b494e02543f8303183a95020000006a4730440220048f9c107bf6f734f1ea2038051612525108ec06787232ea011c382b2f8660c002204f0c20f8f7ee984d4dc95be8a91bfd80dd0f3270fec9b3143173a2055b189c330121025bc22d727141b3c366ac2c3f438775f7024682e6fdbaaa9801b45f67f572415cffffffff7cae8b5adddfa59b45f4020beef146c67e11abfe17e983ed640c5a1736894e40020000006a47304402204f024ba023ddf7e6acfb8f8505be816a8d2edefe1cfc085259f70d3fd8533aa00220112d105228fa58f483a28d0edade809a3be67b75c1d3d9a06fd0aeb47444cf640121025bc22d727141b3c366ac2c3f438775f7024682e6fdbaaa9801b45f67f572415cffffffff027ac3f381010000001976a914e73cff340fc96c6960298c1214ce57d053b638ab88ac722ff7b4000000001976a9142244caa73f879e7b2f494020b26b36b870c4f72588ac00000000';
   const placeholderAddress = 'BRXknAc5gRVSh6Yo3Gs8hgwRPa3mumBwcm';
 
+  const fixSignatures = (psbt: Psbt) => {
+    const partialSig = psbt.data.inputs[2].partialSig;
+    psbt.finalizeInput(2);
+    psbt.data.inputs[2].partialSig = partialSig;
+
+    return psbt.toBase64();
+  };
+
   return useCallback(
-    async (inscription: { txid: string; vout: number }, price: number) => {
+    async (inscriptions: { txid: string; vout: number; price: number }[]) => {
       if (!address) return;
-      const sellerOrdUtxoHex = await getTransactionRawHex(inscription.txid);
-      if (!sellerOrdUtxoHex) return;
-      let sellerPsbt = new Psbt({ network: networks.bitcoin });
+      const psbtsToSign: SignPsbtData[] = [];
 
-      sellerPsbt.addInput({
-        hash: placeholderTxId,
-        index: 0,
-        nonWitnessUtxo: Buffer.from(placeHolderTxhex, 'hex'),
-      });
+      for (const inscription of inscriptions) {
+        const sellerOrdUtxoHex = await getTransactionRawHex(inscription.txid);
+        if (!sellerOrdUtxoHex) return;
+        const sellerPsbt = new Psbt({ network: networks.bitcoin });
 
-      sellerPsbt.addInput({
-        hash: placeholderTxId2,
-        index: 0,
-        nonWitnessUtxo: Buffer.from(placeHolderTxhex2, 'hex'),
-      });
+        sellerPsbt.addInput({
+          hash: placeholderTxId,
+          index: 0,
+          nonWitnessUtxo: Buffer.from(placeHolderTxhex, 'hex'),
+        });
 
-      sellerPsbt.addInput({
-        hash: inscription.txid,
-        index: inscription.vout,
-        nonWitnessUtxo: Buffer.from(sellerOrdUtxoHex, 'hex'),
-        sighashType: Transaction.SIGHASH_SINGLE | Transaction.SIGHASH_ANYONECANPAY,
-      });
+        sellerPsbt.addInput({
+          hash: placeholderTxId2,
+          index: 0,
+          nonWitnessUtxo: Buffer.from(placeHolderTxhex2, 'hex'),
+        });
 
-      sellerPsbt.addOutput({
-        address: placeholderAddress,
-        value: 2,
-      });
-      sellerPsbt.addOutput({
-        address: placeholderAddress,
-        value: 2,
-      });
-      sellerPsbt.addOutput({
-        address: address,
-        value: Math.floor(price * 10 ** 8),
-      });
+        sellerPsbt.addInput({
+          hash: inscription.txid,
+          index: inscription.vout,
+          nonWitnessUtxo: Buffer.from(sellerOrdUtxoHex, 'hex'),
+          sighashType: Transaction.SIGHASH_SINGLE | Transaction.SIGHASH_ANYONECANPAY,
+        });
 
-      const partiallySignedPsbtbase64 = await signPsbtInputs(sellerPsbt.toBase64(), {
-        autoFinalized: false,
-        toSignInputs: [
-          {
-            address,
-            index: 2,
-            sighashTypes: [Transaction.SIGHASH_SINGLE | Transaction.SIGHASH_ANYONECANPAY],
+        sellerPsbt.addOutput({
+          address: placeholderAddress,
+          value: 2,
+        });
+        sellerPsbt.addOutput({
+          address: placeholderAddress,
+          value: 2,
+        });
+        sellerPsbt.addOutput({
+          address: address,
+          value: Math.floor(inscription.price),
+        });
+
+        psbtsToSign.push({
+          options: {
+            autoFinalized: false,
+            toSignInputs: [
+              {
+                address,
+                index: 2,
+                sighashTypes: [Transaction.SIGHASH_SINGLE | Transaction.SIGHASH_ANYONECANPAY],
+              },
+            ],
           },
-        ],
-      });
+          psbtBase64: sellerPsbt.toBase64(),
+        });
+      }
 
-      if (!partiallySignedPsbtbase64) return toast.error('Failed to sign psbt');
-      sellerPsbt = Psbt.fromBase64(partiallySignedPsbtbase64);
+      const signedListPsbtsBase64: string[] = [];
 
-      const partialSig = sellerPsbt.data.inputs[2].partialSig;
-      sellerPsbt.finalizeInput(2);
-      sellerPsbt.data.inputs[2].partialSig = partialSig;
+      if (psbtsToSign.length > 1) {
+        const partiallySignedPsbtsBase64 = await signMultiPsbt(psbtsToSign);
+        if (!partiallySignedPsbtsBase64) return;
+        signedListPsbtsBase64.push(
+          ...partiallySignedPsbtsBase64.flatMap((f) => fixSignatures(Psbt.fromBase64(f))),
+        );
+      } else {
+        const partiallySignedPsbtbase64 = await signPsbtInputs(
+          psbtsToSign[0].psbtBase64,
+          psbtsToSign[0].options,
+        );
+        if (!partiallySignedPsbtbase64) return;
+        const psbt = Psbt.fromBase64(partiallySignedPsbtbase64);
+        signedListPsbtsBase64.push(fixSignatures(psbt));
+      }
 
-      return sellerPsbt.toBase64();
+      return signedListPsbtsBase64;
     },
-    [address, getTransactionRawHex, signPsbtInputs],
+    [address, getTransactionRawHex],
   );
 };
 

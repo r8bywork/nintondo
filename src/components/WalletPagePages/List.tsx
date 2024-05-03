@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { useGetUserTokens } from '@/hooks/electrs';
 import { IToken, ITransfer } from '@/interfaces/intefaces';
 import classNames from 'classnames';
@@ -163,26 +164,26 @@ export const List = ({ isListed = false }: ListProps) => {
   };
 
   const list = async () => {
-    const txid = selectedTransfersByTick.transfers[0].inscription_id.slice(0, -2);
-    const vout = selectedTransfersByTick.transfers[0].inscription_id.slice(-1);
-    // eslint-disable-next-line camelcase
+    if (selectedTransfers.transfers.length < 1) return;
     const public_key_hex = await getPublicKey();
-    const psbt = await createSignedListPsbt(
-      {
-        txid,
-        vout: Number(vout),
-      },
-      price,
+    const psbts_base64 = await createSignedListPsbt(
+      selectedTransfers.transfers.flatMap((f) => ({
+        txid: f.inscription_id.slice(0, -2),
+        vout: Number(f.inscription_id.slice(-1)),
+        price: f.amount * price,
+      })),
     );
+
     const response = await makeAuthRequest(() =>
       axios.post(
         `${MARKET_API_URL}/tokens/list-token`,
         // eslint-disable-next-line camelcase
-        { psbt_base64: psbt, public_key_hex },
+        { psbts_base64, public_key_hex },
         { withCredentials: true },
       ),
     );
     console.log(response);
+
     await updateUserTokensForTick();
     setSelectedTransfers(defaultSelectedTransfers);
     close();
