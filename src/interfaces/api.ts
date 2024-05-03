@@ -43,3 +43,27 @@ export interface Listed {
   tick: string;
   token_numbers: number[];
 }
+
+export interface MarketplaceToken {
+  number: number;
+  amount: number;
+  outpoint: string;
+  price_per_token: number;
+  owner: string;
+}
+
+export interface MarketplaceTokens {
+  current_page: number;
+  total_pages: number;
+  tokens: MarketplaceToken[];
+}
+
+export interface MarketplaceTokenView extends MarketplaceToken {
+  shortenOutpoint: string;
+}
+
+export interface MarketplaceTokensView {
+  current_page: number;
+  total_pages: number;
+  tokens: Array<MarketplaceTokenView>;
+}

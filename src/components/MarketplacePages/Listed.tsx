@@ -1,11 +1,22 @@
 import Token from './Token/Token';
 import Pagination from '../Table/Pagination';
 import Arrow from '@/assets/TableArrow.svg?react';
-import { ListedToken, ListedTokenCard } from '@/interfaces/marketapi';
+import {
+  MarketplaceTokens,
+  MarketplaceTokensView,
+  ListedToken,
+  ListedTokenCard,
+  MarketplaceTokenView,
+} from '@/interfaces/marketapi';
 import { Modal } from '../Modal';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import './style.css';
 import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { MARKET_API_URL } from '@/consts';
+import { useSearchParams } from 'react-router-dom';
+import { shortAddress } from '@/utils';
+import { Slider } from '../Controls/Slider';
 // import { useTokenFilters } from '@/hooks/tokenFilters';
 
 const generateFakeListedToken = (): ListedToken => ({
@@ -28,13 +39,29 @@ const tokens = generateFakeListedTokenCard(21);
 
 const Listed = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [tokensToBuy, setTokensToBuy] = useState<ListedToken[]>([]);
+  const [tokensToBuy, setTokensToBuy] = useState<MarketplaceTokenView[]>([]);
   // const { tokenCard, onPageChange } = useTokenFilters();
-  const [selectedTokens, setSelectedBuyTokens] = useState<ListedToken[]>([]);
-  const { isLoading, data } = useQuery({
-    queryKey: ['listed-tokens'],
+  const [selectedTokens, setSelectedBuyTokens] = useState<MarketplaceTokenView[]>([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [tick, page] = [
+    searchParams.get('tick') || 'amid',
+    isNaN(Number(searchParams.get('page'))) ? 1 : Number(searchParams.get('page')) || 1,
+  ];
+
+  const { isSuccess, data } = useQuery<MarketplaceTokensView>({
+    queryKey: ['listed-tokens', tick, page],
     queryFn: async () => {
-      
+      const { data } = await axios.get(`${MARKET_API_URL}/pub/tokens?tick=${tick}&page=${page}`);
+
+      return {
+        ...data,
+        tokens: (data as MarketplaceTokens).tokens.map((item) => ({
+          ...item,
+          shortenOutpoint: shortAddress(item.outpoint),
+          fullPrice: ((item.amount * item.price_per_token) / 10 ** 8).toFixed(6),
+        })),
+      };
     },
   });
 
@@ -51,58 +78,62 @@ const Listed = () => {
     closeModal();
   };
 
-  const handleBuyClick = (token: ListedToken) => {
+  const handleBuyClick = (token: MarketplaceTokenView) => {
     setTokensToBuy([token]);
     openModal();
   };
 
+  const handleRangeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const tempSliderValue = Number(e.target.value);
+    setSelectedBuyTokens(data?.tokens.slice(0, tempSliderValue) || []);
+  };
+
   return (
     <div className='max-w-[1490px] mx-auto flex max-mobile:gap-[5px] gap-[10px] max-lg:justify-center flex-col pb-[72px]'>
-      <div className='w-full mx-auto flex flex-wrap justify-center pt-[10px] max-mobile:gap-[5px] gap-[10px] max-lg:justify-center'>
-        {tokens.tokens.map((f, i) => (
-          <Token
-            checked={selectedTokens.includes(f)}
-            onBuyClick={() => handleBuyClick(f)}
-            token={f}
-            key={i}
-            full
-          />
-        ))}
-      </div>
+      {isSuccess && (
+        <div className='w-full mx-auto flex flex-wrap justify-center pt-[10px] max-mobile:gap-[5px] gap-[10px] max-lg:justify-center'>
+          {data?.tokens.map((f, i) => (
+            <Token
+              tick='yes'
+              checked={selectedTokens.includes(f)}
+              onBuyClick={() => handleBuyClick(f)}
+              token={f}
+              key={i}
+              full
+            />
+          ))}
+        </div>
+      )}
       <Pagination
         activeClassName='bg-[#FFBB00] text-black'
         leftBtnPlaceholder={<Arrow />}
         rightBtnPlaceholder={<Arrow className={'rotate-180 flex'} />}
         buttonsClassName='flex items-center justify-center w-auto min-w-[2.25rem] px-[6px] h-9 bg-[#191919] rounded-full'
-        currentPage={1}
+        currentPage={1 - page}
         arrowsClassName='h-full flex items-center p-[10px] bg-[#191919] rounded-[26px]'
         className={
           'text-white flex justify-center pt-[30px] pb-[30px] items-center gap-x-[10px] text-center align-middle'
         }
-        pageCount={300}
-        onPageChange={() => {}}
+        pageCount={Number(data?.total_pages) - 1 || 0}
+        onPageChange={(page) => {
+          searchParams.set('page', page.toString());
+
+          setSearchParams(searchParams);
+        }}
       />
       <div className='fixed flex justify-center items-center w-screen bottom-0 left-0 h-[113px] mobile:h-[72px] backdrop-blur-sm border-t-[1px] border-[#191919]'>
         <div className='max-w-[1490px] flex justify-between px-5 w-full flex-col mobile:flex-row'>
-          <div className='items-center flex gap-2 font-bold text-[16px] border-[1px] border-white rounded-[30px] h-[24px] w-[336px] justify-center px-[15px]'>
-            <input
-              type='range'
-              className='styled-range'
-              max={tokens.tokens.length}
-              min={0}
-              value={selectedTokens.length}
-              onChange={(e) => {
-                const tempSliderValue = Number(e.target.value);
-                setSelectedBuyTokens(tokens.tokens.slice(0, tempSliderValue));
-
-                const sliderEl = e.target as HTMLInputElement;
-                const progress =
-                  tokens.tokens.length === 0 ? 0 : (tempSliderValue / tokens.tokens.length) * 100;
-                sliderEl.style.background = `linear-gradient(to right, #FFFFFF ${progress}%, #4b4b4b ${progress}%)`;
-              }}
-            />
-            <span className='w-[16px]'>{selectedTokens.length}</span>
-          </div>
+          {!data?.tokens.length || (
+            <div className='items-center flex gap-2 font-bold text-[16px] border-[1px] border-white rounded-[30px] h-[24px] w-[336px] justify-center px-[15px]'>
+              <Slider
+                max={data?.tokens.length || 0}
+                min={0}
+                value={selectedTokens.length}
+                onChange={handleRangeChange}
+              />
+              <span className='w-[16px]'>{selectedTokens.length}</span>
+            </div>
+          )}
           <p>SHIT2</p>
         </div>
       </div>
@@ -118,7 +149,8 @@ const Listed = () => {
               {tokensToBuy.map((value) => (
                 <Token
                   token={value}
-                  key={value.tick}
+                  tick={tick || ''}
+                  key={value.outpoint}
                   background='#292929'
                 />
               ))}

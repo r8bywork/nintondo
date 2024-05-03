@@ -1,11 +1,11 @@
-import { ListedToken } from '@/interfaces/marketapi';
-import { shortAddress } from '@/utils';
+import { MarketplaceTokenView } from '@/interfaces/marketapi';
 import { FC } from 'react';
 import cn from 'classnames';
 import BellsIcon from '@/assets/bells.svg?react';
 
 interface TokenProps {
-  token: ListedToken;
+  token: MarketplaceTokenView;
+  tick: string;
   full?: boolean;
   checked?: boolean;
   background?: string;
@@ -15,6 +15,7 @@ interface TokenProps {
 const Token: FC<TokenProps> = ({
   token,
   full,
+  tick,
   checked = false,
   onBuyClick,
   background = '#1A1A1A',
@@ -28,7 +29,7 @@ const Token: FC<TokenProps> = ({
     >
       <div className='flex justify-between items-center'>
         <p className='bg-[#0F0F0F] text-[#FFFFFF] px-[7px] py-[2px] rounded-[31px] text-[14px]'>
-          {token.tick}
+          {tick}
         </p>
         {full && (
           <div
@@ -46,21 +47,21 @@ const Token: FC<TokenProps> = ({
         </div>
         <div className='w-[1px] h-[55px] bg-white'></div>
         <div className=''>
-          <p className='text-[#FFBB00] text-[16px]'>{token.price.toFixed(4)}</p>
+          <p className='text-[#FFBB00] text-[16px]'>{token.price_per_token.toFixed(4)}</p>
           <span></span>
         </div>
       </div>
       <div className='flex flex-col gap-3'>
-        <p className='font-bold text-[16px]'>{shortAddress(token.outpoint)}</p>
+        <p className='font-bold text-[16px]'>{token.shortenOutpoint}</p>
         {full && (
           <>
             <div className='flex justify-between items-center'>
               <p className='border-[1px] rounded-[4px] h-[19px] border-[#FFFFFF] px-[5px] text-[14px] font-normal text-[#FFFFFF] leading-[17px] gap-[5px] flex items-center'>
                 <BellsIcon className='w-[11px]' />
-                {((token.amount * token.price) / 10 ** 8).toFixed(6)}
+                {token.fullPrice}
               </p>
               <p className='border-[1px] rounded-[4px] border-[#4B4B4B] px-[5px] text-[14px] font-normal text-[#4B4B4B] leading-[17px]'>
-                $ 76762
+                $ 0
               </p>
             </div>
             <button

@@ -20,14 +20,14 @@ const FIELDS: Field[] = [
 const DATA: ItemField[] = [
   {
     num: { value: '1' },
-    tick: { value: 'tick' },
+    tick: { value: 'amid' },
     volume: { value: '0.0000' },
     price: { value: '0', under: 'sats/atom' },
     day: { value: '0.00%', marked: true },
   },
   {
     num: { value: '2' },
-    tick: { value: 'fasd' },
+    tick: { value: 'nook' },
     volume: { value: '0.0000' },
     price: { value: '0', under: 'sats/atom' },
     day: { value: '0.00%', marked: true },

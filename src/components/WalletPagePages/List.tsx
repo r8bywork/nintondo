@@ -171,15 +171,6 @@ export const List = ({ isListed = false }: ListProps) => {
   const list = async () => {
     if (selectedTransfers.total < 1) return;
     const public_key_hex = await getPublicKey();
-    console.log(
-      Object.values(selectedTransfers.transfers).flatMap((r) =>
-        r.flatMap((f) => ({
-          txid: f.inscription_id.slice(0, -2),
-          vout: Number(f.inscription_id.slice(-1)),
-          price: f.amount * price,
-        })),
-      ),
-    );
     const psbts_base64 = await createSignedListPsbt(
       Object.values(selectedTransfers.transfers).flatMap((r) =>
         r.flatMap((f) => ({
@@ -220,10 +211,6 @@ export const List = ({ isListed = false }: ListProps) => {
     await updateUserTokensForTick();
     setSelectedTransfers(defaultSelectedTransfers);
     close();
-  };
-
-  const handleOpenModal = () => {
-    if (selectedTransfersByTick.transfers.length > 0) open();
   };
 
   const handleListAllClick = () => {
