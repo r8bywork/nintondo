@@ -1,7 +1,7 @@
 import { useGetUserTokens } from '@/hooks/electrs';
 import { IToken, ITransfer } from '@/interfaces/intefaces';
 import classNames from 'classnames';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, ChangeEvent } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ReloadSVG from '@/assets/reload.svg?react';
 import PlusSVG from '@/assets/plus.svg?react';
@@ -13,14 +13,21 @@ import { MARKET_API_URL } from '@/consts';
 import { useCreateListedSignedPSBT } from '@/hooks/market';
 import axios from 'axios';
 import { Listed } from '@/interfaces/api';
+import { Slider } from '../Controls/Slider';
+import { omit } from 'lodash';
 
 type SelectedTransfers = {
-  transfers: ITransfer[];
+  transfers: Record<string, ITransfer[]>;
   total: number;
 };
 
 type ListProps = {
   isListed?: boolean;
+};
+
+const defaultSelectedTransfers: SelectedTransfers = {
+  transfers: {},
+  total: 0,
 };
 
 const filterListed = (token: IToken, listed: Listed, reverse: boolean): IToken => {
@@ -39,10 +46,8 @@ export const List = ({ isListed = false }: ListProps) => {
   const [userTokens, setUserTokens] = useState<IToken[]>([]);
   const [userTokensRaw, setUserTokensRaw] = useState<IToken[]>([]);
   const [selectedTick, setSelectedTick] = useState<IToken | null>(null);
-  const [selectedTransfers, setSelectedTransfers] = useState<SelectedTransfers>({
-    transfers: [],
-    total: 0,
-  });
+  const [selectedTransfers, setSelectedTransfers] =
+    useState<SelectedTransfers>(defaultSelectedTransfers);
   const { open, close, isOpen } = useModal();
   const { inscribeTransfer, getPublicKey } = useNintondoManagerContext();
   const makeAuthRequest = useMakeAuthRequests();
@@ -55,9 +60,17 @@ export const List = ({ isListed = false }: ListProps) => {
     return isListed ? 'ULIST' : 'LIST';
   }, [isListed]);
 
+  const selectedTransfersByTick = useMemo(() => {
+    const transfers: ITransfer[] = selectedTransfers.transfers[selectedTick?.tick || ''] || [];
+
+    return {
+      amount: transfers.reduce((acc, transfer) => acc + transfer.amount, 0),
+      transfers: transfers,
+    };
+  }, [selectedTick, selectedTransfers]);
+
   const handleTickChange = (tick: IToken) => {
     searchParams.set('tick', tick.tick);
-    setSelectedTransfers({ transfers: [], total: 0 });
 
     setSearchParams(searchParams);
   };
@@ -93,22 +106,46 @@ export const List = ({ isListed = false }: ListProps) => {
 
   const handleTranferClick = (transfer: ITransfer, isRemove: boolean) => {
     if (isRemove) {
-      setSelectedTransfers((selectedTransfers) => {
-        return {
-          transfers: selectedTransfers.transfers.filter(
-            (st) => st.inscription_id !== transfer.inscription_id,
+      setSelectedTransfers((selectedTransfers) => ({
+        transfers: {
+          ...selectedTransfers.transfers,
+          [selectedTick!.tick]: selectedTransfersByTick.transfers.filter(
+            (v) => v.number !== transfer.number,
           ),
-          total: selectedTransfers.total - transfer.amount,
-        };
-      });
-    } else {
-      setSelectedTransfers((selectedTransfers) => {
-        return {
-          transfers: [...selectedTransfers.transfers, transfer],
-          total: selectedTransfers.total + transfer.amount,
-        };
-      });
+        },
+        total: selectedTransfers.total - transfer.amount,
+      }));
+
+      return;
     }
+
+    setSelectedTransfers((selectedTransfers) => ({
+      transfers: {
+        ...selectedTransfers.transfers,
+        [selectedTick!.tick]: [...selectedTransfersByTick.transfers, transfer],
+      },
+      total: transfer.amount + selectedTransfers.total,
+    }));
+  };
+
+  const handleTranferRangeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.currentTarget.value);
+
+    const transfers = selectedTick!.transfers.slice(0, value);
+
+    const amount = transfers?.reduce((acc, v) => acc + v.amount, 0);
+
+    setSelectedTransfers((selectedTransfers) => ({
+      transfers: {
+        ...selectedTransfers.transfers,
+        [selectedTick!.tick]: transfers,
+      },
+
+      total:
+        Object.values(
+          omit(selectedTransfers.transfers, selectedTick!.tick) as SelectedTransfers['transfers'],
+        ).reduce((acc, v) => acc + v.reduce((acc, r) => acc + r.amount, 0), 0) + amount,
+    }));
   };
 
   const updateUserTokensForTick = async () => {
@@ -126,8 +163,8 @@ export const List = ({ isListed = false }: ListProps) => {
   };
 
   const list = async () => {
-    const txid = selectedTransfers.transfers[0].inscription_id.slice(0, -2);
-    const vout = selectedTransfers.transfers[0].inscription_id.slice(-1);
+    const txid = selectedTransfersByTick.transfers[0].inscription_id.slice(0, -2);
+    const vout = selectedTransfersByTick.transfers[0].inscription_id.slice(-1);
     // eslint-disable-next-line camelcase
     const public_key_hex = await getPublicKey();
     const psbt = await createSignedListPsbt(
@@ -147,7 +184,7 @@ export const List = ({ isListed = false }: ListProps) => {
     );
     console.log(response);
     await updateUserTokensForTick();
-    setSelectedTransfers({ transfers: [], total: 0 });
+    setSelectedTransfers(defaultSelectedTransfers);
     close();
   };
 
@@ -155,17 +192,22 @@ export const List = ({ isListed = false }: ListProps) => {
     await makeAuthRequest(() =>
       axios.delete(`${MARKET_API_URL}/tokens/listed`, {
         withCredentials: true,
-        data: { numbers: selectedTransfers.transfers.map((v) => v.number) },
+        data: {
+          numbers: Object.values(selectedTransfers.transfers).reduce(
+            (acc, item) => [...acc, ...item.map((v) => v.number)],
+            [] as number[],
+          ),
+        },
       }),
     );
 
     await updateUserTokensForTick();
-    setSelectedTransfers({ transfers: [], total: 0 });
+    setSelectedTransfers(defaultSelectedTransfers);
     close();
   };
 
   const handleOpenModal = () => {
-    if (selectedTransfers.transfers.length > 0) open();
+    if (selectedTransfersByTick.transfers.length > 0) open();
   };
 
   useEffect(() => {
@@ -178,13 +220,10 @@ export const List = ({ isListed = false }: ListProps) => {
   }, [userTokens, searchParams]);
 
   useEffect(() => {
-    return () => {
-      setSelectedTransfers({
-        transfers: [],
-        total: 0,
-      });
-    };
-  }, [searchParams]);
+    // return () => {
+    //   setSelectedTransfers(defaultSelectedTransfers);
+    // };
+  }, []);
 
   return (
     <div className='flex gap-[82px] max-[1200px]:flex-col'>
@@ -240,9 +279,9 @@ export const List = ({ isListed = false }: ListProps) => {
           <button
             onClick={open}
             className='font-bold py-[6px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)] disabled:opacity-50'
-            disabled={selectedTransfers.transfers.length === 0}
+            disabled={selectedTransfers.total === 0}
           >
-            {isListed ? 'ULIST' : 'LIST'} {selectedTransfers.total.toLocaleString()}
+            {buttonText} {selectedTransfers.total.toLocaleString()}
           </button>
         </div>
       </div>
@@ -293,7 +332,7 @@ export const List = ({ isListed = false }: ListProps) => {
               const fontSize =
                 transferAmountStr.length > 7 ? (32 * 5) / transferAmountStr.length : 32;
 
-              const isSelected = selectedTransfers.transfers.some(
+              const isSelected = selectedTransfersByTick.transfers.some(
                 (v) => v.inscription_id === transfer.inscription_id,
               );
 
@@ -355,10 +394,10 @@ export const List = ({ isListed = false }: ListProps) => {
                 <div
                   className={classNames(
                     'flex gap-[34px] max-w-[500px] overflow-auto',
-                    selectedTransfers.transfers.length > 2 && 'px-[62px] -mx-[62px]',
+                    selectedTransfersByTick.transfers.length > 2 && 'px-[62px] -mx-[62px]',
                   )}
                 >
-                  {selectedTransfers.transfers.map((transfer) => {
+                  {selectedTransfersByTick.transfers.map((transfer) => {
                     const transferAmountStr = transfer.amount.toLocaleString();
                     const fontSize =
                       transferAmountStr.length > 7 ? (32 * 5) / transferAmountStr.length : 32;
@@ -441,21 +480,20 @@ export const List = ({ isListed = false }: ListProps) => {
       <div className='fixed flex justify-center items-center w-screen bottom-0 left-0 h-[113px] mobile:h-[72px] backdrop-blur-sm border-t-[1px] border-[#191919]'>
         <div className='max-w-[1390px] flex items-center justify-between px-5 w-full max-medium:flex-col'>
           <div className='items-center flex gap-2 font-bold text-[16px] border-[1px] border-white rounded-[30px] h-[24px] w-[336px] justify-center px-[15px]'>
-            <input
-              type='range'
-              className='styled-range'
-              max={selectedTick?.transfers.length}
+            <Slider
               min={0}
-              value={selectedTransfers.transfers.length}
+              max={selectedTick?.transfers.length || 0}
+              value={selectedTransfersByTick.transfers.length}
+              onChange={handleTranferRangeChange}
             />
-            <span className='w-[16px]'>{selectedTransfers.transfers.length}</span>
+            <span className='w-[16px]'>{selectedTransfersByTick.transfers.length}</span>
           </div>
           <div className='flex gap-[18px]'>
             {isListed || (
               <button
                 className={classNames(
                   'px-[31px] py-[6px] border font-bold text-[20px] leading-[21px] transition rounded-[50px]',
-                  selectedTransfers.transfers.length > 0
+                  selectedTransfersByTick.transfers.length > 0
                     ? 'border-[#53DCFF] text-[#53DCFF]'
                     : 'border-[#262626] text-[#262626]',
                 )}
@@ -467,13 +505,14 @@ export const List = ({ isListed = false }: ListProps) => {
             <button
               className={classNames(
                 'px-[31px] py-[6px] border font-bold text-[20px] leading-[21px] transition rounded-[50px]',
-                selectedTransfers.transfers.length > 0
+                selectedTransfersByTick.transfers.length > 0
                   ? 'border-[#FFBB00] text-[#FFBB00]'
                   : 'border-[#262626] text-[#262626] cursor-default',
               )}
               onClick={handleOpenModal}
             >
-              {buttonText} SELETED ({selectedTransfers.total.toLocaleString()} {selectedTick?.tick})
+              {buttonText} SELETED ({selectedTransfersByTick.amount.toLocaleString()}{' '}
+              {selectedTick?.tick})
             </button>
           </div>
         </div>
