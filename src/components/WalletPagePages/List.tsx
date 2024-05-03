@@ -1,7 +1,7 @@
 import { useGetUserTokens } from '@/hooks/electrs';
 import { IToken, ITransfer } from '@/interfaces/intefaces';
 import classNames from 'classnames';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ReloadSVG from '@/assets/reload.svg?react';
 import PlusSVG from '@/assets/plus.svg?react';
@@ -50,6 +50,10 @@ export const List = ({ isListed = false }: ListProps) => {
 
   const [price, setPrice] = useState<number>(0.2);
   const tick = searchParams.get('tick') || '';
+
+  const buttonText = useMemo(() => {
+    return isListed ? 'ULIST' : 'LIST';
+  }, [isListed]);
 
   const handleTickChange = (tick: IToken) => {
     searchParams.set('tick', tick.tick);
@@ -247,6 +251,37 @@ export const List = ({ isListed = false }: ListProps) => {
           <h1 className='text-[32px] font-bold leading-[34px]'>
             List <span className='text-[#53DCFF]'>{selectedTick?.tick}</span>
           </h1>
+          {isListed || (
+            <div className='flex flex-col gap-[17px]'>
+              <div className='flex gap-[15px] flex-wrap'>
+                <div className='flex items-center flex-shrink-1 px-[28px] py-[9px] rounded-[50px] gap-[100px] bg-[#191919] max-[1200px]:flex-1 max-[1200px]:justify-between'>
+                  <p className='text-[20px] text-[#4B4B4B] leading-[21px]'>TRANSFERABLE</p>
+                  <p className='text-[20px] font-bold flex-shrink-0'>
+                    {selectedTick?.transferable_balance.toLocaleString()}
+                    <span className='text-[16px] text-[#4b4b4b] font-normal'>
+                      {' '}
+                      {selectedTick.tick}
+                    </span>
+                  </p>
+                </div>
+                <div className='flex items-center flex-shrink-1 px-[28px] py-[9px] rounded-[50px] gap-[100px] bg-[#191919] max-medium:flex-1 max-medium:justify-between'>
+                  <p className='text-[20px] text-[#4B4B4B] leading-[21px]'>AVAILABLE</p>
+                  <p className='text-[20px] font-bold flex-shrink-0'>
+                    {selectedTick?.balance.toLocaleString()}
+                    <span className='text-[16px] text-[#4b4b4b] font-normal'>
+                      {' '}
+                      {selectedTick.tick}
+                    </span>
+                  </p>
+                </div>
+              </div>
+              <p className='text-[16px] text-[#4B4B4B]'>
+                The total value is limited to between 50000 sats (0.0005 BTC) and 20000000 sats (0.2
+                BTC).
+              </p>
+            </div>
+          )}
+
           <div
             className='grid gap-[47px]'
             style={{
@@ -302,44 +337,6 @@ export const List = ({ isListed = false }: ListProps) => {
                 </p>
               </button>
             )}
-          </div>
-          <div className='flex flex-col gap-[17px]'>
-            <div className='flex gap-[15px] flex-wrap'>
-              <div className='flex items-center flex-shrink-1 px-[28px] py-[9px] rounded-[50px] gap-[100px] bg-[#191919] max-[1200px]:flex-1 max-[1200px]:justify-between'>
-                <p className='text-[20px] text-[#4B4B4B] leading-[21px]'>TRANSFERABLE</p>
-                <p className='text-[20px] font-bold flex-shrink-0'>
-                  {selectedTick?.transferable_balance.toLocaleString()}
-                  <span className='text-[16px] text-[#4b4b4b] font-normal'>
-                    {' '}
-                    {selectedTick.tick}
-                  </span>
-                </p>
-              </div>
-              <div className='flex items-center flex-shrink-1 px-[28px] py-[9px] rounded-[50px] gap-[100px] bg-[#191919] max-medium:flex-1 max-medium:justify-between'>
-                <p className='text-[20px] text-[#4B4B4B] leading-[21px]'>AVAILABLE</p>
-                <p className='text-[20px] font-bold flex-shrink-0'>
-                  {selectedTick?.balance.toLocaleString()}
-                  <span className='text-[16px] text-[#4b4b4b] font-normal'>
-                    {' '}
-                    {selectedTick.tick}
-                  </span>
-                </p>
-              </div>
-            </div>
-            <p className='text-[16px] text-[#4B4B4B]'>
-              The total value is limited to between 50000 sats (0.0005 BTC) and 20000000 sats (0.2
-              BTC).
-            </p>
-          </div>
-          <div className='flex justify-center'>
-            <button
-              className='max-[1200px]:flex-1 font-bold py-[6px] px-[101px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)] disabled:opacity-50'
-              onClick={handleOpenModal}
-              disabled={selectedTransfers.transfers.length === 0}
-            >
-              {isListed ? 'UNLIST' : 'LIST'} {selectedTransfers.total.toLocaleString()}{' '}
-              {selectedTick.tick}
-            </button>
           </div>
         </div>
       )}
@@ -434,13 +431,53 @@ export const List = ({ isListed = false }: ListProps) => {
                   onClick={list}
                   className='max-[1200px]:flex-1 font-bold py-[6px] px-[101px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)]'
                 >
-                  LIST {selectedTransfers.total.toLocaleString()} {selectedTick?.tick}
+                  UNLIST {selectedTransfers.total.toLocaleString()} {selectedTick?.tick}
                 </button>
               </div>
             )}
           </div>
         </Modal>
       )}
+      <div className='fixed flex justify-center items-center w-screen bottom-0 left-0 h-[113px] mobile:h-[72px] backdrop-blur-sm border-t-[1px] border-[#191919]'>
+        <div className='max-w-[1390px] flex items-center justify-between px-5 w-full max-medium:flex-col'>
+          <div className='items-center flex gap-2 font-bold text-[16px] border-[1px] border-white rounded-[30px] h-[24px] w-[336px] justify-center px-[15px]'>
+            <input
+              type='range'
+              className='styled-range'
+              max={selectedTick?.transfers.length}
+              min={0}
+              value={selectedTransfers.transfers.length}
+            />
+            <span className='w-[16px]'>{selectedTransfers.transfers.length}</span>
+          </div>
+          <div className='flex gap-[18px]'>
+            {isListed || (
+              <button
+                className={classNames(
+                  'px-[31px] py-[6px] border font-bold text-[20px] leading-[21px] transition rounded-[50px]',
+                  selectedTransfers.transfers.length > 0
+                    ? 'border-[#53DCFF] text-[#53DCFF]'
+                    : 'border-[#262626] text-[#262626]',
+                )}
+                disabled={!selectedTransfers.transfers.length}
+              >
+                DELETE SELECTED ({selectedTick?.tick})
+              </button>
+            )}
+            <button
+              className={classNames(
+                'px-[31px] py-[6px] border font-bold text-[20px] leading-[21px] transition rounded-[50px]',
+                selectedTransfers.transfers.length > 0
+                  ? 'border-[#FFBB00] text-[#FFBB00]'
+                  : 'border-[#262626] text-[#262626] cursor-default',
+              )}
+              onClick={handleOpenModal}
+            >
+              {buttonText} SELETED ({selectedTransfers.total.toLocaleString()} {selectedTick?.tick})
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
