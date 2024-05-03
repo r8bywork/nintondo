@@ -5,6 +5,7 @@ import { ListedToken, ListedTokenCard } from '@/interfaces/marketapi';
 import { Modal } from '../Modal';
 import { useState } from 'react';
 import './style.css';
+import { useQuery } from '@tanstack/react-query';
 // import { useTokenFilters } from '@/hooks/tokenFilters';
 
 const generateFakeListedToken = (): ListedToken => ({
@@ -30,6 +31,12 @@ const Listed = () => {
   const [tokensToBuy, setTokensToBuy] = useState<ListedToken[]>([]);
   // const { tokenCard, onPageChange } = useTokenFilters();
   const [selectedTokens, setSelectedBuyTokens] = useState<ListedToken[]>([]);
+  const { isLoading, data } = useQuery({
+    queryKey: ['listed-tokens'],
+    queryFn: async () => {
+      
+    },
+  });
 
   const openModal = () => {
     setIsModalOpen(true);

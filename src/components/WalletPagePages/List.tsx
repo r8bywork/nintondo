@@ -164,14 +164,16 @@ export const List = ({ isListed = false }: ListProps) => {
   };
 
   const list = async () => {
-    if (selectedTransfers.transfers.length < 1) return;
+    if (selectedTransfers.total < 1) return;
     const public_key_hex = await getPublicKey();
     const psbts_base64 = await createSignedListPsbt(
-      selectedTransfers.transfers.flatMap((f) => ({
-        txid: f.inscription_id.slice(0, -2),
-        vout: Number(f.inscription_id.slice(-1)),
-        price: f.amount * price,
-      })),
+      Object.values(selectedTransfers.transfers).flatMap((r) =>
+        r.flatMap((f) => ({
+          txid: f.inscription_id.slice(0, -2),
+          vout: Number(f.inscription_id.slice(-1)),
+          price: f.amount * price,
+        })),
+      ),
     );
 
     const response = await makeAuthRequest(() =>
