@@ -16,6 +16,7 @@ import axios from 'axios';
 import { Listed } from '@/interfaces/api';
 import { Slider } from '../Controls/Slider';
 import { omit } from 'lodash';
+import { Unlist } from './components/Unlist';
 
 type SelectedTransfers = {
   transfers: Record<string, ITransfer[]>;
@@ -42,6 +43,7 @@ const filterListed = (token: IToken, listed: Listed, reverse: boolean): IToken =
   };
 };
 
+// TODO: refactor this code
 export const List = ({ isListed = false }: ListProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [userTokens, setUserTokens] = useState<IToken[]>([]);
@@ -49,6 +51,9 @@ export const List = ({ isListed = false }: ListProps) => {
   const [selectedTick, setSelectedTick] = useState<IToken | null>(null);
   const [selectedTransfers, setSelectedTransfers] =
     useState<SelectedTransfers>(defaultSelectedTransfers);
+  // there are two buttons in the page to open modal with defferent data
+  // so we need to add them to state of modal data ad first
+  const [toModal, setToModal] = useState<SelectedTransfers>(defaultSelectedTransfers);
   const { open, close, isOpen } = useModal();
   const { inscribeTransfer, getPublicKey } = useNintondoManagerContext();
   const makeAuthRequest = useMakeAuthRequests();
@@ -58,7 +63,7 @@ export const List = ({ isListed = false }: ListProps) => {
   const tick = searchParams.get('tick') || '';
 
   const buttonText = useMemo(() => {
-    return isListed ? 'ULIST' : 'LIST';
+    return isListed ? 'UNLIST' : 'LIST';
   }, [isListed]);
 
   const selectedTransfersByTick = useMemo(() => {
@@ -166,6 +171,15 @@ export const List = ({ isListed = false }: ListProps) => {
   const list = async () => {
     if (selectedTransfers.total < 1) return;
     const public_key_hex = await getPublicKey();
+    console.log(
+      Object.values(selectedTransfers.transfers).flatMap((r) =>
+        r.flatMap((f) => ({
+          txid: f.inscription_id.slice(0, -2),
+          vout: Number(f.inscription_id.slice(-1)),
+          price: f.amount * price,
+        })),
+      ),
+    );
     const psbts_base64 = await createSignedListPsbt(
       Object.values(selectedTransfers.transfers).flatMap((r) =>
         r.flatMap((f) => ({
@@ -175,7 +189,6 @@ export const List = ({ isListed = false }: ListProps) => {
         })),
       ),
     );
-
     const response = await makeAuthRequest(() =>
       axios.post(
         `${MARKET_API_URL}/tokens/list-token`,
@@ -191,12 +204,12 @@ export const List = ({ isListed = false }: ListProps) => {
     close();
   };
 
-  const unlist = async () => {
+  const unlist = async (transfers: SelectedTransfers['transfers']) => {
     await makeAuthRequest(() =>
       axios.delete(`${MARKET_API_URL}/tokens/listed`, {
         withCredentials: true,
         data: {
-          numbers: Object.values(selectedTransfers.transfers).reduce(
+          numbers: Object.values(transfers).reduce(
             (acc, item) => [...acc, ...item.map((v) => v.number)],
             [] as number[],
           ),
@@ -213,6 +226,21 @@ export const List = ({ isListed = false }: ListProps) => {
     if (selectedTransfersByTick.transfers.length > 0) open();
   };
 
+  const handleListAllClick = () => {
+    setToModal(selectedTransfers);
+    open();
+  };
+
+  const handleListByTickClick = () => {
+    setToModal({
+      transfers: {
+        [selectedTick!.tick]: selectedTransfersByTick.transfers,
+      },
+      total: selectedTransfersByTick.amount,
+    });
+    open();
+  };
+
   useEffect(() => {
     updateUserTokens();
   }, [isListed, getUserTokens]);
@@ -223,10 +251,10 @@ export const List = ({ isListed = false }: ListProps) => {
   }, [userTokens, searchParams]);
 
   useEffect(() => {
-    // return () => {
-    //   setSelectedTransfers(defaultSelectedTransfers);
-    // };
-  }, []);
+    return () => {
+      setSelectedTransfers(defaultSelectedTransfers);
+    };
+  }, [isListed]);
 
   return (
     <div className='flex gap-[82px] max-[1200px]:flex-col'>
@@ -280,7 +308,7 @@ export const List = ({ isListed = false }: ListProps) => {
             })}
           </div>
           <button
-            onClick={open}
+            onClick={handleListAllClick}
             className='font-bold py-[6px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)] disabled:opacity-50'
             disabled={selectedTransfers.total === 0}
           >
@@ -296,25 +324,25 @@ export const List = ({ isListed = false }: ListProps) => {
           {isListed || (
             <div className='flex flex-col gap-[17px]'>
               <div className='flex gap-[15px] flex-wrap'>
-                <div className='flex items-center flex-shrink-1 px-[28px] py-[9px] rounded-[50px] gap-[100px] bg-[#191919] max-[1200px]:flex-1 max-[1200px]:justify-between'>
+                <div className='flex items-center flex-1 px-[28px] justify-between py-[9px] rounded-[50px] gap-[100px] bg-[#191919] max-[1200px]:flex-1 max-[1200px]:justify-between'>
                   <p className='text-[20px] text-[#4B4B4B] leading-[21px]'>TRANSFERABLE</p>
-                  <p className='text-[20px] font-bold flex-shrink-0'>
+                  <div className='text-[20px] font-bold flex gap-[10px]'>
                     {selectedTick?.transferable_balance.toLocaleString()}
-                    <span className='text-[16px] text-[#4b4b4b] font-normal'>
+                    <div className='text-[16px] text-[#4b4b4b] font-normal pt-[5px]'>
                       {' '}
                       {selectedTick.tick}
-                    </span>
-                  </p>
+                    </div>
+                  </div>
                 </div>
-                <div className='flex items-center flex-shrink-1 px-[28px] py-[9px] rounded-[50px] gap-[100px] bg-[#191919] max-medium:flex-1 max-medium:justify-between'>
+                <div className='flex items-center flex-1  justify-between px-[28px] py-[9px] rounded-[50px] gap-[100px] bg-[#191919] max-medium:flex-1 max-medium:justify-between'>
                   <p className='text-[20px] text-[#4B4B4B] leading-[21px]'>AVAILABLE</p>
-                  <p className='text-[20px] font-bold flex-shrink-0'>
+                  <div className='text-[20px] font-bold flex gap-[10px]'>
                     {selectedTick?.balance.toLocaleString()}
-                    <span className='text-[16px] text-[#4b4b4b] font-normal'>
+                    <div className='text-[16px] text-[#4b4b4b] font-normal pt-[5px]'>
                       {' '}
                       {selectedTick.tick}
-                    </span>
-                  </p>
+                    </div>
+                  </div>
                 </div>
               </div>
               <p className='text-[16px] text-[#4B4B4B]'>
@@ -325,11 +353,24 @@ export const List = ({ isListed = false }: ListProps) => {
           )}
 
           <div
-            className='grid gap-[47px]'
+            className='grid gap-[47px] pb-[100px]'
             style={{
-              gridTemplateColumns: 'repeat(auto-fill, 170px)',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))',
             }}
           >
+            {isListed || (
+              <button
+                onClick={() => inscribeTransfer(selectedTick.tick)}
+                className='py-[20px] flex flex-col rounded-[15px] bg-[#191919] items-center justify-center gap-[13px] h-[130px]'
+              >
+                <PlusSVG />
+                <p className='text-[20px] text-[#4B4B4B]'>
+                  Inscribe
+                  <br /> TRANSFER
+                </p>
+              </button>
+            )}
+
             {selectedTick.transfers.map((transfer) => {
               const transferAmountStr = transfer.amount.toLocaleString();
               const fontSize =
@@ -343,12 +384,12 @@ export const List = ({ isListed = false }: ListProps) => {
                 <button
                   key={transfer.inscription_id}
                   className={classNames(
-                    'px-[10px] py-[13px] bg-[#191919] rounded-[15px] border flex flex-col gap-[15px] w-[170px] h-[130px] transition',
+                    'px-[10px] py-[13px] bg-[#191919] rounded-[15px] border flex flex-col gap-[15px] w-full min-w-[170px] h-[130px] transition',
                     isSelected ? 'border-[#FFBB00]' : 'border-[transparent]',
                   )}
                   onClick={() => handleTranferClick(transfer, isSelected)}
                 >
-                  <div className='w-[150px] h-[70px] flex items-center justify-center rounded-[9px] bg-[#0F0F0F]'>
+                  <div className='w-full h-[70px] flex items-center justify-center rounded-[9px] bg-[#0F0F0F]'>
                     <div>
                       <p
                         className='font-bold'
@@ -367,18 +408,6 @@ export const List = ({ isListed = false }: ListProps) => {
                 </button>
               );
             })}
-            {isListed || (
-              <button
-                onClick={() => inscribeTransfer(selectedTick.tick)}
-                className='py-[20px] flex flex-col rounded-[15px] bg-[#191919] w-[170px] items-center justify-center gap-[13px] h-[130px]'
-              >
-                <PlusSVG />
-                <p className='text-[20px] text-[#4B4B4B]'>
-                  Inscribe
-                  <br /> TRANSFER
-                </p>
-              </button>
-            )}
           </div>
         </div>
       )}
@@ -389,73 +418,12 @@ export const List = ({ isListed = false }: ListProps) => {
         >
           <div className='rounded-[15px] px-[62px] py-[21px] bg-[#191919] p-[25px]'>
             {isListed ? (
-              <div className='flex flex-col gap-[34px] items-center'>
-                <h1 className='text-[20px] leading-[21px] font-bold'>Confirmation</h1>
-                <p className='text-[20px] leading-[21px] text-[#53DCFF]'>
-                  Unlist following tokens?
-                </p>
-                <div
-                  className={classNames(
-                    'flex gap-[34px] max-w-[500px] overflow-auto',
-                    selectedTransfersByTick.transfers.length > 2 && 'px-[62px] -mx-[62px]',
-                  )}
-                >
-                  {selectedTransfersByTick.transfers.map((transfer) => {
-                    const transferAmountStr = transfer.amount.toLocaleString();
-                    const fontSize =
-                      transferAmountStr.length > 7 ? (32 * 5) / transferAmountStr.length : 32;
-                    return (
-                      <div
-                        key={transfer.inscription_id}
-                        className={classNames(
-                          'px-[10px] py-[13px] bg-[#262626] rounded-[15px] flex flex-col gap-[15px] w-[170px] h-[130px] transition',
-                        )}
-                      >
-                        <div className='w-[150px] h-[70px] flex items-center justify-center rounded-[9px] bg-[#0F0F0F]'>
-                          <div>
-                            <p
-                              style={{
-                                fontSize,
-                              }}
-                              className='font-bold'
-                            >
-                              {transfer.amount.toLocaleString()}
-                            </p>
-                          </div>
-                        </div>
-                        <div className='flex justify-between flex-1'>
-                          <p className='overflow-hidden rounded-[4px] text-ellipsis text-[16px] border border-[#FFBB00] text-[#FFBB00] px-[5px]'>
-                            {selectedTick!.tick}
-                          </p>
-                          <p className='rounded-[4px] text-[16px] border px-[5px]'>
-                            #{transfer.number}
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className='flex px-[24px] py-[9px] justify-between w-full border border-[#53DCFF] rounded-[50px]'>
-                  <p className='text-[20px] font-bold leading-[21px] text-[#53DCFF]'>TOTAL</p>
-                  <p className='text-[20px] font-bold leading-[21px]'>
-                    {selectedTransfers.total.toLocaleString()}
-                  </p>
-                </div>
-                <div className='flex gap-[52px]'>
-                  <button
-                    onClick={close}
-                    className='font-bold py-[6px] px-[45px] rounded-[20px] text-[20px] text-black bg-white'
-                  >
-                    CANCEL
-                  </button>
-                  <button
-                    onClick={unlist}
-                    className='font-bold py-[6px] px-[45px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)]'
-                  >
-                    CONFIRM
-                  </button>
-                </div>
-              </div>
+              <Unlist
+                onCancel={handleClose}
+                transfers={toModal.transfers}
+                amount={toModal.total}
+                unlist={unlist}
+              />
             ) : (
               <div className='flex flex-col gap-[15px]'>
                 <input
@@ -473,16 +441,16 @@ export const List = ({ isListed = false }: ListProps) => {
                   onClick={list}
                   className='max-[1200px]:flex-1 font-bold py-[6px] px-[101px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)]'
                 >
-                  UNLIST {selectedTransfers.total.toLocaleString()} {selectedTick?.tick}
+                  LIST {selectedTransfers.total.toLocaleString()} {selectedTick?.tick}
                 </button>
               </div>
             )}
           </div>
         </Modal>
       )}
-      <div className='fixed flex justify-center items-center w-screen bottom-0 left-0 h-[113px] mobile:h-[72px] backdrop-blur-sm border-t-[1px] border-[#191919]'>
-        <div className='max-w-[1390px] flex items-center justify-between px-5 w-full max-medium:flex-col'>
-          <div className='items-center flex gap-2 font-bold text-[16px] border-[1px] border-white rounded-[30px] h-[24px] w-[336px] justify-center px-[15px]'>
+      <div className='fixed flex justify-center items-center w-screen bottom-0 left-0 bg-[rgba(0,0,0,0.2)] backdrop-blur-xl border-t-[1px] border-[#191919]'>
+        <div className='max-w-[1390px] flex items-center justify-between p-5 w-full max-medium:flex-col gap-[18px]'>
+          <div className='items-center flex gap-2 font-bold text-[16px] border-[1px] border-white rounded-[30px] h-[24px] w-[336px] max-medium:w-full justify-center px-[15px]'>
             <Slider
               min={0}
               max={selectedTick?.transfers.length || 0}
@@ -491,7 +459,7 @@ export const List = ({ isListed = false }: ListProps) => {
             />
             <span className='w-[16px]'>{selectedTransfersByTick.transfers.length}</span>
           </div>
-          <div className='flex gap-[18px]'>
+          <div className='flex gap-[18px] max-medium:flex-col max-medium:w-full'>
             {isListed || (
               <button
                 className={classNames(
@@ -512,9 +480,9 @@ export const List = ({ isListed = false }: ListProps) => {
                   ? 'border-[#FFBB00] text-[#FFBB00]'
                   : 'border-[#262626] text-[#262626] cursor-default',
               )}
-              onClick={handleOpenModal}
+              onClick={handleListByTickClick}
             >
-              {buttonText} SELETED ({selectedTransfersByTick.amount.toLocaleString()}{' '}
+              {buttonText} SELECTED ({selectedTransfersByTick.amount.toLocaleString()}{' '}
               {selectedTick?.tick})
             </button>
           </div>
