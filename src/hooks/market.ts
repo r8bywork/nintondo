@@ -2,12 +2,13 @@ import { useCallback } from 'react';
 import { useNintondoManagerContext } from '../utils/bell-provider';
 import { ApiOrdUTXO, ApiUTXO } from '../interfaces/api';
 import { Psbt, Transaction, networks } from 'belcoinjs-lib';
-import { IDummyInscription, MarketplaceToken } from '../interfaces/marketapi';
+import { MarketplaceToken } from '../interfaces/marketapi';
 import { DEFAULT_FEE_RATE, DUMMY_UTXO_VALUE, FEE_ADDRESS } from '../consts';
 import { fetchBELLMainnet, gptFeeCalculate } from '../utils';
 import toast from 'react-hot-toast';
 import { getApiUtxo, getTransactionRawHex } from './electrs';
 import { SignPsbtData } from '@/interfaces/nintondo-manager-provider';
+import { SORT_FILTERS } from '@/pages/MarketplacePage';
 
 export const useMakeDummyUTXOS = () => {
   const { signPsbtInputs } = useNintondoManagerContext();
@@ -245,8 +246,11 @@ export const useCreateBuyingSignedPsbt = () => {
   const { address, signPsbtInputs } = useNintondoManagerContext();
 
   return useCallback(
-    async (inscription: IDummyInscription, sellerOrdUtxo: ApiOrdUTXO, utxos: ApiUTXO[]) => {
+    async (token: MarketplaceToken, sellerOrdUtxo: ApiOrdUTXO, utxos: ApiUTXO[]) => {
       if (!address) return;
+
+      const fullTokenPrice = token.amount * token.price_per_token;
+
       utxos = utxos.sort((a, b) => a.value - b.value);
 
       let buyerPsbt = new Psbt({ network: networks.bitcoin });
@@ -285,8 +289,8 @@ export const useCreateBuyingSignedPsbt = () => {
         value: sellerOrdUtxo.value,
       });
       buyerPsbt.addOutput({
-        address: inscription.address,
-        value: inscription.price,
+        address: token.outpoint,
+        value: fullTokenPrice,
       });
       buyerPsbt.addOutput({
         address: FEE_ADDRESS,
@@ -308,7 +312,7 @@ export const useCreateBuyingSignedPsbt = () => {
         fee -
         splicedUtxos.reduce((acc, sum) => (acc += sum.value), 0) +
         600 * 2 -
-        inscription.price -
+        fullTokenPrice -
         0.02 * 10 ** 8;
 
       if (change <= 0) return toast.error('Not enough funds');
@@ -341,4 +345,15 @@ export const useCreateBuyingSignedPsbt = () => {
     },
     [address, signPsbtInputs],
   );
+};
+
+export const getMarketplaceFilters = (searchParams: URLSearchParams) => {
+  const rawPage = Number(searchParams.get('page'));
+  const rawFilter = searchParams.get('filter') || Object.keys(SORT_FILTERS)[0];
+
+  return {
+    tick: searchParams.get('tick') || 'amid',
+    page: isNaN(rawPage) || rawPage < 1 ? 1 : rawPage,
+    filter: rawFilter in SORT_FILTERS ? rawFilter : Object.keys(SORT_FILTERS)[0],
+  };
 };

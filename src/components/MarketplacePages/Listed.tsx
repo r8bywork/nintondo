@@ -19,31 +19,37 @@ import { ConfirmationModal } from './components/ConfirmationModal';
 import { BottomSelect } from '../BottomSelect/BottomSelect';
 import { useModal } from '@/hooks/useModal';
 import { useWithStatistic } from '@/hooks/useWithStatistics';
-// import { useCheckInscription, useCreateBuyingSignedPsbt, useHasEnoughUtxos } from '@/hooks/market';
-// import toast from 'react-hot-toast';
+import {
+  getMarketplaceFilters,
+  useCheckInscription,
+  useCreateBuyingSignedPsbt,
+  useHasEnoughUtxos,
+  useMakeDummyUTXOS,
+} from '@/hooks/market';
+import toast from 'react-hot-toast';
+import { YesNoModal } from './components/YesNoModal';
 
 const Listed = () => {
   const { isOpen, open: openModal, close: closeModal } = useModal();
+  const { isOpen: isYesNoOpen, open: openYesNo, close: closeYesNo } = useModal();
   const [tokensToBuy, setTokensToBuy] = useState<MarketplaceTokenView[]>([]);
-  // const { tokenCard, onPageChange } = useTokenFilters();
-  // const [selectedTokens, setSelectedBuyTokens] = useState<MarketplaceTokenView[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTokens, { stats, forceSet, addItem, removeItem }] =
     useWithStatistic<MarketplaceTokenView>([], ['amount']);
 
-  // const hasEnoughUtxos = useHasEnoughUtxos();
-  // const checkInscription = useCheckInscription();
-  // const createBuyingSignedPsbt = useCreateBuyingSignedPsbt();
+  const makeDummyUTXOs = useMakeDummyUTXOS();
+  const hasEnoughUtxos = useHasEnoughUtxos();
+  const checkInscription = useCheckInscription();
+  const createBuyingSignedPsbt = useCreateBuyingSignedPsbt();
 
-  const [tick, page] = [
-    searchParams.get('tick') || 'amid',
-    isNaN(Number(searchParams.get('page'))) ? 1 : Number(searchParams.get('page')) || 1,
-  ];
+  const { tick, page, filter } = getMarketplaceFilters(searchParams);
 
   const { isSuccess, data, isLoading } = useQuery<MarketplaceTokensView>({
-    queryKey: ['listed-tokens', tick, page],
+    queryKey: ['listed-tokens', tick, page, filter],
     queryFn: async () => {
-      const { data } = await axios.get(`${MARKET_API_URL}/pub/tokens?tick=${tick}&page=${page}`);
+      const { data } = await axios.get(
+        `${MARKET_API_URL}/pub/tokens?tick=${tick}&page=${page}&filter=${filter}`,
+      );
 
       return {
         ...data,
@@ -59,6 +65,11 @@ const Listed = () => {
   const handleModalCloseClick = () => {
     setTokensToBuy([]);
     closeModal();
+  };
+
+  const handleYesNoCancel = () => {
+    closeYesNo();
+    handleModalCloseClick();
   };
 
   const handleBuyClick = (token: MarketplaceTokenView) => {
@@ -83,17 +94,18 @@ const Listed = () => {
     addItem(token);
   };
 
-  const handleBuy = async () => {
-    // if (selectedTokens.length === 1) {
-    //   const sellerUtxo = await checkInscription(selectedTokens[0]);
-    //   if (!sellerUtxo) return toast.error('Failed to find sellers inscription');
-    //   const utxos = await hasEnoughUtxos();
-    //   if (!utxos) {
-    //     return;
-    //   }
-    //   const partiallySignedPsbt = await createBuyingSignedPsbt(inscription, sellerUtxo, utxos);
-    //   if (partiallySignedPsbt === undefined) return;
-    // }
+  const handleBuy = async (tokens: MarketplaceTokenView[]) => {
+    if (tokens.length === 1) {
+      const sellerUtxo = await checkInscription(selectedTokens[0]);
+      if (!sellerUtxo) return toast.error('Failed to find sellers inscription');
+      const utxos = await hasEnoughUtxos();
+      if (!utxos) {
+        openYesNo();
+        return;
+      }
+      const partiallySignedPsbt = await createBuyingSignedPsbt(tokens[0], sellerUtxo, utxos);
+      if (partiallySignedPsbt === undefined) return;
+    }
   };
 
   return (
@@ -107,7 +119,7 @@ const Listed = () => {
         >
           {data?.tokens.map((f, i) => (
             <Token
-              tick='yes'
+              tick={tick}
               checked={selectedTokens.some((s) => s.number === f.number)}
               onBuyClick={handleBuyClick}
               token={f}
@@ -163,6 +175,17 @@ const Listed = () => {
             onConfirm={handleBuy}
             tokensToBuy={tokensToBuy}
             tick={tick}
+          />
+        </Modal>
+      )}
+      {isYesNoOpen && (
+        <Modal
+          isOpen
+          onClose={closeYesNo}
+        >
+          <YesNoModal
+            onCancel={handleYesNoCancel}
+            onConfirm={makeDummyUTXOs}
           />
         </Modal>
       )}

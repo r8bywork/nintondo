@@ -17,11 +17,11 @@ type Tab = {
 
 type MarketPlaceTabs = 'listed' | 'orders';
 
-const SORT_FILTERS = {
-  low: 'Price: Low → High',
-  high: 'Price: High → Low',
-  latest: 'List Time: Latest → Earliest',
-  earliest: 'List Time: Earliest → Latest',
+export const SORT_FILTERS = {
+  lowhigh: 'Price: Low → High',
+  highlow: 'Price: High → Low',
+  latestearliest: 'List Time: Latest → Earliest',
+  earliestlatest: 'List Time: Earliest → Latest',
 };
 
 const EVENT_FILTERS = {
@@ -36,8 +36,8 @@ const MARKETPLACE_COMPONENTS: Record<MarketPlaceTabs, Tab> = {
     component: <Listed />,
     filter: (
       <Filter
-        defaultFilter='low'
-        filterKey='sort'
+        defaultFilter={Object.keys(SORT_FILTERS)[0]}
+        filterKey='filter'
         filters={SORT_FILTERS}
       />
     ),

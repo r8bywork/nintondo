@@ -2,7 +2,7 @@
 import { useGetUserTokens } from '@/hooks/electrs';
 import { IToken, ITransfer } from '@/interfaces/intefaces';
 import classNames from 'classnames';
-import { useState, useEffect, useCallback, useMemo, ChangeEvent } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ReloadSVG from '@/assets/reload.svg?react';
 import PlusSVG from '@/assets/plus.svg?react';
@@ -14,7 +14,6 @@ import { MARKET_API_URL } from '@/consts';
 import { useCreateListedSignedPSBT } from '@/hooks/market';
 import axios from 'axios';
 import { Listed } from '@/interfaces/api';
-import { Slider } from '../Controls/Slider';
 import { omit } from 'lodash';
 import { Unlist } from './components/Unlist';
 import { BottomSelect } from '../BottomSelect/BottomSelect';
@@ -179,7 +178,7 @@ export const List = ({ isListed = false }: ListProps) => {
         })),
       ),
     );
-    const response = await makeAuthRequest(() =>
+    await makeAuthRequest(() =>
       axios.post(
         `${MARKET_API_URL}/tokens/list-token`,
         // eslint-disable-next-line camelcase
@@ -187,7 +186,6 @@ export const List = ({ isListed = false }: ListProps) => {
         { withCredentials: true },
       ),
     );
-    console.log(response);
 
     await updateUserTokensForTick();
     setSelectedTransfers(defaultSelectedTransfers);
