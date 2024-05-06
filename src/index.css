@@ -56,6 +56,27 @@
   .tab-animated-active::before {
     opacity: 1;
   }
+
+  .better-scrollbar::-webkit-scrollbar:horizontal {
+    background: red;
+  }
+
+  /* Track */
+  .better-scrollbar::-webkit-scrollbar-track:horizontal {
+    background: #f1f1f1;
+    width: 100px;
+    height: 100px;
+  }
+
+  /* Handle */
+  .better-scrollbar::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  .better-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 }
 
 /*Disable scroll only in mobile devices*/

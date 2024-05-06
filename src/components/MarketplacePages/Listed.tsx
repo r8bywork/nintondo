@@ -18,13 +18,16 @@ import Loading from 'react-loading';
 import { ConfirmationModal } from './components/ConfirmationModal';
 import { BottomSelect } from '../BottomSelect/BottomSelect';
 import { useModal } from '@/hooks/useModal';
+import { useWithStatistic } from '@/hooks/useWithStatistics';
 
 const Listed = () => {
   const { isOpen, open: openModal, close: closeModal } = useModal();
   const [tokensToBuy, setTokensToBuy] = useState<MarketplaceTokenView[]>([]);
   // const { tokenCard, onPageChange } = useTokenFilters();
-  const [selectedTokens, setSelectedBuyTokens] = useState<MarketplaceTokenView[]>([]);
-  const [searchParams, setSearchParams] = useSearchParams(); 
+  // const [selectedTokens, setSelectedBuyTokens] = useState<MarketplaceTokenView[]>([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [selectedTokens, { stats, forceSet, addItem, removeItem }] =
+    useWithStatistic<MarketplaceTokenView>([], ['amount']);
 
   const [tick, page] = [
     searchParams.get('tick') || 'amid',
@@ -63,17 +66,15 @@ const Listed = () => {
   };
 
   const handleRangeChange = (value: number) => {
-    setSelectedBuyTokens(data?.tokens.slice(0, value) || []);
+    forceSet(data?.tokens.slice(0, value) || []);
   };
 
   const handleSelect = (token: MarketplaceTokenView) => {
-    setSelectedBuyTokens((selectedTokens) => {
-      if (selectedTokens.some((s) => s.number === token.number)) {
-        return selectedTokens.filter((s) => s.number !== token.number);
-      }
+    if (selectedTokens.some((s) => s.number === token.number)) {
+      return removeItem(token, 'number');
+    }
 
-      return [...selectedTokens, token];
-    });
+    addItem(token);
   };
 
   return (
@@ -105,14 +106,14 @@ const Listed = () => {
           leftBtnPlaceholder={<Arrow />}
           rightBtnPlaceholder={<Arrow className={'rotate-180 flex'} />}
           buttonsClassName='flex items-center justify-center w-auto min-w-[2.25rem] px-[6px] h-9 bg-[#191919] rounded-full'
-          currentPage={1 - page}
+          currentPage={page - 1}
           arrowsClassName='h-full flex items-center p-[10px] bg-[#191919] rounded-[26px]'
           className={
             'text-white flex justify-center pt-[30px] pb-[30px] items-center gap-x-[10px] text-center align-middle'
           }
           pageCount={Number(data?.total_pages) - 1 || 0}
           onPageChange={(page) => {
-            searchParams.set('page', page.toString());
+            searchParams.set('page', (page + 1).toString());
 
             setSearchParams(searchParams);
           }}
@@ -124,10 +125,13 @@ const Listed = () => {
         onChange={handleRangeChange}
       >
         <button
+          className={
+            'px-[31px] py-[6px] border font-bold text-[20px] leading-[21px] transition rounded-[50px] border-[#FFBB00] text-[#FFBB00] disabled:border-[#262626] disabled:text-[#262626] disabled:cursor-default'
+          }
           onClick={handleBuySelectedClick}
-          className='max-[1200px]:flex-1 font-bold py-[6px] px-[101px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)]'
+          disabled={!selectedTokens.length}
         >
-          BUY
+          BUY {stats.amount.toLocaleString()} {tick} for 0 BTC
         </button>
       </BottomSelect>
       {isOpen && (

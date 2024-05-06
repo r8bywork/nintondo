@@ -15,18 +15,20 @@ export const ConfirmationModal = ({
   tick,
 }: ConfirmationModalProps) => {
   return (
-    <div className='bg-[#191919] shadow-[0_0_20px_0_rgba(0,0,0,0.3)] rounded-[15px] py-[21px] mx-[17px] px-[62px] max-medium:px-[25px] flex flex-col gap-[34px] items-center'>
+    <div className='bg-[#191919] shadow-[0_0_20px_0_rgba(0,0,0,0.3)] max-w-[740px] max-medium:max-w-[395px] rounded-[15px] py-[21px] mx-[17px] px-[62px] max-medium:px-[25px] flex flex-col gap-[34px] items-center'>
       <p className='text-[20px] font-bold'>Confirmation</p>
       <p className='text-[20px] text-[#4b4b4b]'>Please, confirm the transaction below:</p>
-      <div>
-        {tokensToBuy.map((value) => (
-          <Token
-            token={value}
-            tick={tick || ''}
-            key={value.outpoint}
-            background='#292929'
-          />
-        ))}
+      <div className='w-full flex justify-center'>
+        <div className='flex better-scrollbar gap-[15px] overflow-x-auto pb-[20px] -mx-[62px] px-[62px] max-medium:-mx-[25px] max-medium:px-[25px]'>
+          {tokensToBuy.map((value) => (
+            <Token
+              token={value}
+              tick={tick || ''}
+              key={value.outpoint}
+              background='#292929'
+            />
+          ))}
+        </div>
       </div>
       <div className='flex flex-col gap-[13px]'>
         <div className='flex gap-[20px] max-medium:gap-[12px] pb-[13px] border-b border-[#4B4B4B] max-w-[620px]'>

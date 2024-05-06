@@ -1,29 +1,83 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 
-export const useWithStatistic = <T>(
+const createNumericObjectFromKeys = <Obj extends object, T extends keyof Obj>(keys: T[]) =>
+  keys.reduce((acc, key) => ({ ...acc, [key]: 0 }), {} as Record<T, number>);
+
+export const useWithStatistic = <T extends object>(
   data: T[],
-  statsConverters: Record<string, <V>(data: T[]) => V>,
-) => {
-  const [dataState, setDataState] = useState<T[]>(data);
-  const stats = useMemo(() => {
-    return Object.entries(statsConverters).reduce(
-      (acc, [key, value]) => {
-        return {
-          ...acc,
-          [key]: value(dataState),
-        };
-      },
-      {} as {
-        [key: keyof typeof statsConverters]: ReturnType<
-          (typeof statsConverters)[keyof typeof statsConverters]
-        >;
-      },
-    );
-  }, [dataState]);
+  statsFields: Array<keyof T>,
+): [
+  T[],
+  {
+    stats: Record<keyof T, number>;
+    clearState: () => void;
+    addItem: (item: T) => void;
+    removeItem: (item: T, checkKey: keyof T) => void;
+    forceSet: (data: T[]) => void;
+  },
+] => {
+  const [dataState, setDataState] = useState(data);
+  const [stats, setStats] = useState(createNumericObjectFromKeys<T, keyof T>(statsFields));
 
-  return {
-    dataState,
-    stats,
-    setDataState,
+  const addItem = (item: T) => {
+    setDataState((dataState) => [...dataState, item]);
+    setStats((stats) => {
+      return Object.keys(stats).reduce(
+        (acc, key) => ({
+          ...acc,
+          [key]: (stats[key as keyof T] as number) + (item[key as keyof T] as number),
+        }),
+        {} as Record<keyof T, number>,
+      );
+    });
   };
+
+  const removeItem = (item: T, checkKey: keyof T) => {
+    setDataState((dataState) => dataState.filter((v) => v[checkKey] !== item[checkKey]));
+    setStats((stats) => {
+      return Object.keys(stats).reduce(
+        (acc, key) => ({
+          ...acc,
+          [key]: (stats[key as keyof T] as number) - (item[key as keyof T] as number),
+        }),
+        {} as Record<keyof T, number>,
+      );
+    });
+  };
+
+  const forceStatsRecalculate = (data: T[]) => {
+    return data.reduce(
+      (acc, item) => {
+        return statsFields.reduce(
+          (fieldAcc, key) => ({
+            ...fieldAcc,
+            [key]: (acc[key as keyof T] as number) + (item[key as keyof T] as number),
+          }),
+          {} as Record<keyof T, number>,
+        );
+      },
+      createNumericObjectFromKeys<T, keyof T>(statsFields) as Record<keyof T, number>,
+    );
+  };
+
+  const forceSet = (data: T[]) => {
+    setDataState(data);
+    setStats(forceStatsRecalculate(data));
+  };
+
+  const clearState = () => {
+    setDataState(data);
+    setStats(createNumericObjectFromKeys<T, keyof T>(statsFields));
+  };
+
+  return [
+    dataState,
+    {
+      stats,
+      addItem,
+      removeItem,
+      forceSet,
+      clearState,
+    },
+  ];
 };
