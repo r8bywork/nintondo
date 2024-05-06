@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useNintondoManagerContext } from '../utils/bell-provider';
 import { ApiOrdUTXO, ApiUTXO } from '../interfaces/api';
 import { Psbt, Transaction, networks } from 'belcoinjs-lib';
-import { IDummyInscription } from '../interfaces/marketapi';
+import { IDummyInscription, MarketplaceToken } from '../interfaces/marketapi';
 import { DEFAULT_FEE_RATE, DUMMY_UTXO_VALUE, FEE_ADDRESS } from '../consts';
 import { fetchBELLMainnet, gptFeeCalculate } from '../utils';
 import toast from 'react-hot-toast';
@@ -209,15 +209,15 @@ export const useCheckInscription = () => {
   const { address } = useNintondoManagerContext();
 
   return useCallback(
-    async (inscription: IDummyInscription): Promise<ApiOrdUTXO | undefined> => {
+    async (inscription: MarketplaceToken): Promise<ApiOrdUTXO | undefined> => {
       if (!address) return;
       const foundInscriptions = await fetchBELLMainnet<ApiOrdUTXO[]>({
-        path: `/address/${inscription.address}/ords?search=${inscription.inscription_id}`,
+        path: `/address/${inscription.owner}/ords?search=${inscription.outpoint}`,
       });
       if (!foundInscriptions || foundInscriptions.length <= 0) return;
       const sellerOrdUtxo = foundInscriptions[0];
       if (!sellerOrdUtxo) {
-        toast.error(`Failed to find seller utxo: ${inscription.txid}`);
+        toast.error(`Failed to find seller utxo: ${inscription.outpoint}`);
         return;
       }
       sellerOrdUtxo.rawHex = await getTransactionRawHex(sellerOrdUtxo?.txid);

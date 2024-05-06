@@ -18,13 +18,19 @@ import Loading from 'react-loading';
 import { ConfirmationModal } from './components/ConfirmationModal';
 import { BottomSelect } from '../BottomSelect/BottomSelect';
 import { useModal } from '@/hooks/useModal';
+// import { useCheckInscription, useCreateBuyingSignedPsbt, useHasEnoughUtxos } from '@/hooks/market';
+// import toast from 'react-hot-toast';
 
 const Listed = () => {
   const { isOpen, open: openModal, close: closeModal } = useModal();
   const [tokensToBuy, setTokensToBuy] = useState<MarketplaceTokenView[]>([]);
   // const { tokenCard, onPageChange } = useTokenFilters();
   const [selectedTokens, setSelectedBuyTokens] = useState<MarketplaceTokenView[]>([]);
-  const [searchParams, setSearchParams] = useSearchParams(); 
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // const hasEnoughUtxos = useHasEnoughUtxos();
+  // const checkInscription = useCheckInscription();
+  // const createBuyingSignedPsbt = useCreateBuyingSignedPsbt();
 
   const [tick, page] = [
     searchParams.get('tick') || 'amid',
@@ -74,6 +80,19 @@ const Listed = () => {
 
       return [...selectedTokens, token];
     });
+  };
+
+  const handleBuy = async () => {
+    // if (selectedTokens.length === 1) {
+    //   const sellerUtxo = await checkInscription(selectedTokens[0]);
+    //   if (!sellerUtxo) return toast.error('Failed to find sellers inscription');
+    //   const utxos = await hasEnoughUtxos();
+    //   if (!utxos) {
+    //     return;
+    //   }
+    //   const partiallySignedPsbt = await createBuyingSignedPsbt(inscription, sellerUtxo, utxos);
+    //   if (partiallySignedPsbt === undefined) return;
+    // }
   };
 
   return (
@@ -137,7 +156,7 @@ const Listed = () => {
         >
           <ConfirmationModal
             onClose={handleModalCloseClick}
-            onConfirm={() => console.log('Dont care about this logic')}
+            onConfirm={handleBuy}
             tokensToBuy={tokensToBuy}
             tick={tick}
           />
