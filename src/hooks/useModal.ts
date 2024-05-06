@@ -12,16 +12,25 @@ export const useModal = (defaultValue?: boolean) => {
 
   const handleOpen = () => {
     // disable scroll from page
-    // handleClos make scroll available again
+    // handleClose make scroll available again
     document.body.classList.add('mobile-scroll-disable');
 
     setIsOpen(true);
   };
 
   useEffect(() => {
+    const closeModalOnKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+
+    document.addEventListener('keydown', closeModalOnKeyDown);
+
     return () => {
       // force enable scroll when dismounted
       document.body.classList.remove('mobile-scroll-disable');
+      document.removeEventListener('keydown', closeModalOnKeyDown);
     };
   }, []);
 

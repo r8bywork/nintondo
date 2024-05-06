@@ -17,6 +17,7 @@ import { Listed } from '@/interfaces/api';
 import { Slider } from '../Controls/Slider';
 import { omit } from 'lodash';
 import { Unlist } from './components/Unlist';
+import { BottomSelect } from '../BottomSelect/BottomSelect';
 
 type SelectedTransfers = {
   transfers: Record<string, ITransfer[]>;
@@ -134,9 +135,7 @@ export const List = ({ isListed = false }: ListProps) => {
     }));
   };
 
-  const handleTranferRangeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.currentTarget.value);
-
+  const handleTranferRangeChange = (value: number) => {
     const transfers = selectedTick!.transfers.slice(0, value);
 
     const amount = transfers?.reduce((acc, v) => acc + v.amount, 0);
@@ -305,9 +304,22 @@ export const List = ({ isListed = false }: ListProps) => {
       </div>
       {selectedTick && (
         <div className='flex flex-col flex-1 gap-[40px]'>
-          <h1 className='text-[32px] font-bold leading-[34px]'>
-            List <span className='text-[#53DCFF]'>{selectedTick?.tick}</span>
-          </h1>
+          <div className='flex items-center gap-[24px]'>
+            <h1 className='text-[32px] font-bold leading-[34px]'>
+              List <span className='text-[#53DCFF]'>{selectedTick?.tick}</span>
+            </h1>
+            {isListed || (
+              <button
+                className={
+                  'px-[17px] py-[2px] border font-bold text-[20px] flex items-center gap-[10px] leading-[21px] transition rounded-[50px] border-[#53DCFF] text-[#53DCFF]'
+                }
+                onClick={() => inscribeTransfer(selectedTick.tick)}
+              >
+                <PlusSVG />
+                INSCRIBE TRANSFER
+              </button>
+            )}
+          </div>
           {isListed || (
             <div className='flex flex-col gap-[17px]'>
               <div className='flex gap-[15px] flex-wrap'>
@@ -345,19 +357,6 @@ export const List = ({ isListed = false }: ListProps) => {
               gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))',
             }}
           >
-            {isListed || (
-              <button
-                onClick={() => inscribeTransfer(selectedTick.tick)}
-                className='py-[20px] flex flex-col rounded-[15px] bg-[#191919] items-center justify-center gap-[13px] h-[130px]'
-              >
-                <PlusSVG />
-                <p className='text-[20px] text-[#4B4B4B]'>
-                  Inscribe
-                  <br /> TRANSFER
-                </p>
-              </button>
-            )}
-
             {selectedTick.transfers.map((transfer) => {
               const transferAmountStr = transfer.amount.toLocaleString();
               const fontSize =
@@ -435,46 +434,37 @@ export const List = ({ isListed = false }: ListProps) => {
           </div>
         </Modal>
       )}
-      <div className='fixed flex justify-center items-center w-screen bottom-0 left-0 bg-[rgba(0,0,0,0.2)] backdrop-blur-xl border-t-[1px] border-[#191919]'>
-        <div className='max-w-[1390px] flex items-center justify-between p-5 w-full max-medium:flex-col gap-[18px]'>
-          <div className='items-center flex gap-2 font-bold text-[16px] border-[1px] border-white rounded-[30px] h-[24px] w-[336px] max-medium:w-full justify-center px-[15px]'>
-            <Slider
-              min={0}
-              max={selectedTick?.transfers.length || 0}
-              value={selectedTransfersByTick.transfers.length}
-              onChange={handleTranferRangeChange}
-            />
-            <span className='w-[16px]'>{selectedTransfersByTick.transfers.length}</span>
-          </div>
-          <div className='flex gap-[18px] max-medium:flex-col max-medium:w-full'>
-            {isListed || (
-              <button
-                className={classNames(
-                  'px-[31px] py-[6px] border font-bold text-[20px] leading-[21px] transition rounded-[50px]',
-                  selectedTransfersByTick.transfers.length > 0
-                    ? 'border-[#53DCFF] text-[#53DCFF]'
-                    : 'border-[#262626] text-[#262626]',
-                )}
-                disabled={!selectedTransfers.transfers.length}
-              >
-                DELETE SELECTED ({selectedTick?.tick})
-              </button>
+      <BottomSelect
+        selectedCount={selectedTransfersByTick.transfers.length}
+        dataCount={selectedTick?.transfers.length || 0}
+        onChange={handleTranferRangeChange}
+      >
+        {isListed || (
+          <button
+            className={classNames(
+              'px-[31px] py-[6px] border font-bold text-[20px] leading-[21px] transition rounded-[50px]',
+              selectedTransfersByTick.transfers.length > 0
+                ? 'border-[#53DCFF] text-[#53DCFF]'
+                : 'border-[#262626] text-[#262626]',
             )}
-            <button
-              className={classNames(
-                'px-[31px] py-[6px] border font-bold text-[20px] leading-[21px] transition rounded-[50px]',
-                selectedTransfersByTick.transfers.length > 0
-                  ? 'border-[#FFBB00] text-[#FFBB00]'
-                  : 'border-[#262626] text-[#262626] cursor-default',
-              )}
-              onClick={handleListByTickClick}
-            >
-              {buttonText} SELECTED ({selectedTransfersByTick.amount.toLocaleString()}{' '}
-              {selectedTick?.tick})
-            </button>
-          </div>
-        </div>
-      </div>
+            disabled={!selectedTransfers.transfers.length}
+          >
+            DELETE SELECTED ({selectedTick?.tick})
+          </button>
+        )}
+        <button
+          className={classNames(
+            'px-[31px] py-[6px] border font-bold text-[20px] leading-[21px] transition rounded-[50px]',
+            selectedTransfersByTick.transfers.length > 0
+              ? 'border-[#FFBB00] text-[#FFBB00]'
+              : 'border-[#262626] text-[#262626] cursor-default',
+          )}
+          onClick={handleListByTickClick}
+        >
+          {buttonText} SELECTED ({selectedTransfersByTick.amount.toLocaleString()}{' '}
+          {selectedTick?.tick})
+        </button>
+      </BottomSelect>
     </div>
   );
 };

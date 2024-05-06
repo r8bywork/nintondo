@@ -9,7 +9,8 @@ interface TokenProps {
   full?: boolean;
   checked?: boolean;
   background?: string;
-  onBuyClick?: () => void;
+  onBuyClick?: (token: MarketplaceTokenView) => void;
+  onSelect?: (token: MarketplaceTokenView) => void;
 }
 
 const Token: FC<TokenProps> = ({
@@ -19,12 +20,11 @@ const Token: FC<TokenProps> = ({
   checked = false,
   onBuyClick,
   background = '#1A1A1A',
+  onSelect,
 }) => {
   return (
     <div
-      className={cn(
-        'flex flex-col w-[200px] max-mobile:w-[184px] py-[8px] px-[10px] rounded-[15px] gap-[10px]',
-      )}
+      className={cn('flex flex-col py-[8px] px-[10px] rounded-[15px] gap-[10px]')}
       style={{ background }}
     >
       <div className='flex justify-between items-center'>
@@ -32,13 +32,14 @@ const Token: FC<TokenProps> = ({
           {tick}
         </p>
         {full && (
-          <div
+          <button
             className={cn(
               'size-[15px] rounded-[4px] cursor-pointer transition-all border-[1px]',
               { 'bg-[#0F0F0F] border-[#1A1A1A]': !checked },
-              { 'bg-[#53DCFF] border-[#FFBB00]': checked },
+              { 'bg-[#53DCFF] border-[transparent]': checked },
             )}
-          ></div>
+            onClick={() => onSelect?.(token)}
+          />
         )}
       </div>
       <div className='bg-[#0F0F0F] rounded-[9px] px-[29px] py-[16px] flex items-center justify-evenly gap-3'>
@@ -65,8 +66,8 @@ const Token: FC<TokenProps> = ({
               </p>
             </div>
             <button
-              className='w-[180px] h-[24px] text-center border-[1px] border-[#FFFFFF] rounded-[20px] font-bold flex items-center justify-center max-mobile:w-[164px] transition duration-300 hover:border-[#FFBB00] hover:text-[#FFBB00]'
-              onClick={onBuyClick}
+              className=' h-[24px] text-center border-[1px] border-[#FFFFFF] rounded-[20px] font-bold flex items-center justify-center transition duration-300 hover:border-[#FFBB00] hover:text-[#FFBB00] cursor-pointer'
+              onClick={() => onBuyClick?.(token)}
             >
               BUY
             </button>

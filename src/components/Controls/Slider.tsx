@@ -1,7 +1,7 @@
 import { ChangeEvent } from 'react';
 import './Slider.css';
 
-interface SliderProps {
+export interface SliderProps {
   value: number;
   max: number;
   min: number;
