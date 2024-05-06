@@ -212,6 +212,7 @@ export const useCheckInscription = () => {
   return useCallback(
     async (inscription: MarketplaceToken): Promise<ApiOrdUTXO | undefined> => {
       if (!address) return;
+      console.log(inscription)
       const foundInscriptions = await fetchBELLMainnet<ApiOrdUTXO[]>({
         path: `/address/${inscription.owner}/ords?search=${inscription.outpoint}`,
       });

@@ -7,7 +7,7 @@ import {
   MarketplaceTokenView,
 } from '@/interfaces/marketapi';
 import { Modal } from '../Modal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './style.css';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -31,16 +31,38 @@ import { YesNoModal } from './components/YesNoModal';
 
 const Listed = () => {
   const { isOpen, open: openModal, close: closeModal } = useModal();
-  const { isOpen: isYesNoOpen, open: openYesNo, close: closeYesNo } = useModal();
+  const { isOpen: isYesNoOpen, open: openYesNo, close: closeYesNo } = useModal(true);
   const [tokensToBuy, setTokensToBuy] = useState<MarketplaceTokenView[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTokens, { stats, forceSet, addItem, removeItem }] =
     useWithStatistic<MarketplaceTokenView>([], ['amount']);
 
-  const makeDummyUTXOs = useMakeDummyUTXOS();
+  const makeDummyUTXOsReq = useMakeDummyUTXOS();
   const hasEnoughUtxos = useHasEnoughUtxos();
   const checkInscription = useCheckInscription();
   const createBuyingSignedPsbt = useCreateBuyingSignedPsbt();
+
+  const {
+    isLoading: isMaking,
+    refetch: makeDummyUTXOs,
+    isSuccess: isMakingSuccess,
+    isError: isMakingError,
+  } = useQuery({
+    queryKey: ['make-duumy-utxos'],
+    queryFn: makeDummyUTXOsReq,
+    enabled: false,
+    retry: false,
+  });
+
+  useEffect(() => {
+    if (!isLoading && isMakingSuccess) {
+      closeYesNo();
+    }
+
+    if (!isLoading && isMakingError) {
+      handleYesNoCancel();
+    }
+  }, [isMaking, isMakingSuccess, isMakingError]);
 
   const { tick, page, filter } = getMarketplaceFilters(searchParams);
 
@@ -96,7 +118,7 @@ const Listed = () => {
 
   const handleBuy = async (tokens: MarketplaceTokenView[]) => {
     if (tokens.length === 1) {
-      const sellerUtxo = await checkInscription(selectedTokens[0]);
+      const sellerUtxo = await checkInscription(tokens[0]);
       if (!sellerUtxo) return toast.error('Failed to find sellers inscription');
       const utxos = await hasEnoughUtxos();
       if (!utxos) {
@@ -184,6 +206,7 @@ const Listed = () => {
           onClose={closeYesNo}
         >
           <YesNoModal
+            isLoading={isMaking}
             onCancel={handleYesNoCancel}
             onConfirm={makeDummyUTXOs}
           />
