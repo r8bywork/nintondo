@@ -30,6 +30,11 @@ export const MARKET_HISTORY_API_URL =
 
 export const PREVIEW_URL = `${HOST}/pub/preview`;
 export const CONTENT_URL = `${HOST}/pub/content`;
+
+export const OLD_ELECTRS = import.meta.env.VITE_ELECTRS_URL ?? 'https://api.nintondo.io/api';
+export const OLD_CONTENT = import.meta.env.VITE_CONTENT_URL ?? 'https://static.nintondo.io';
+export const OLD_PREVIEW_URL = `${OLD_CONTENT}/pub/preview`;
+export const OLD_CONTENT_URL = `${OLD_CONTENT}/pub/content`;
 // export const PREVIEW_URL = 'http://93.125.14.5:8111/pub/preview';
 // export const CONTENT_URL = 'http://93.125.14.5:8111/pub/content';
 

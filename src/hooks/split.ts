@@ -149,15 +149,20 @@ export const useSplitOrds = () => {
     const signedPsbtBase64 = await signPsbtInputs(psbt.toBase64());
     if (!signedPsbtBase64) return;
     const signedPsbt = Psbt.fromBase64(signedPsbtBase64);
+    signedPsbt.finalizeAllInputs();
 
-    const hex = signedPsbt.finalizeAllInputs().extractTransaction(true).toHex();
+    const hex = signedPsbt.extractTransaction(true).toHex();
     const result = await pushSplit({
       // eslint-disable-next-line camelcase
       transaction_hex: hex,
       locations: ords.map((f) => `${f.txid}:${f.vout}`),
     });
-    if (result?.length === 64) {
-      toast('Success');
+    if (!result) {
+      return;
+    }
+    if (result.length !== 64 || (result as string).includes('RPC error')) {
+      toast.error(result);
+      return;
     }
     return result as string;
   };

@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import cn from 'classnames';
 import { Ord } from '@/interfaces/nintondo-manager-provider';
-import { PREVIEW_URL } from '@/consts';
+import { OLD_PREVIEW_URL } from '@/consts';
 
 interface SplitUtxoProps {
   switchToInscription: (ord: Ord, direction: 'next' | 'previous') => void;
@@ -24,7 +24,9 @@ const SplitUtxo: FC<SplitUtxoProps> = ({ switchToInscription, ord }) => {
           <div className='flex gap-2 items-center'>
             <div className='w-20 h-20 overflow-hidden rounded-lg relative group'>
               <img
-                src={`${PREVIEW_URL}/${ord.inscriptions[ord.inscriptionIndex ?? 0].inscription_id}`}
+                src={`${OLD_PREVIEW_URL}/${
+                  ord.inscriptions[ord.inscriptionIndex ?? 0].inscription_id
+                }`}
                 className='object-cover cursor-pointer'
               />
             </div>

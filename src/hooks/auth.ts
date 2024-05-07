@@ -24,7 +24,8 @@ export const useMakeAuthRequests = () => {
             fail();
           }
         } else {
-          toast.error('Please try again later');
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          toast.error((e as any).response.data);
         }
       }
     },

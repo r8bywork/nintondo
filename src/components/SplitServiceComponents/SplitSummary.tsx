@@ -2,6 +2,7 @@ import { useSplitOrds } from '@/hooks/split';
 import { Ord } from '@/interfaces/nintondo-manager-provider';
 import { FC, useState } from 'react';
 import toast from 'react-hot-toast';
+// import toast from 'react-hot-toast';
 import Loading from 'react-loading';
 
 interface SplitSummaryProps {
@@ -16,20 +17,23 @@ const SplitSummary: FC<SplitSummaryProps> = ({ selectedOrds, updateOrds, selecte
 
   const doSplit = async () => {
     setLoading(true);
-    if (selectedFeeRate <= 500) {
-      toast.error('Fee is too low');
+    if (isNaN(selectedFeeRate) || selectedFeeRate <= 0) {
+      toast.error('Select the fee');
       setLoading(false);
       return;
     }
     const txid = await splitOrds(selectedOrds, selectedFeeRate);
-    if (txid?.length === 64) updateOrds();
+    if (txid?.length === 64) {
+      toast.success('Success');
+      updateOrds();
+    }
     setLoading(false);
   };
 
   if (!selectedOrds.length) return;
 
   return (
-    <div className='max-w-fit flex flex-col items-center text-lg border-2 border-[#191919] rounded-lg p-4 gap-1'>
+    <div className='max-w-fit flex flex-col items-center justify-center text-lg border-2 border-[#191919] rounded-lg p-4 gap-1'>
       <div>
         <p>Total utxos to split: {selectedOrds.length}</p>
         <p>

@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import UtxoSelector from '@/components/SplitServiceComponents/UtxoSelector';
 import SplitVisualizer from '@/components/SplitServiceComponents/SplitVisualizer';
 import SplitSummary from '@/components/SplitServiceComponents/SplitSummary';
-import { BACKEND_URL, NINTONDO_API_URL } from '@/consts';
+import { BACKEND_URL, OLD_ELECTRS } from '@/consts';
 import Loading from 'react-loading';
 import FeeSelector from '@/components/SplitServiceComponents/FeeSelector';
 import { Fees } from '@/interfaces/api';
@@ -34,11 +34,8 @@ const SplitServicePage = () => {
 
   const getOffsets = useCallback(async (): Promise<Ord[]> => {
     const response =
-      (
-        await makeAuthRequests(() =>
-          axios.get(`${NINTONDO_API_URL}/offset_ords/address/${address}`),
-        )
-      )?.data ?? [];
+      (await makeAuthRequests(() => axios.get(`${OLD_ELECTRS}/offset_ords/address/${address}`)))
+        ?.data ?? [];
     return response.ords as Ord[];
   }, [address]);
 
