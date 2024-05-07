@@ -170,9 +170,10 @@ const Listed = () => {
     <div className='max-w-[1490px] flex max-mobile:gap-[5px] gap-[10px] max-lg:justify-center flex-col pb-[72px]'>
       {isSuccess && (
         <div
-          className='w-full grid gap-[18px]'
+          className='w-full grid gap-[18px] min-h-[760px] max-medium:min-h-auto'
           style={{
             gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+            gridTemplateRows: 'repeat(auto-fill, 240px)',
           }}
         >
           {data?.tokens.map((f, i) => (
