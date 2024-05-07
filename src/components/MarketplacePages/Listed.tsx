@@ -265,6 +265,7 @@ const Listed = () => {
             isLoading={isMaking}
             onCancel={handleYesNoCancel}
             onConfirm={makeDummyUTXOs}
+            onCustomizeClick={openCustomize}
           />
         </Modal>
       )}
