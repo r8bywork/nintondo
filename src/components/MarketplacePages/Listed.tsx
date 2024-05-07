@@ -156,21 +156,24 @@ const Listed = () => {
         }
         await new Promise((resolve) => setTimeout(() => resolve(''), 1000));
       }
-      const partiallySignedPsbts = await createBuyingSignedPsbt([
-        {
-          inscription: {
-            address: tokens[0].owner,
-            price: tokens[0].amount * tokens[0].price_per_token,
+      const partiallySignedPsbts = await createBuyingSignedPsbt(
+        [
+          {
+            inscription: {
+              address: tokens[0].owner,
+              price: tokens[0].amount * tokens[0].price_per_token,
+            },
+            sellerOrdUtxo: sellerUtxo,
+            utxos,
           },
-          sellerOrdUtxo: sellerUtxo,
-          utxos,
-        },
-      ]);
+        ],
+        2000,
+      );
       if (partiallySignedPsbts === undefined) return;
       const pubKey = await getPublicKey();
       const result = await makeAuthRequests(() =>
         axios.post(
-          `${MARKET_API_URL}/tokens/list-tokens`,
+          `${MARKET_API_URL}/tokens/buy-tokens`,
           {
             psbts_base64: partiallySignedPsbts,
             public_key_hex: pubKey,

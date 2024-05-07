@@ -47,7 +47,7 @@ export const useMakeDummyUTXOS = () => {
     const change =
       utxos.reduce((acc, f) => (acc += f.value), 0) -
       gptFeeCalculate(utxos.length, 3, DEFAULT_FEE_RATE) -
-      600 * 2;
+      DUMMY_UTXO_VALUE * 2;
 
     if (change <= 0) {
       toast.error('Not enough funds');
@@ -131,6 +131,7 @@ export const useCreateListedSignedPSBT = () => {
       const psbtsToSign: SignPsbtData[] = [];
 
       for (const inscription of inscriptions) {
+        if (!Number.isInteger(inscription.price)) return;
         const sellerOrdUtxoHex = await getTransactionRawHex(inscription.txid);
         if (!sellerOrdUtxoHex) return;
         const sellerPsbt = new Psbt({ network: networks.bitcoin });
@@ -257,8 +258,10 @@ export const useCreateBuyingSignedPsbt = () => {
         sellerOrdUtxo: ApiOrdUTXO;
         utxos: ApiUTXO[];
       }[],
+      feeRate: number,
     ) => {
       if (!address) return;
+      if (!Number.isInteger(feeRate)) return;
       const psbtsToSign: SignPsbtData[] = [];
 
       for (const data of datas) {
@@ -316,13 +319,13 @@ export const useCreateBuyingSignedPsbt = () => {
           value: DUMMY_UTXO_VALUE,
         });
 
-        const fee = gptFeeCalculate(utxos.length + 2, 7, DEFAULT_FEE_RATE);
+        const fee = gptFeeCalculate(utxos.length + 2, 7, feeRate);
 
         const change =
           utxos.concat(splicedUtxos).reduce((acc, cur) => acc + cur.value, 0) -
           fee -
           splicedUtxos.reduce((acc, sum) => (acc += sum.value), 0) +
-          600 * 2 -
+          DUMMY_UTXO_VALUE * 2 -
           data.inscription.price -
           0.02 * 10 ** 8;
 

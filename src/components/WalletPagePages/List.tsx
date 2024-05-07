@@ -180,7 +180,7 @@ export const List = ({ isListed = false }: ListProps) => {
     );
     await makeAuthRequest(() =>
       axios.post(
-        `${MARKET_API_URL}/tokens/list-token`,
+        `${MARKET_API_URL}/tokens/list-tokens`,
         // eslint-disable-next-line camelcase
         { psbts_base64, public_key_hex },
         { withCredentials: true },
