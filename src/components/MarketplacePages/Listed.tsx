@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import Token from './Token/Token';
 import Pagination from '../Table/Pagination';
 import Arrow from '@/assets/TableArrow.svg?react';
@@ -30,6 +31,7 @@ import toast from 'react-hot-toast';
 import { YesNoModal } from './components/YesNoModal';
 import { useNintondoManagerContext } from '@/utils/bell-provider';
 import { ApiUTXO } from '@/interfaces/api';
+import { useMakeAuthRequests } from '@/hooks/auth';
 
 const Listed = () => {
   const { isOpen, open: openModal, close: closeModal } = useModal();
@@ -44,6 +46,8 @@ const Listed = () => {
   const checkInscription = useCheckInscription();
   const createBuyingSignedPsbt = useCreateBuyingSignedPsbt();
 
+  const makeAuthRequests = useMakeAuthRequests();
+
   const {
     isLoading: isMaking,
     refetch: makeDummyUTXOs,
@@ -56,7 +60,7 @@ const Listed = () => {
     retry: false,
   });
 
-  const { verifyAddress } = useNintondoManagerContext();
+  const { verifiedAddress, getPublicKey } = useNintondoManagerContext();
 
   useEffect(() => {
     if (!isLoading && isMakingSuccess) {
@@ -100,6 +104,10 @@ const Listed = () => {
   };
 
   const checkUtxos = async () => {
+    if (!verifiedAddress) {
+      toast.error('Connect your wallet first');
+      return false;
+    }
     const utxos = await hasEnoughUtxos();
     if (!utxos) {
       openYesNo();
@@ -131,7 +139,7 @@ const Listed = () => {
   };
 
   const handleBuy = async (tokens: MarketplaceTokenView[]) => {
-    if (!verifyAddress) toast.error('Please connect your wallet first');
+    if (!verifiedAddress) toast.error('Please connect your wallet first');
     if (tokens.length === 1) {
       const sellerUtxo = await checkInscription(tokens[0]);
       if (!sellerUtxo) return toast.error('Failed to find sellers inscription');
@@ -144,7 +152,7 @@ const Listed = () => {
         }
         await new Promise((resolve) => setTimeout(() => resolve(''), 1000));
       }
-      const partiallySignedPsbt = await createBuyingSignedPsbt([
+      const partiallySignedPsbts = await createBuyingSignedPsbt([
         {
           inscription: {
             address: tokens[0].owner,
@@ -154,7 +162,19 @@ const Listed = () => {
           utxos,
         },
       ]);
-      if (partiallySignedPsbt === undefined) return;
+      if (partiallySignedPsbts === undefined) return;
+      const pubKey = await getPublicKey();
+      const result = await makeAuthRequests(() =>
+        axios.post(
+          `${MARKET_API_URL}/tokens/list-tokens`,
+          {
+            psbts_base64: partiallySignedPsbts,
+            public_key_hex: pubKey,
+          },
+          { withCredentials: true },
+        ),
+      );
+      console.log(result);
     }
   };
 

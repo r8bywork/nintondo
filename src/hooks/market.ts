@@ -246,10 +246,7 @@ export const useCreateBuyingSignedPsbt = () => {
   const { address, signPsbtInputs, signMultiPsbt } = useNintondoManagerContext();
 
   const fixSignatures = (psbt: Psbt, data: SignPsbtData) => {
-    const partialSig = psbt.data.inputs[2].partialSig;
     data.options.toSignInputs?.map((f) => psbt.finalizeInput(f.index));
-    psbt.data.inputs[2].partialSig = partialSig;
-
     return psbt.toBase64();
   };
 
