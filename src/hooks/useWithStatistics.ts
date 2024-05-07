@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 const createNumericObjectFromKeys = <Obj extends object, T extends keyof Obj>(keys: T[]) =>
   keys.reduce((acc, key) => ({ ...acc, [key]: 0 }), {} as Record<T, number>);

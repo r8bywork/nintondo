@@ -28,10 +28,12 @@ import {
 } from '@/hooks/market';
 import toast from 'react-hot-toast';
 import { YesNoModal } from './components/YesNoModal';
+import { useNintondoManagerContext } from '@/utils/bell-provider';
+import { ApiUTXO } from '@/interfaces/api';
 
 const Listed = () => {
   const { isOpen, open: openModal, close: closeModal } = useModal();
-  const { isOpen: isYesNoOpen, open: openYesNo, close: closeYesNo } = useModal();
+  const { isOpen: isYesNoOpen, open: openYesNo, close: closeYesNo } = useModal(false);
   const [tokensToBuy, setTokensToBuy] = useState<MarketplaceTokenView[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTokens, { stats, forceSet, addItem, removeItem }] =
@@ -54,9 +56,12 @@ const Listed = () => {
     retry: false,
   });
 
+  const { verifyAddress } = useNintondoManagerContext();
+
   useEffect(() => {
     if (!isLoading && isMakingSuccess) {
       closeYesNo();
+      openModal();
     }
 
     if (!isLoading && isMakingError) {
@@ -94,14 +99,23 @@ const Listed = () => {
     handleModalCloseClick();
   };
 
-  const handleBuyClick = (token: MarketplaceTokenView) => {
-    setTokensToBuy([token]);
-    openModal();
+  const checkUtxos = async () => {
+    const utxos = await hasEnoughUtxos();
+    if (!utxos) {
+      openYesNo();
+      return false;
+    }
+    return true;
   };
 
-  const handleBuySelectedClick = () => {
+  const handleBuyClick = async (token: MarketplaceTokenView) => {
+    setTokensToBuy([token]);
+    if (await checkUtxos()) openModal();
+  };
+
+  const handleBuySelectedClick = async () => {
     setTokensToBuy(selectedTokens);
-    openModal();
+    if (await checkUtxos()) openModal();
   };
 
   const handleRangeChange = (value: number) => {
@@ -117,15 +131,29 @@ const Listed = () => {
   };
 
   const handleBuy = async (tokens: MarketplaceTokenView[]) => {
+    if (!verifyAddress) toast.error('Please connect your wallet first');
     if (tokens.length === 1) {
       const sellerUtxo = await checkInscription(tokens[0]);
       if (!sellerUtxo) return toast.error('Failed to find sellers inscription');
-      const utxos = await hasEnoughUtxos();
-      if (!utxos) {
-        openYesNo();
-        return;
+      let utxos: ApiUTXO[] = [];
+      while (utxos.length < 2) {
+        const receivedUtxos = await hasEnoughUtxos();
+        if (receivedUtxos) {
+          utxos = receivedUtxos;
+          break;
+        }
+        await new Promise((resolve) => setTimeout(() => resolve(''), 1000));
       }
-      const partiallySignedPsbt = await createBuyingSignedPsbt(tokens[0], sellerUtxo, utxos);
+      const partiallySignedPsbt = await createBuyingSignedPsbt([
+        {
+          inscription: {
+            address: tokens[0].owner,
+            price: tokens[0].amount * tokens[0].price_per_token,
+          },
+          sellerOrdUtxo: sellerUtxo,
+          utxos,
+        },
+      ]);
       if (partiallySignedPsbt === undefined) return;
     }
   };

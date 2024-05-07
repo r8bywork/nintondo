@@ -212,7 +212,6 @@ export const useCheckInscription = () => {
   return useCallback(
     async (inscription: MarketplaceToken): Promise<ApiOrdUTXO | undefined> => {
       if (!address) return;
-      console.log(inscription)
       const foundInscriptions = await fetchBELLMainnet<ApiOrdUTXO[]>({
         path: `/address/${inscription.owner}/ords?search=${inscription.outpoint}`,
       });
@@ -244,105 +243,138 @@ export const useHasEnoughUtxos = () => {
 };
 
 export const useCreateBuyingSignedPsbt = () => {
-  const { address, signPsbtInputs } = useNintondoManagerContext();
+  const { address, signPsbtInputs, signMultiPsbt } = useNintondoManagerContext();
+
+  const fixSignatures = (psbt: Psbt, data: SignPsbtData) => {
+    const partialSig = psbt.data.inputs[2].partialSig;
+    data.options.toSignInputs?.map((f) => psbt.finalizeInput(f.index));
+    psbt.data.inputs[2].partialSig = partialSig;
+
+    return psbt.toBase64();
+  };
 
   return useCallback(
-    async (token: MarketplaceToken, sellerOrdUtxo: ApiOrdUTXO, utxos: ApiUTXO[]) => {
+    async (
+      datas: {
+        inscription: { address: string; price: number };
+        sellerOrdUtxo: ApiOrdUTXO;
+        utxos: ApiUTXO[];
+      }[],
+    ) => {
       if (!address) return;
+      const psbtsToSign: SignPsbtData[] = [];
 
-      const fullTokenPrice = token.amount * token.price_per_token;
+      for (const data of datas) {
+        const utxos = data.utxos.sort((a, b) => a.value - b.value);
 
-      utxos = utxos.sort((a, b) => a.value - b.value);
+        const buyerPsbt = new Psbt({ network: networks.bitcoin });
 
-      let buyerPsbt = new Psbt({ network: networks.bitcoin });
-
-      buyerPsbt.addInput({
-        hash: utxos[0].txid,
-        index: utxos[0].vout,
-        nonWitnessUtxo: Buffer.from(utxos[0].rawHex!, 'hex'),
-      });
-      buyerPsbt.addInput({
-        hash: utxos[1].txid,
-        index: utxos[1].vout,
-        nonWitnessUtxo: Buffer.from(utxos[1].rawHex!, 'hex'),
-      });
-      buyerPsbt.addInput({
-        hash: sellerOrdUtxo.txid,
-        index: sellerOrdUtxo.vout,
-        nonWitnessUtxo: Buffer.from(sellerOrdUtxo.rawHex!, 'hex'),
-        sighashType: Transaction.SIGHASH_SINGLE | Transaction.SIGHASH_ANYONECANPAY,
-      });
-      const splicedUtxos = utxos.splice(0, 2);
-      utxos.forEach((f) => {
         buyerPsbt.addInput({
-          hash: f.txid,
-          index: f.vout,
-          nonWitnessUtxo: Buffer.from(f.rawHex!, 'hex'),
+          hash: utxos[0].txid,
+          index: utxos[0].vout,
+          nonWitnessUtxo: Buffer.from(utxos[0].rawHex!, 'hex'),
         });
-      });
+        buyerPsbt.addInput({
+          hash: utxos[1].txid,
+          index: utxos[1].vout,
+          nonWitnessUtxo: Buffer.from(utxos[1].rawHex!, 'hex'),
+        });
+        buyerPsbt.addInput({
+          hash: data.sellerOrdUtxo.txid,
+          index: data.sellerOrdUtxo.vout,
+          nonWitnessUtxo: Buffer.from(data.sellerOrdUtxo.rawHex!, 'hex'),
+          sighashType: Transaction.SIGHASH_SINGLE | Transaction.SIGHASH_ANYONECANPAY,
+        });
+        const splicedUtxos = utxos.splice(0, 2);
+        utxos.forEach((f) => {
+          buyerPsbt.addInput({
+            hash: f.txid,
+            index: f.vout,
+            nonWitnessUtxo: Buffer.from(f.rawHex!, 'hex'),
+          });
+        });
 
-      buyerPsbt.addOutput({
-        address: address,
-        value: DUMMY_UTXO_VALUE * 2,
-      });
-      buyerPsbt.addOutput({
-        address: address,
-        value: sellerOrdUtxo.value,
-      });
-      buyerPsbt.addOutput({
-        address: token.outpoint,
-        value: fullTokenPrice,
-      });
-      buyerPsbt.addOutput({
-        address: FEE_ADDRESS,
-        value: 0.02 * 10 ** 8,
-      });
-      buyerPsbt.addOutput({
-        address: address,
-        value: DUMMY_UTXO_VALUE,
-      });
-      buyerPsbt.addOutput({
-        address: address,
-        value: DUMMY_UTXO_VALUE,
-      });
+        buyerPsbt.addOutput({
+          address: address,
+          value: DUMMY_UTXO_VALUE * 2,
+        });
+        buyerPsbt.addOutput({
+          address: address,
+          value: data.sellerOrdUtxo.value,
+        });
+        buyerPsbt.addOutput({
+          address: data.inscription.address,
+          value: data.inscription.price,
+        });
+        buyerPsbt.addOutput({
+          address: FEE_ADDRESS,
+          value: 0.02 * 10 ** 8,
+        });
+        buyerPsbt.addOutput({
+          address: address,
+          value: DUMMY_UTXO_VALUE,
+        });
+        buyerPsbt.addOutput({
+          address: address,
+          value: DUMMY_UTXO_VALUE,
+        });
 
-      const fee = gptFeeCalculate(utxos.length + 2, 7, DEFAULT_FEE_RATE);
+        const fee = gptFeeCalculate(utxos.length + 2, 7, DEFAULT_FEE_RATE);
 
-      const change =
-        utxos.concat(splicedUtxos).reduce((acc, cur) => acc + cur.value, 0) -
-        fee -
-        splicedUtxos.reduce((acc, sum) => (acc += sum.value), 0) +
-        600 * 2 -
-        fullTokenPrice -
-        0.02 * 10 ** 8;
+        const change =
+          utxos.concat(splicedUtxos).reduce((acc, cur) => acc + cur.value, 0) -
+          fee -
+          splicedUtxos.reduce((acc, sum) => (acc += sum.value), 0) +
+          600 * 2 -
+          data.inscription.price -
+          0.02 * 10 ** 8;
 
-      if (change <= 0) return toast.error('Not enough funds');
+        if (change <= 0) {
+          toast.error('Not enough funds');
+          return;
+        }
 
-      buyerPsbt.addOutput({
-        address: address,
-        value: change,
-      });
+        buyerPsbt.addOutput({
+          address: address,
+          value: change,
+        });
 
-      const inputsToSign = [0, 1, ...utxos.map((_, i) => i + 3)];
-      const partiallySignedPsbtBase64 = await signPsbtInputs(buyerPsbt.toBase64(), {
-        autoFinalized: false,
-        toSignInputs: inputsToSign.map((f) => ({
-          address,
-          index: f,
-          sighashTypes: undefined,
-        })),
-      });
-      if (!partiallySignedPsbtBase64) {
-        toast.error('Failed to sign buyer inputs');
-        return;
+        const inputsToSign = [0, 1, ...utxos.map((_, i) => i + 3)];
+
+        psbtsToSign.push({
+          psbtBase64: buyerPsbt.toBase64(),
+          options: {
+            autoFinalized: false,
+            toSignInputs: inputsToSign.map((f) => ({
+              address,
+              index: f,
+              sighashTypes: undefined,
+            })),
+          },
+        });
       }
 
-      buyerPsbt = Psbt.fromBase64(partiallySignedPsbtBase64);
-      inputsToSign.forEach((f) => {
-        buyerPsbt.finalizeInput(f);
-      });
+      const signedListPsbtsBase64: string[] = [];
 
-      return buyerPsbt.toBase64();
+      if (psbtsToSign.length > 1) {
+        const partiallySignedPsbtsBase64 = await signMultiPsbt(psbtsToSign);
+        if (!partiallySignedPsbtsBase64) return;
+        signedListPsbtsBase64.push(
+          ...partiallySignedPsbtsBase64.flatMap((f, i) =>
+            fixSignatures(Psbt.fromBase64(f), psbtsToSign[i]),
+          ),
+        );
+      } else {
+        const partiallySignedPsbtbase64 = await signPsbtInputs(
+          psbtsToSign[0].psbtBase64,
+          psbtsToSign[0].options,
+        );
+        if (!partiallySignedPsbtbase64) return;
+        const psbt = Psbt.fromBase64(partiallySignedPsbtbase64);
+        signedListPsbtsBase64.push(fixSignatures(psbt, psbtsToSign[0]));
+      }
+
+      return signedListPsbtsBase64;
     },
     [address, signPsbtInputs],
   );

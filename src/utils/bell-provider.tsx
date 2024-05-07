@@ -79,7 +79,6 @@ ${connectedAddress}
 
     try {
       const signedMessage = await nintondo.signMessage(message);
-      console.log(signedMessage);
       const signatureBuffer = Buffer.from(signedMessage, 'base64');
       const publicKeyBuffer = Buffer.from(await nintondo.getPublicKey(), 'hex');
       const pair = ECPair.fromPublicKey(publicKeyBuffer);
