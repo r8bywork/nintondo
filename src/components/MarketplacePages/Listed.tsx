@@ -168,7 +168,12 @@ const Listed = () => {
 
   return (
     <div className='max-w-[1490px] flex max-mobile:gap-[5px] gap-[10px] max-lg:justify-center flex-col pb-[72px]'>
-      {isSuccess && (
+      {isSuccess && !data.tokens.length && (
+        <p className='text-[28px] font-bold text-center pt-[50px]'>
+          No listed tokens found for <span className='text-[#FFBB00]'> {tick}</span>
+        </p>
+      )}
+      {isSuccess && Boolean(data.tokens.length) && (
         <div
           className='w-full grid gap-[18px] min-h-[760px] max-medium:min-h-auto'
           style={{
