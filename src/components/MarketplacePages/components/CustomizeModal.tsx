@@ -7,12 +7,18 @@ interface CustomizeModalProps {
   onClose: () => void;
   onConfirm: (fee: number) => void;
   defaultFee: number;
+  normalFee: number;
 }
 
-export const CustomizeModal = ({ onConfirm, onClose, defaultFee }: CustomizeModalProps) => {
+export const CustomizeModal = ({
+  onConfirm,
+  onClose,
+  defaultFee,
+  normalFee,
+}: CustomizeModalProps) => {
   const ref = useRef<HTMLInputElement>(null);
   const [feeType, setFeeType] = useState<FeeType>('normal');
-  const [customFee, setCustomFee] = useState(36);
+  const [customFee, setCustomFee] = useState(defaultFee);
 
   const handleCustomClick = () => {
     setFeeType('custom');
@@ -39,7 +45,7 @@ export const CustomizeModal = ({ onConfirm, onClose, defaultFee }: CustomizeModa
             NORMAL
           </button>
           <div className='font-bold text-[20px] leading-[21px] text-[#FFBB00] flex gap-[10px]'>
-            {defaultFee}
+            {normalFee}
             <span className='font-normal text-[#4b4b4b]'>sasts/vB</span>
           </div>
         </div>

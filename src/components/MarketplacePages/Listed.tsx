@@ -8,11 +8,11 @@ import {
   MarketplaceTokenView,
 } from '@/interfaces/marketapi';
 import { Modal } from '../Modal';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './style.css';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { MARKET_API_URL } from '@/consts';
+import { DEFAULT_FEE_RATE, MARKET_API_URL } from '@/consts';
 import { useSearchParams } from 'react-router-dom';
 import { shortAddress } from '@/utils';
 import Loading from 'react-loading';
@@ -25,57 +25,30 @@ import {
   useCheckInscription,
   useCreateBuyingSignedPsbt,
   useHasEnoughUtxos,
-  useMakeDummyUTXOS,
 } from '@/hooks/market';
 import toast from 'react-hot-toast';
 import { YesNoModal } from './components/YesNoModal';
 import { useNintondoManagerContext } from '@/utils/bell-provider';
 import { ApiUTXO } from '@/interfaces/api';
 import { useMakeAuthRequests } from '@/hooks/auth';
-import { CustomizeModal } from './components/CustomizeModal';
 
 const Listed = () => {
   // Modal logic
   const { isOpen, open: openModal, close: closeModal } = useModal();
   const { isOpen: isYesNoOpen, open: openYesNo, close: closeYesNo } = useModal();
-  const { isOpen: isCustomizeOpen, open: openCustomize, close: closeCustomize } = useModal();
 
   const [tokensToBuy, setTokensToBuy] = useState<MarketplaceTokenView[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTokens, { stats, forceSet, addItem, removeItem }] =
     useWithStatistic<MarketplaceTokenView>([], ['amount']);
 
-  const makeDummyUTXOsReq = useMakeDummyUTXOS();
   const hasEnoughUtxos = useHasEnoughUtxos();
   const checkInscription = useCheckInscription();
   const createBuyingSignedPsbt = useCreateBuyingSignedPsbt();
 
   const makeAuthRequests = useMakeAuthRequests();
 
-  const {
-    isLoading: isMaking,
-    refetch: makeDummyUTXOs,
-    isSuccess: isMakingSuccess,
-    isError: isMakingError,
-  } = useQuery({
-    queryKey: ['make-duumy-utxos'],
-    queryFn: makeDummyUTXOsReq,
-    enabled: false,
-    retry: false,
-  });
-
   const { verifiedAddress, getPublicKey } = useNintondoManagerContext();
-
-  useEffect(() => {
-    if (!isLoading && isMakingSuccess) {
-      closeYesNo();
-      openModal();
-    }
-
-    if (!isLoading && isMakingError) {
-      handleYesNoCancel();
-    }
-  }, [isMaking, isMakingSuccess, isMakingError]);
 
   const { tick, page, filter } = getMarketplaceFilters(searchParams);
 
@@ -97,13 +70,21 @@ const Listed = () => {
     },
   });
 
-  const handleModalCloseClick = () => {
-    setTokensToBuy([]);
+  const handleYesNoClose = () => {
+    closeYesNo();
+  };
+
+  const handleModalClose = () => {
     closeModal();
   };
 
+  const handleModalCloseClick = () => {
+    setTokensToBuy([]);
+    handleModalClose();
+  };
+
   const handleYesNoCancel = () => {
-    closeYesNo();
+    handleYesNoClose();
     handleModalCloseClick();
   };
 
@@ -142,7 +123,7 @@ const Listed = () => {
     addItem(token);
   };
 
-  const handleBuy = async (tokens: MarketplaceTokenView[]) => {
+  const handleBuy = async (tokens: MarketplaceTokenView[], fee: number) => {
     if (!verifiedAddress) toast.error('Please connect your wallet first');
     if (tokens.length === 1) {
       const sellerUtxo = await checkInscription(tokens[0]);
@@ -167,7 +148,7 @@ const Listed = () => {
             utxos,
           },
         ],
-        2000,
+        fee,
       );
       if (partiallySignedPsbts === undefined) return;
       const pubKey = await getPublicKey();
@@ -245,39 +226,26 @@ const Listed = () => {
       {isOpen && (
         <Modal
           isOpen
-          onClose={closeModal}
+          onClose={handleModalClose}
         >
           <ConfirmationModal
             onClose={handleModalCloseClick}
             onConfirm={handleBuy}
-            onCustomizeClick={openCustomize}
             tokensToBuy={tokensToBuy}
             tick={tick}
+            data={{ fee: DEFAULT_FEE_RATE }}
           />
         </Modal>
       )}
       {isYesNoOpen && (
         <Modal
           isOpen
-          onClose={closeYesNo}
+          onClose={handleYesNoClose}
         >
           <YesNoModal
-            isLoading={isMaking}
             onCancel={handleYesNoCancel}
-            onConfirm={makeDummyUTXOs}
-            onCustomizeClick={openCustomize}
-          />
-        </Modal>
-      )}
-      {isCustomizeOpen && (
-        <Modal
-          isOpen
-          onClose={closeCustomize}
-        >
-          <CustomizeModal
-            defaultFee={32}
-            onClose={closeCustomize}
-            onConfirm={closeCustomize}
+            onError={handleYesNoCancel}
+            onSuccess={handleYesNoClose}
           />
         </Modal>
       )}

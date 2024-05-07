@@ -1,12 +1,21 @@
 import { MarketplaceTokenView } from '@/interfaces/marketapi';
 import Token from '../Token/Token';
+import { useModal } from '@/hooks/useModal';
+import { Modal } from '@/components/Modal';
+import { CustomizeModal } from './CustomizeModal';
+import { DEFAULT_FEE_RATE } from '@/consts';
+import { useState } from 'react';
+
+interface Info {
+  fee: number;
+}
 
 interface ConfirmationModalProps {
   onClose: () => void;
   tokensToBuy: MarketplaceTokenView[];
   tick: string;
-  onConfirm: (tokensToBuy: MarketplaceTokenView[], tick: string) => void;
-  onCustomizeClick: () => void;
+  onConfirm: (tokensToBuy: MarketplaceTokenView[], fee: number) => void;
+  data: Info;
 }
 
 export const ConfirmationModal = ({
@@ -14,8 +23,16 @@ export const ConfirmationModal = ({
   onClose,
   tokensToBuy,
   tick,
-  onCustomizeClick,
+  data,
 }: ConfirmationModalProps) => {
+  const { isOpen: isCustomizeOpen, open: openCustomize, close: closeCustomize } = useModal();
+  const [feeRate, setFeeRate] = useState(data.fee);
+
+  const handleCustomizeFee = (feeRate: number) => {
+    setFeeRate(feeRate);
+    closeCustomize();
+  };
+
   return (
     <div className='bg-[#191919] shadow-[0_0_20px_0_rgba(0,0,0,0.3)] max-w-[740px] max-medium:max-w-[395px] rounded-[15px] py-[21px] mx-[17px] px-[62px] max-medium:px-[25px] flex flex-col gap-[34px] items-center'>
       <p className='text-[20px] font-bold'>Confirmation</p>
@@ -57,7 +74,7 @@ export const ConfirmationModal = ({
           <div className='flex w-[400px] max-medium:w-[220px] flex-col gap-[10px]'>
             <div className='flex justify-between'>
               <p className='text-[20px] text-[#4B4B4B]'>TRANSACTION FEE RATE</p>
-              <p className='text-[20px]'>321</p>
+              <p className='text-[20px] pt-[4px] max-medium:pt-0'>{feeRate}</p>
             </div>
             <div className='flex justify-between'>
               <p className='text-[20px] text-[#4B4B4B]'></p>
@@ -68,7 +85,7 @@ export const ConfirmationModal = ({
             <div className='flex justify-between items-center'>
               <p className='text-[20px] max-medium:text-[14px] text-[#4B4B4B]'>sats/vB</p>
               <button
-                onClick={onCustomizeClick}
+                onClick={openCustomize}
                 className='text-[20px] text-[#FFBB00] border border-[#FFBB00] px-2 rounded-[4px] leading-5 max-medium:text-[14px] max-medium:px-[2px]'
               >
                 Customize
@@ -121,12 +138,25 @@ export const ConfirmationModal = ({
           CANCEL
         </button>
         <button
-          onClick={() => onConfirm(tokensToBuy, tick)}
+          onClick={() => onConfirm(tokensToBuy, feeRate)}
           className='shadow-[0px_1px_18px_0px_#FFD45C80] py-[6px] px-[45px] rounded-full bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)] text-[#000] text-[20px] font-bold '
         >
           CONFIRM
         </button>
       </div>
+      {isCustomizeOpen && (
+        <Modal
+          isOpen
+          onClose={closeCustomize}
+        >
+          <CustomizeModal
+            defaultFee={feeRate}
+            normalFee={DEFAULT_FEE_RATE}
+            onClose={closeCustomize}
+            onConfirm={handleCustomizeFee}
+          />
+        </Modal>
+      )}
     </div>
   );
 };

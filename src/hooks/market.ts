@@ -14,95 +14,98 @@ export const useMakeDummyUTXOS = () => {
   const { signPsbtInputs } = useNintondoManagerContext();
   const { address } = useNintondoManagerContext();
 
-  return useCallback(async (): Promise<ApiUTXO[] | undefined> => {
-    if (!address) return;
+  return useCallback(
+    async (fee: number): Promise<ApiUTXO[] | undefined> => {
+      if (!address) return;
 
-    let utxos = await getApiUtxo(address);
-    if (!utxos) return;
-    for (const i of utxos) {
-      i.rawHex = await getTransactionRawHex(i.txid);
-    }
+      let utxos = await getApiUtxo(address);
+      if (!utxos) return;
+      for (const i of utxos) {
+        i.rawHex = await getTransactionRawHex(i.txid);
+      }
 
-    if (utxos.filter((f) => f.rawHex === undefined).length > 0)
-      throw new Error('Need raw hex in order to make dummy UTXOs');
+      if (utxos.filter((f) => f.rawHex === undefined).length > 0)
+        throw new Error('Need raw hex in order to make dummy UTXOs');
 
-    let psbt = new Psbt({ network: networks.bitcoin });
-    for (const i of utxos) {
-      psbt.addInput({
-        hash: i.txid,
-        index: i.vout,
-        sequence: 0xffffffff,
-        nonWitnessUtxo: Buffer.from(i.rawHex!, 'hex'),
-      });
-    }
-
-    psbt.addOutput({
-      address,
-      value: DUMMY_UTXO_VALUE,
-    });
-    psbt.addOutput({
-      address,
-      value: DUMMY_UTXO_VALUE,
-    });
-    const change =
-      utxos.reduce((acc, f) => (acc += f.value), 0) -
-      gptFeeCalculate(utxos.length, 3, DEFAULT_FEE_RATE) -
-      DUMMY_UTXO_VALUE * 2;
-
-    if (change <= 0) {
-      toast.error('Not enough funds');
-      return;
-    }
-
-    psbt.addOutput({
-      address,
-      value: change,
-    });
-
-    const signedPsbtBase64 = await signPsbtInputs(psbt.toBase64());
-    if (!signedPsbtBase64) throw new Error('Failed to sign inputs to create dummys');
-
-    psbt = Psbt.fromBase64(signedPsbtBase64);
-
-    const transaction = psbt.finalizeAllInputs().extractTransaction(true);
-    const txHex = transaction.toHex();
-    const pushedTxId = await fetchBELLMainnet<string>({
-      path: '/tx',
-      method: 'POST',
-      body: txHex,
-      json: false,
-    });
-
-    if (!pushedTxId || pushedTxId.length !== 64) {
-      toast.error(`${pushedTxId}`);
-      return;
-    }
-
-    let txFound = false;
-    while (!txFound) {
-      const utxos = await fetchBELLMainnet<ApiUTXO[]>({
-        path: `/address/${address}/utxo`,
-      });
-      if (utxos === undefined || utxos.find((f) => f.txid === transaction.getId()) === undefined)
-        await new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(undefined);
-          }, 2000);
+      let psbt = new Psbt({ network: networks.bitcoin });
+      for (const i of utxos) {
+        psbt.addInput({
+          hash: i.txid,
+          index: i.vout,
+          sequence: 0xffffffff,
+          nonWitnessUtxo: Buffer.from(i.rawHex!, 'hex'),
         });
-      else txFound = true;
-    }
+      }
 
-    utxos = [];
-    for (let i = 0; i <= transaction.outs.length - 1; i++) {
-      utxos.push({
-        txid: transaction.getId(),
-        vout: i,
-        value: transaction.outs[i].value,
-        rawHex: txHex,
+      psbt.addOutput({
+        address,
+        value: DUMMY_UTXO_VALUE,
       });
-    }
-    return utxos;
-  }, [signPsbtInputs, address, getApiUtxo, getTransactionRawHex]);
+      psbt.addOutput({
+        address,
+        value: DUMMY_UTXO_VALUE,
+      });
+      const change =
+        utxos.reduce((acc, f) => (acc += f.value), 0) -
+        gptFeeCalculate(utxos.length, 3, fee) -
+        DUMMY_UTXO_VALUE * 2;
+
+      if (change <= 0) {
+        toast.error('Not enough funds');
+        return;
+      }
+
+      psbt.addOutput({
+        address,
+        value: change,
+      });
+
+      const signedPsbtBase64 = await signPsbtInputs(psbt.toBase64());
+      if (!signedPsbtBase64) throw new Error('Failed to sign inputs to create dummys');
+
+      psbt = Psbt.fromBase64(signedPsbtBase64);
+
+      const transaction = psbt.finalizeAllInputs().extractTransaction(true);
+      const txHex = transaction.toHex();
+      const pushedTxId = await fetchBELLMainnet<string>({
+        path: '/tx',
+        method: 'POST',
+        body: txHex,
+        json: false,
+      });
+
+      if (!pushedTxId || pushedTxId.length !== 64) {
+        toast.error(`${pushedTxId}`);
+        return;
+      }
+
+      let txFound = false;
+      while (!txFound) {
+        const utxos = await fetchBELLMainnet<ApiUTXO[]>({
+          path: `/address/${address}/utxo`,
+        });
+        if (utxos === undefined || utxos.find((f) => f.txid === transaction.getId()) === undefined)
+          await new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(undefined);
+            }, 2000);
+          });
+        else txFound = true;
+      }
+
+      utxos = [];
+      for (let i = 0; i <= transaction.outs.length - 1; i++) {
+        utxos.push({
+          txid: transaction.getId(),
+          vout: i,
+          value: transaction.outs[i].value,
+          rawHex: txHex,
+        });
+      }
+      return utxos;
+    },
+    [signPsbtInputs, address, getApiUtxo, getTransactionRawHex],
+  );
 };
 
 export const useCreateListedSignedPSBT = () => {
