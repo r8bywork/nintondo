@@ -67,3 +67,9 @@ export interface MarketplaceTokensView {
   total_pages: number;
   tokens: Array<MarketplaceTokenView>;
 }
+
+export interface SplitHistoryItem {
+  txid: string;
+  locations: string[];
+  confirmed: boolean;
+}

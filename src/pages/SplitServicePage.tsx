@@ -13,6 +13,9 @@ import { getFees } from '@/hooks/electrs';
 import { Split } from '@/interfaces/marketapi';
 import { filterOrdsAndFindUnmatchedSplits } from '@/utils';
 import { useMakeAuthRequests } from '@/hooks/auth';
+import { useModal } from '@/hooks/useModal';
+import { Modal } from '@/components/Modal';
+import { HistoryModal } from '@/components/SplitServiceComponents/HistoryModal';
 
 const SplitServicePage = () => {
   const { address, verifiedAddress } = useNintondoManagerContext();
@@ -24,6 +27,8 @@ const SplitServicePage = () => {
   const [feeRates, setFeeRate] = useState<Fees>({ fast: 3000, slow: 200 });
 
   const [selectedFeeRate, setSelectedFeeRate] = useState<number | string>(37);
+
+  const { isOpen, open, close } = useModal();
 
   const makeAuthRequests = useMakeAuthRequests();
 
@@ -153,6 +158,7 @@ const SplitServicePage = () => {
           selectedOrds={selectedOrds}
           setSelectedOrds={setSelectedOrds}
           removeSelectedOrdHandler={removeSelectedOrdHandler}
+          onHistoryClick={open}
         />
       </div>
       <div className='flex gap-6'>
@@ -169,6 +175,14 @@ const SplitServicePage = () => {
           updateOrds={updateOrds}
         />
       </div>
+      {isOpen && (
+        <Modal
+          isOpen
+          onClose={close}
+        >
+          <HistoryModal onClose={close} />
+        </Modal>
+      )}
     </div>
   );
 };

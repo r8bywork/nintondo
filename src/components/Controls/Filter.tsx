@@ -44,7 +44,7 @@ const Filter: FC<FilterProps> = ({
   mobileHorizontally,
   mobileAlwaysActive,
 }) => {
-  const { open, close, isOpen } = useModal();
+  const { open, close, isOpen } = useModal(false, { mobileScrollDisable: true });
   const filters = useMemo(() => config.filters, [config.filters]);
   const { containerRef, itemsPerRow } = useItemsPerRow(
     filters.map((elem) => ('text' in elem ? elem.text : 'Range')),

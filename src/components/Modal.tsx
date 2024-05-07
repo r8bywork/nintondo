@@ -18,7 +18,7 @@ export const Modal = ({ isOpen, onClose, children, mobileOnly }: ModalProps) => 
   return (
     <div
       className={classNames(
-        'fixed top-[0] left-[0] w-full h-full z-[999] bg-[#0000007d] justify-center items-center',
+        'fixed top-[0] left-[0] w-full h-full z-[999] bg-[#0000007d] justify-center items-center overflow-auto',
         {
           flex: !mobileOnly && isOpen,
           hidden: mobileOnly || !isOpen,

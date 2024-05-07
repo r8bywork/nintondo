@@ -31,7 +31,7 @@ import { YesNoModal } from './components/YesNoModal';
 
 const Listed = () => {
   const { isOpen, open: openModal, close: closeModal } = useModal();
-  const { isOpen: isYesNoOpen, open: openYesNo, close: closeYesNo } = useModal(true);
+  const { isOpen: isYesNoOpen, open: openYesNo, close: closeYesNo } = useModal();
   const [tokensToBuy, setTokensToBuy] = useState<MarketplaceTokenView[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTokens, { stats, forceSet, addItem, removeItem }] =

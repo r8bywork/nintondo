@@ -8,12 +8,14 @@ interface SplitVisualizerProps {
   selectedOrds: Ord[];
   setSelectedOrds: (ords: Ord[]) => void;
   removeSelectedOrdHandler: (ord: Ord) => void;
+  onHistoryClick: () => void;
 }
 
 const SplitVisualizer: FC<SplitVisualizerProps> = ({
   selectedOrds,
   setSelectedOrds,
   removeSelectedOrdHandler,
+  onHistoryClick,
 }) => {
   const switchToInscription = (ord: Ord, direction: 'next' | 'previous') => {
     setSelectedOrds(
@@ -43,16 +45,37 @@ const SplitVisualizer: FC<SplitVisualizerProps> = ({
 
   if (!selectedOrds.length)
     return (
-      <div className='flex min-w-[55%] h-128 items-center justify-center border-2 border-[#191919] rounded-lg p-4'>
-        <p>Selected ords will appear here</p>
+      <div className='flex flex-col min-w-[55%] border-2 border-[#191919] rounded-lg p-4'>
+        <div className='w-full flex justify-between items-center'>
+          <p className='text-lg font-medium'>Splits</p>
+          <button
+            className={
+              'text-[20px] flex items-center border px-[20px] py-[6px] gap-[10px] leading-[21px] transition rounded-[50px]'
+            }
+            onClick={onHistoryClick}
+          >
+            History
+          </button>
+        </div>
+        <div className='flex-1 flex justify-center items-center'>
+          <p>Selected ords will appear here</p>
+        </div>
       </div>
     );
 
   return (
     <div className='flex flex-col min-w-[55%] border-2 border-[#191919] rounded-lg p-4'>
-      <div className='flex flex-col'>
+      <div className='flex flex-col pb-[20px]'>
         <div className='w-full flex justify-between items-center'>
           <p className='text-lg font-medium'>Splits</p>
+          <button
+            className={
+              'text-[20px] flex border items-center px-[20px] py-[6px] gap-[10px] leading-[21px] transition rounded-[50px]'
+            }
+            onClick={onHistoryClick}
+          >
+            History
+          </button>
         </div>
       </div>
 

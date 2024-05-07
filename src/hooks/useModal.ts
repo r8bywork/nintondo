@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react';
 
-export const useModal = (defaultValue?: boolean) => {
+interface ModalOptions {
+  mobileScrollDisable: boolean;
+}
+
+export const useModal = (defaultValue?: boolean, options?: ModalOptions) => {
   const [isOpen, setIsOpen] = useState(defaultValue || false);
+
+  const scrollClass = options?.mobileScrollDisable ? 'mobile-scroll-disable' : 'scroll-disable';
 
   const handleClose = () => {
     // enable scroll
-    document.body.classList.remove('mobile-scroll-disable');
+    document.body.classList.remove(scrollClass);
 
     setIsOpen(false);
   };
@@ -13,7 +19,7 @@ export const useModal = (defaultValue?: boolean) => {
   const handleOpen = () => {
     // disable scroll from page
     // handleClose make scroll available again
-    document.body.classList.add('mobile-scroll-disable');
+    document.body.classList.add(scrollClass);
 
     setIsOpen(true);
   };
@@ -29,7 +35,7 @@ export const useModal = (defaultValue?: boolean) => {
 
     return () => {
       // force enable scroll when dismounted
-      document.body.classList.remove('mobile-scroll-disable');
+      document.body.classList.remove(scrollClass);
       document.removeEventListener('keydown', closeModalOnKeyDown);
     };
   }, []);

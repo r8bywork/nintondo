@@ -5,16 +5,29 @@ export type Field = {
   key: string;
   canBeSorted?: boolean;
   Component?: JSX.ElementType;
+  className?: string;
+  headerClassName?: string;
+};
+
+export type Item = {
+  value: string;
+  additional?: string;
+  under?: string;
+  marked?: boolean;
+  bold?: boolean;
 };
 
 export type ItemField = {
-  [key: string]: {
-    value: string;
-    additional?: string;
-    under?: string;
-    marked?: boolean;
-    bold?: boolean;
-  };
+  [key: string]: Item;
+};
+
+export type FieldComponentProps = {
+  item: ItemField;
+  keyId: string;
+  under: string;
+  additional: string;
+  id: string;
+  children: string;
 };
 
 interface InlineTableProps {
@@ -26,6 +39,7 @@ interface InlineTableProps {
   underClassName?: string;
   selectedId?: string;
   keyId?: string;
+  headClassName?: string;
 }
 
 export const InlineTable = ({
@@ -37,10 +51,11 @@ export const InlineTable = ({
   underClassName,
   keyId = 'id',
   selectedId,
+  headClassName,
 }: InlineTableProps) => {
   return (
     <table className='w-full'>
-      <thead>
+      <thead className={classNames(headClassName)}>
         <tr>
           {fields.map((field, idx) => (
             <th
@@ -48,6 +63,7 @@ export const InlineTable = ({
                 'text-[20px] text-[#FFBB00] pb-[16px] font-normal',
                 idx === 0 ? 'text-left' : 'text-right text-nowrap',
                 idx === 0 ? firstCellClassName : cellClassName,
+                field.headerClassName,
               )}
               key={field.key}
             >
@@ -76,6 +92,7 @@ export const InlineTable = ({
                   },
                   selectedId === item[keyId].value ? 'text-[#FFBB00]' : 'text-[#fff]',
                   cellIdx === 0 ? firstCellClassName : cellClassName,
+                  field.className,
                 )}
                 key={field.key}
               >
@@ -84,6 +101,8 @@ export const InlineTable = ({
                     under={item[field.key].under}
                     additional={item[field.key].additional}
                     item={item}
+                    keyId={keyId}
+                    id={item[keyId].value}
                   >
                     {item[field.key].value}
                   </field.Component>
