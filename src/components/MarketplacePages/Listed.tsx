@@ -32,10 +32,14 @@ import { YesNoModal } from './components/YesNoModal';
 import { useNintondoManagerContext } from '@/utils/bell-provider';
 import { ApiUTXO } from '@/interfaces/api';
 import { useMakeAuthRequests } from '@/hooks/auth';
+import { CustomizeModal } from './components/CustomizeModal';
 
 const Listed = () => {
+  // Modal logic
   const { isOpen, open: openModal, close: closeModal } = useModal();
-  const { isOpen: isYesNoOpen, open: openYesNo, close: closeYesNo } = useModal(false);
+  const { isOpen: isYesNoOpen, open: openYesNo, close: closeYesNo } = useModal();
+  const { isOpen: isCustomizeOpen, open: openCustomize, close: closeCustomize } = useModal();
+
   const [tokensToBuy, setTokensToBuy] = useState<MarketplaceTokenView[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTokens, { stats, forceSet, addItem, removeItem }] =
@@ -243,6 +247,7 @@ const Listed = () => {
           <ConfirmationModal
             onClose={handleModalCloseClick}
             onConfirm={handleBuy}
+            onCustomizeClick={openCustomize}
             tokensToBuy={tokensToBuy}
             tick={tick}
           />
@@ -257,6 +262,18 @@ const Listed = () => {
             isLoading={isMaking}
             onCancel={handleYesNoCancel}
             onConfirm={makeDummyUTXOs}
+          />
+        </Modal>
+      )}
+      {isCustomizeOpen && (
+        <Modal
+          isOpen
+          onClose={closeCustomize}
+        >
+          <CustomizeModal
+            defaultFee={32}
+            onClose={closeCustomize}
+            onConfirm={closeCustomize}
           />
         </Modal>
       )}
