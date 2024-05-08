@@ -33,7 +33,7 @@ export const HistoryModal = ({ onClose }: HistoryModalProps) => {
   });
 
   return (
-    <div className='bg-[#191919] shadow-[0_0_20px_0_rgba(0,0,0,0.3)] rounded-[15px] py-[21px] mx-[17px] px-[62px] max-medium:px-[25px] flex flex-col gap-[34px] items-center'>
+    <div className='bg-[#191919] shadow-[0_0_20px_0_rgba(0,0,0,0.3)] rounded-[15px] py-[21px] mx-[17px] px-[36px] py-[20px] max-medium:px-[25px] flex flex-col gap-[34px] items-center'>
       {isLoading && <Loading type='balls' />}
       <div className='max-h-[420px] overflow-y-auto px-[20px]'>
         {isSuccess && (

@@ -131,9 +131,23 @@ const SplitServicePage = () => {
   if (!ords.length && !selectedOrds.length)
     return (
       <div className={'bg-black'}>
-        <div className='h-screen max-w-[1700px] mx-auto flex pt-[150px] items-center justify-center text-white'>
+        <div className='h-screen max-w-[1700px] mx-auto flex pt-[150px] items-center justify-center text-white flex-col gap-[20px]'>
           You cannot split any ords
+          <button
+            className={
+              'text-[20px] flex items-center border px-[20px] py-[6px] gap-[10px] leading-[21px] transition rounded-[50px]'
+            }
+            onClick={open}
+          >
+            History
+          </button>
         </div>
+        <Modal
+          isOpen={isOpen}
+          onClose={close}
+        >
+          <HistoryModal onClose={close} />
+        </Modal>
       </div>
     );
 
@@ -172,14 +186,12 @@ const SplitServicePage = () => {
           updateOrds={updateOrds}
         />
       </div>
-      {isOpen && (
-        <Modal
-          isOpen
-          onClose={close}
-        >
-          <HistoryModal onClose={close} />
-        </Modal>
-      )}
+      <Modal
+        isOpen={isOpen}
+        onClose={close}
+      >
+        <HistoryModal onClose={close} />
+      </Modal>
     </div>
   );
 };

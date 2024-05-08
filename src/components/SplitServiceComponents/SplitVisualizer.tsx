@@ -65,7 +65,7 @@ const SplitVisualizer: FC<SplitVisualizerProps> = ({
 
   return (
     <div className='flex flex-col min-w-[55%] border-2 border-[#191919] rounded-lg p-4'>
-      <div className='flex flex-col pb-[20px]'>
+      <div className='flex flex-col pb-[]'>
         <div className='w-full flex justify-between items-center'>
           <p className='text-lg font-medium'>Splits</p>
           <button
