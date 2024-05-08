@@ -43,8 +43,7 @@ export const useSplitOrds = () => {
         ord.inscriptions
           .sort((a, b) => a.offset - b.offset)
           .forEach((inscription) => {
-            const availableToFree =
-              inscription.offset - (addedValues.reduce((acc, v) => acc + v, 0) + ORD_VALUE);
+            const availableToFree = inscription.offset - addedValues.reduce((acc, v) => acc + v, 0);
             if (inscription.offset > 0 && availableToFree > 1000) {
               psbt.addOutput({ address, value: availableToFree });
               addedValues.push(availableToFree);
