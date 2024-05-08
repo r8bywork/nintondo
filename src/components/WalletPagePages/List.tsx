@@ -396,7 +396,7 @@ export const List = ({ isListed = false }: ListProps) => {
         </div>
       )}
       <Modal
-        isOpen
+        isOpen={isOpen}
         onClose={handleClose}
       >
         <div className='rounded-[15px] px-[62px] py-[21px] bg-[#191919] p-[25px]'>
