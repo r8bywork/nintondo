@@ -8,7 +8,7 @@ import {
   MarketplaceTokenView,
 } from '@/interfaces/marketapi';
 import { Modal } from '../Modal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './style.css';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -229,32 +229,28 @@ const Listed = () => {
           BUY {stats.amount.toLocaleString()} {tick} for 0 BTC
         </button>
       </BottomSelect>
-      {isOpen && (
-        <Modal
-          isOpen
-          onClose={handleModalClose}
-        >
-          <ConfirmationModal
-            onClose={handleModalCloseClick}
-            onConfirm={handleBuy}
-            tokensToBuy={tokensToBuy}
-            tick={tick}
-            data={{ fee: DEFAULT_FEE_RATE }}
-          />
-        </Modal>
-      )}
-      {isYesNoOpen && (
-        <Modal
-          isOpen
-          onClose={handleYesNoClose}
-        >
-          <YesNoModal
-            onCancel={handleYesNoCancel}
-            onError={handleYesNoCancel}
-            onSuccess={handleYesNoClose}
-          />
-        </Modal>
-      )}
+      <Modal
+        isOpen={isOpen}
+        onClose={handleModalClose}
+      >
+        <ConfirmationModal
+          onClose={handleModalCloseClick}
+          onConfirm={handleBuy}
+          tokensToBuy={tokensToBuy}
+          tick={tick}
+          data={{ fee: DEFAULT_FEE_RATE }}
+        />
+      </Modal>
+      <Modal
+        isOpen={isYesNoOpen}
+        onClose={handleYesNoClose}
+      >
+        <YesNoModal
+          onCancel={handleYesNoCancel}
+          onError={handleYesNoCancel}
+          onSuccess={handleYesNoClose}
+        />
+      </Modal>
     </div>
   );
 };

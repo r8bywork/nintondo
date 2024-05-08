@@ -395,43 +395,41 @@ export const List = ({ isListed = false }: ListProps) => {
           </div>
         </div>
       )}
-      {isOpen && (
-        <Modal
-          isOpen
-          onClose={handleClose}
-        >
-          <div className='rounded-[15px] px-[62px] py-[21px] bg-[#191919] p-[25px]'>
-            {isListed ? (
-              <Unlist
-                onCancel={handleClose}
-                transfers={toModal.transfers}
-                amount={toModal.total}
-                unlist={unlist}
+      <Modal
+        isOpen
+        onClose={handleClose}
+      >
+        <div className='rounded-[15px] px-[62px] py-[21px] bg-[#191919] p-[25px]'>
+          {isListed ? (
+            <Unlist
+              onCancel={handleClose}
+              transfers={toModal.transfers}
+              amount={toModal.total}
+              unlist={unlist}
+            />
+          ) : (
+            <div className='flex flex-col gap-[15px]'>
+              <input
+                inputMode='numeric'
+                pattern='[0-9]*'
+                className='rounded-[50px] outline-none px-[10px] py-[3px] text-[20px] bg-[#4b4b4b]'
+                value={price}
+                onChange={(e) =>
+                  setPrice((price) =>
+                    isNaN(Number(e.target.value)) ? price : Number(e.target.value),
+                  )
+                }
               />
-            ) : (
-              <div className='flex flex-col gap-[15px]'>
-                <input
-                  inputMode='numeric'
-                  pattern='[0-9]*'
-                  className='rounded-[50px] outline-none px-[10px] py-[3px] text-[20px] bg-[#4b4b4b]'
-                  value={price}
-                  onChange={(e) =>
-                    setPrice((price) =>
-                      isNaN(Number(e.target.value)) ? price : Number(e.target.value),
-                    )
-                  }
-                />
-                <button
-                  onClick={list}
-                  className='max-[1200px]:flex-1 font-bold py-[6px] px-[101px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)]'
-                >
-                  LIST {selectedTransfers.total.toLocaleString()} {selectedTick?.tick}
-                </button>
-              </div>
-            )}
-          </div>
-        </Modal>
-      )}
+              <button
+                onClick={list}
+                className='max-[1200px]:flex-1 font-bold py-[6px] px-[101px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)]'
+              >
+                LIST {selectedTransfers.total.toLocaleString()} {selectedTick?.tick}
+              </button>
+            </div>
+          )}
+        </div>
+      </Modal>
       <BottomSelect
         selectedCount={selectedTransfersByTick.transfers.length}
         dataCount={selectedTick?.transfers.length || 0}

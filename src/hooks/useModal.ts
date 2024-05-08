@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface ModalOptions {
   mobileScrollDisable: boolean;
@@ -9,36 +9,38 @@ export const useModal = (defaultValue?: boolean, options?: ModalOptions) => {
 
   const scrollClass = options?.mobileScrollDisable ? 'mobile-scroll-disable' : 'scroll-disable';
 
-  const handleClose = () => {
+  const closeModalOnKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      handleClose();
+    }
+  }, []);
+
+  const handleClose = useCallback(() => {
     // enable scroll
     document.body.classList.remove(scrollClass);
+    document.removeEventListener('keydown', closeModalOnKeyDown);
 
     setIsOpen(false);
-  };
+  }, []);
 
-  const handleOpen = () => {
+  const handleOpen = useCallback(() => {
     // disable scroll from page
     // handleClose make scroll available again
-    document.body.classList.add(scrollClass);
-
-    setIsOpen(true);
-  };
-
-  useEffect(() => {
-    const closeModalOnKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        handleClose();
-      }
-    };
-
+    // document.body.classList.add(scrollClass);
     document.addEventListener('keydown', closeModalOnKeyDown);
 
-    return () => {
-      // force enable scroll when dismounted
-      document.body.classList.remove(scrollClass);
-      document.removeEventListener('keydown', closeModalOnKeyDown);
-    };
+    setIsOpen(true);
   }, []);
+
+  useEffect(() => {
+    return () => {
+      if (isOpen) {
+        // force enable scroll when dismounted
+        document.body.classList.remove(scrollClass);
+        document.removeEventListener('keydown', closeModalOnKeyDown);
+      }
+    };
+  }, [isOpen]);
 
   return {
     open: handleOpen,

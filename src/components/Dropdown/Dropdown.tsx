@@ -1,3 +1,4 @@
+import { useAnimation } from '@/hooks/animations';
 import classNames from 'classnames';
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -21,7 +22,11 @@ export const Dropdown = ({
   dropdownClassName,
 }: DropdownProps) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+
+  const animation = useAnimation(popoverRef, 'fade');
 
   const handleToggle = () => {
     if (!onOpen && !onClose) {
@@ -63,6 +68,10 @@ export const Dropdown = ({
     return removeEventListener;
   }, [handleOutsideClick, onOpen, onClose]);
 
+  useEffect(() => {
+    animation.startTransitionTo(isVisible);
+  }, [isVisible]);
+
   return (
     <div
       className={classNames('relative', containerClassName)}
@@ -74,18 +83,15 @@ export const Dropdown = ({
       >
         {target}
       </button>
-      <div
-        className={classNames(
-          'absolute left-0 transition duration-300 scale-0',
-          {
-            'scale-100': isVisible,
-          },
-          dropdownClassName,
-        )}
-        style={{ top: 'calc(100% + 10px)' }}
-      >
-        {dropdown}
-      </div>
+      {animation.isShown && (
+        <div
+          ref={popoverRef}
+          className={classNames('absolute left-0 transition duration-300', dropdownClassName)}
+          style={{ top: 'calc(100% + 10px)' }}
+        >
+          {dropdown}
+        </div>
+      )}
     </div>
   );
 };
