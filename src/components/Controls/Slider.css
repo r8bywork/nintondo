@@ -2,11 +2,12 @@
 -webkit-appearance: none;
   appearance: none; 
   flex: 1;
-  height: 2px;
+  height: 4px;
   border-radius: 2px;
   background: #4b4b4b;
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 /* Thumb: webkit */
@@ -14,8 +15,8 @@
   /* removing default appearance */
   -webkit-appearance: none;
   appearance: none;
-  height: 10px;
-  width: 10px;
+  height: 14px;
+  width: 14px;
   background-color: #fff;
   border-radius: 50%;
   border: none;
@@ -23,14 +24,14 @@
 }
 
 .styled-range::-webkit-slider-thumb:hover {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
 }
 
 /* Thumb: Firefox */
 .styled-range::-moz-range-thumb {
-  height: 10px;
-  width: 10px;
+  height: 14px;
+  width: 14px;
   background-color: #fff;
   border-radius: 50%;
   border: none;
@@ -39,6 +40,6 @@
 }
 
 .styled-range::-moz-range-thumb:hover {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
 }

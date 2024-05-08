@@ -23,7 +23,7 @@ export const BottomSelect = ({
   return (
     <div className='fixed flex justify-center items-center w-screen bottom-0 left-0 bg-[rgba(0,0,0,0.2)] backdrop-blur-xl border-t-[1px] border-[#191919]'>
       <div className='max-w-[1390px] flex items-center justify-between p-5 w-full max-medium:flex-col gap-[18px]'>
-        <div className='items-center flex gap-2 font-bold text-[16px] border-[1px] border-white rounded-[30px] h-[24px] w-[336px] max-medium:w-full justify-center px-[15px]'>
+        <div className='items-center flex gap-2 font-bold text-[16px] border-[1px] border-white rounded-[30px] h-[32px] w-[336px] max-medium:w-full justify-center px-[15px]'>
           {dataCount && (
             <>
               <Slider
@@ -32,7 +32,7 @@ export const BottomSelect = ({
                 value={selectedCount}
                 onChange={handleSliderChange}
               />
-              <span className='w-[16px]'>{selectedCount}</span>
+              <span className='w-[16px] text-[18px]'>{selectedCount}</span>
             </>
           )}
         </div>
