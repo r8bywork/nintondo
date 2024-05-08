@@ -173,8 +173,8 @@ const Listed = () => {
         <div
           className='w-full grid gap-[18px] min-h-[760px] max-medium:min-h-auto'
           style={{
-            gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-            gridTemplateRows: 'repeat(auto-fill, 240px)',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+            gridTemplateRows: 'repeat(auto-fill, 280px)',
           }}
         >
           {data?.tokens.map((f, i) => (

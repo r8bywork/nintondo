@@ -55,14 +55,14 @@ export const Filter = ({ filters, defaultFilter, filterKey, tag, className }: Fi
       dropdown={
         <div
           className={classNames(
-            'border-[2px] rounded-[19px] bg-[rgba(0,0,0,0.1)] flex flex-col gap-[10px] backdrop-blur-lg px-[10px] py-[7px]',
+            'border-[2px] border-[rgba(255,255,255,0.5)] rounded-[28px] bg-[rgba(0,0,0,0.8)] flex flex-col gap-[10px] backdrop-blur-lg p-[10px]',
           )}
         >
           {Object.entries(filters).map(([key, value]) => (
             <button
               key={key}
               className={classNames(
-                'leading-[17px] px-[10px] py-[2px] bg-[#4b4b4b] text-[#000] text-[16px] font-bold rounded-[16px] text-left',
+                'leading-[19px] px-[16px] py-[8px] bg-[#4b4b4b] text-[#000] text-[18px] font-bold rounded-[50px] text-left',
                 {
                   'bg-[#FFBB00]': key === filter,
                 },

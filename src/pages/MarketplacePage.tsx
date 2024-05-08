@@ -39,7 +39,7 @@ const MARKETPLACE_COMPONENTS: Record<MarketPlaceTabs, Tab> = {
         defaultFilter={Object.keys(SORT_FILTERS)[0]}
         filterKey='filter'
         filters={SORT_FILTERS}
-        className='min-w-[300px]'
+        className='min-w-[350px]'
       />
     ),
   },
@@ -90,7 +90,7 @@ const MarketplacePage = () => {
             fields={TABS}
             activeTab={currentTab}
             onHandleChange={handleActiveTabChange}
-            buttonClassName='mt-0 max-md:mt-0 flex-1 mr-0 md:mr-0 py-[6px] px-[45px] leading-[21px] h-[33px] max-md:mr-0'
+            buttonClassName='mt-0 max-md:mt-0 flex-1 mr-0 md:mr-0 py-[10px] px-[45px] leading-[21px] h-[40px] max-md:mr-0'
             className='flex-1 gap-[1px] max-medium:gap-[6px] bg-[#000]'
           />
           <TickDropdown />
