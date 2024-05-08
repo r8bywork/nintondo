@@ -8,7 +8,7 @@ import {
   MarketplaceTokenView,
 } from '@/interfaces/marketapi';
 import { Modal } from '../Modal';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './style.css';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -125,45 +125,41 @@ const Listed = () => {
 
   const handleBuy = async (tokens: MarketplaceTokenView[], fee: number) => {
     if (!verifiedAddress) toast.error('Please connect your wallet first');
-    if (tokens.length === 1) {
-      const sellerUtxo = await checkInscription(tokens[0]);
-      if (!sellerUtxo) return toast.error('Failed to find sellers inscription');
-      let utxos: ApiUTXO[] = [];
-      while (utxos.length < 2) {
-        const receivedUtxos = await hasEnoughUtxos();
-        if (receivedUtxos) {
-          utxos = receivedUtxos;
-          break;
-        }
-        await new Promise((resolve) => setTimeout(() => resolve(''), 1000));
+    const sellerUtxo = await checkInscription(tokens[0]);
+    if (!sellerUtxo) return toast.error('Failed to find sellers inscription');
+    let utxos: ApiUTXO[] = [];
+    while (utxos.length < 2) {
+      const receivedUtxos = await hasEnoughUtxos();
+      if (receivedUtxos) {
+        utxos = receivedUtxos;
+        break;
       }
-      const partiallySignedPsbts = await createBuyingSignedPsbt(
-        [
-          {
-            inscription: {
-              address: tokens[0].owner,
-              price: tokens[0].amount * tokens[0].price_per_token,
-            },
-            sellerOrdUtxo: sellerUtxo,
-            utxos,
-          },
-        ],
-        fee,
-      );
-      if (partiallySignedPsbts === undefined) return;
-      const pubKey = await getPublicKey();
-      const result = await makeAuthRequests(() =>
-        axios.post(
-          `${MARKET_API_URL}/tokens/buy-tokens`,
-          {
-            psbts_base64: partiallySignedPsbts,
-            public_key_hex: pubKey,
-          },
-          { withCredentials: true },
-        ),
-      );
-      console.log(result);
+      await new Promise((resolve) => setTimeout(() => resolve(''), 1000));
     }
+    const partiallySignedPsbts = await createBuyingSignedPsbt(
+      tokens.map((token) => ({
+        inscription: {
+          address: token.owner,
+          price: token.amount * token.price_per_token,
+        },
+        sellerOrdUtxo: sellerUtxo,
+      })),
+      utxos,
+      fee,
+    );
+    if (partiallySignedPsbts === undefined) return;
+    const pubKey = await getPublicKey();
+    const result = await makeAuthRequests(() =>
+      axios.post(
+        `${MARKET_API_URL}/tokens/buy-tokens`,
+        {
+          psbts_base64: partiallySignedPsbts,
+          public_key_hex: pubKey,
+        },
+        { withCredentials: true },
+      ),
+    );
+    console.log(result);
   };
 
   return (

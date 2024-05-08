@@ -259,27 +259,25 @@ export const useCreateBuyingSignedPsbt = () => {
       datas: {
         inscription: { address: string; price: number };
         sellerOrdUtxo: ApiOrdUTXO;
-        utxos: ApiUTXO[];
       }[],
+      utxos: ApiUTXO[],
       feeRate: number,
     ) => {
       if (!address) return;
       if (!Number.isInteger(feeRate)) return;
       const psbtsToSign: SignPsbtData[] = [];
-
+      let sortedUtxos = utxos.sort((a, b) => a.value - b.value);
       for (const data of datas) {
-        const utxos = data.utxos.sort((a, b) => a.value - b.value);
-
         const buyerPsbt = new Psbt({ network: networks.bitcoin });
 
         buyerPsbt.addInput({
-          hash: utxos[0].txid,
-          index: utxos[0].vout,
+          hash: sortedUtxos[0].txid,
+          index: sortedUtxos[0].vout,
           nonWitnessUtxo: Buffer.from(utxos[0].rawHex!, 'hex'),
         });
         buyerPsbt.addInput({
-          hash: utxos[1].txid,
-          index: utxos[1].vout,
+          hash: sortedUtxos[1].txid,
+          index: sortedUtxos[1].vout,
           nonWitnessUtxo: Buffer.from(utxos[1].rawHex!, 'hex'),
         });
         buyerPsbt.addInput({
@@ -288,8 +286,8 @@ export const useCreateBuyingSignedPsbt = () => {
           nonWitnessUtxo: Buffer.from(data.sellerOrdUtxo.rawHex!, 'hex'),
           sighashType: Transaction.SIGHASH_SINGLE | Transaction.SIGHASH_ANYONECANPAY,
         });
-        const splicedUtxos = utxos.splice(0, 2);
-        utxos.forEach((f) => {
+        const splicedUtxos = sortedUtxos.splice(0, 2);
+        sortedUtxos.forEach((f) => {
           buyerPsbt.addInput({
             hash: f.txid,
             index: f.vout,
@@ -322,10 +320,10 @@ export const useCreateBuyingSignedPsbt = () => {
           value: DUMMY_UTXO_VALUE,
         });
 
-        const fee = gptFeeCalculate(utxos.length + 2, 7, feeRate);
+        const fee = gptFeeCalculate(sortedUtxos.length + 2, 7, feeRate);
 
         const change =
-          utxos.concat(splicedUtxos).reduce((acc, cur) => acc + cur.value, 0) -
+          sortedUtxos.concat(splicedUtxos).reduce((acc, cur) => acc + cur.value, 0) -
           fee -
           splicedUtxos.reduce((acc, sum) => (acc += sum.value), 0) +
           DUMMY_UTXO_VALUE * 2 -
@@ -342,6 +340,9 @@ export const useCreateBuyingSignedPsbt = () => {
           value: change,
         });
 
+        const a = buyerPsbt.finalizeAllInputs().extractTransaction(true).getId();
+        console.log({ a })
+
         const inputsToSign = [0, 1, ...utxos.map((_, i) => i + 3)];
 
         psbtsToSign.push({
@@ -355,6 +356,8 @@ export const useCreateBuyingSignedPsbt = () => {
             })),
           },
         });
+
+        sortedUtxos = [{ txid: '', vout: 5, value: DUMMY_UTXO_VALUE, rawHex: '' }];
       }
 
       const signedListPsbtsBase64: string[] = [];

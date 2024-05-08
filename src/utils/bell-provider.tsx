@@ -61,9 +61,8 @@ const useNintondoManager = () => {
 
   const verifyAddress = useCallback(async () => {
     if (!nintondo) return;
-    await connectWallet();
-    if (await checkCookies()) return;
     const connectedAddress = address ?? (await connectWallet());
+    if (!connectedAddress) return;
     const message = `
 Welcome to Nintondo!
 
@@ -140,7 +139,10 @@ ${connectedAddress}
 
     if (verifiedAddress !== null) {
       const publicKeyHex = await nintondo.getPublicKey();
-      if (!publicKeyHex) return;
+      if (!publicKeyHex) {
+        await connectWallet();
+        return;
+      }
       const publicKeyBuffer = Buffer.from(await nintondo.getPublicKey(), 'hex');
       if (verifiedAddress === getAddress(publicKeyBuffer, AddressType.P2PKH)) {
         setVerifiedAddress(true);
