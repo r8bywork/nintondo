@@ -9,9 +9,10 @@ interface FilterProps {
   defaultFilter: keyof FilterProps['filters'];
   filterKey: string;
   tag?: string;
+  className?: string;
 }
 
-export const Filter = ({ filters, defaultFilter, filterKey, tag }: FilterProps) => {
+export const Filter = ({ filters, defaultFilter, filterKey, tag, className }: FilterProps) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -43,13 +44,20 @@ export const Filter = ({ filters, defaultFilter, filterKey, tag }: FilterProps) 
       onOpen={handleDropdownOpen}
       onClose={handleDropdownClose}
       target={
-        <Select isActive={isDropdownVisible}>
+        <Select
+          isActive={isDropdownVisible}
+          className={className}
+        >
           {tag ? `${tag} ` : ''}
           {filters[filter]}
         </Select>
       }
       dropdown={
-        <div className='border-[2px] rounded-[19px] bg-[rgba(0,0,0,0.1)] flex flex-col gap-[10px] backdrop-blur-lg px-[10px] py-[7px]'>
+        <div
+          className={classNames(
+            'border-[2px] rounded-[19px] bg-[rgba(0,0,0,0.1)] flex flex-col gap-[10px] backdrop-blur-lg px-[10px] py-[7px]',
+          )}
+        >
           {Object.entries(filters).map(([key, value]) => (
             <button
               key={key}

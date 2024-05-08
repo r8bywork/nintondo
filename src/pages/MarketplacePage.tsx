@@ -39,6 +39,7 @@ const MARKETPLACE_COMPONENTS: Record<MarketPlaceTabs, Tab> = {
         defaultFilter={Object.keys(SORT_FILTERS)[0]}
         filterKey='filter'
         filters={SORT_FILTERS}
+        className='min-w-[300px]'
       />
     ),
   },
