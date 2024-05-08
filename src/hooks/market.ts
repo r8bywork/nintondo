@@ -3,7 +3,7 @@ import { useNintondoManagerContext } from '../utils/bell-provider';
 import { ApiOrdUTXO, ApiUTXO } from '../interfaces/api';
 import { Psbt, Transaction, networks } from 'belcoinjs-lib';
 import { MarketplaceToken } from '../interfaces/marketapi';
-import { DEFAULT_FEE_RATE, DUMMY_UTXO_VALUE, FEE_ADDRESS } from '../consts';
+import { DUMMY_UTXO_VALUE, FEE_ADDRESS } from '../consts';
 import { fetchBELLMainnet, gptFeeCalculate } from '../utils';
 import toast from 'react-hot-toast';
 import { getApiUtxo, getTransactionRawHex } from './electrs';
@@ -341,7 +341,7 @@ export const useCreateBuyingSignedPsbt = () => {
         });
 
         const a = buyerPsbt.finalizeAllInputs().extractTransaction(true).getId();
-        console.log({ a })
+        console.log({ a });
 
         const inputsToSign = [0, 1, ...utxos.map((_, i) => i + 3)];
 

@@ -60,6 +60,7 @@ const useNintondoManager = () => {
   );
 
   const verifyAddress = useCallback(async () => {
+    console.log('VERIFY ADDRESS');
     if (!nintondo) return;
     const connectedAddress = address ?? (await connectWallet());
     if (!connectedAddress) return;
@@ -182,14 +183,13 @@ ${connectedAddress}
         nintondo = (window as any).nintondo;
         setNintondo(nintondo);
         setExists(nintondo !== undefined);
-        console.log({ nintondo });
-      }, 3000);
+      }, 500);
     } else {
       setNintondo(nintondo);
       setExists(true);
     }
     if (nintondo !== undefined) nintondo.on('accountsChanged', handleAccountsChanged);
-  }, [handleAccountsChanged]);
+  }, [handleAccountsChanged, nintondo]);
 
   return {
     nintondoExists,

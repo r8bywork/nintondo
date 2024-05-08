@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { BACKEND_URL, ORD_VALUE } from '@/consts';
 import { Ord } from '@/interfaces/nintondo-manager-provider';
 import { gptFeeCalculate } from '@/utils';
@@ -20,129 +21,90 @@ export const useSplitOrds = () => {
     return result?.data;
   };
 
+  const addInputsAndOutputs = (psbt: Psbt, ords: Ord[], feeRate: number) => {
+    if (!address) return;
+    ords.forEach((ord) => {
+      psbt.addInput({
+        hash: ord.txid,
+        index: ord.vout,
+        nonWitnessUtxo: Buffer.from(ord.raw_hex, 'hex'),
+      });
+    });
+
+    ords.forEach((ord) => {
+      const addedValues: number[] = [];
+      if (ord.send && ord.sendToAddress) {
+        if (!ord.verifiedSendAddress) throw new Error('One of send addresses is invalid');
+        psbt.addOutput({
+          address: ord.sendToAddress,
+          value: ord.value,
+        });
+      } else {
+        ord.inscriptions
+          .sort((a, b) => a.offset - b.offset)
+          .forEach((inscription) => {
+            const availableToFree =
+              inscription.offset - (addedValues.reduce((acc, v) => acc + v, 0) + ORD_VALUE);
+            if (inscription.offset > 0 && availableToFree > 1000) {
+              psbt.addOutput({ address, value: availableToFree });
+              addedValues.push(availableToFree);
+            }
+            psbt.addOutput({ address, value: ORD_VALUE });
+            addedValues.push(ORD_VALUE);
+          });
+      }
+
+      const remainingValue =
+        ord.value -
+        addedValues.reduce((acc, v) => acc + v, 0) -
+        gptFeeCalculate(ords.length, psbt.txOutputs.length + 1, feeRate);
+      if (remainingValue >= 1000) {
+        psbt.addOutput({ address, value: remainingValue });
+      }
+    });
+  };
+
+  const handleFeeAndChange = async (psbt: Psbt, feeRate: number) => {
+    if (!address) return;
+    const requiredFee = gptFeeCalculate(psbt.txInputs.length, psbt.txOutputs.length + 1, feeRate);
+    const utxos = await getApiUtxo(address!);
+    if (!utxos || !utxos.length)
+      throw new Error(
+        `You need additional ${(requiredFee + 1000) / 10 ** 8} BELL in order to split`,
+      );
+
+    let totalUtxoValue = 0;
+    for (const utxo of utxos) {
+      psbt.addInput({
+        hash: utxo.txid,
+        index: utxo.vout,
+        nonWitnessUtxo: Buffer.from((await getTransactionRawHex(utxo.txid))!, 'hex'),
+      });
+      totalUtxoValue += utxo.value;
+      if (totalUtxoValue - 1000 > requiredFee) {
+        psbt.addOutput({ address, value: totalUtxoValue - requiredFee });
+        break;
+      }
+    }
+
+    if (totalUtxoValue - 1000 <= requiredFee)
+      throw new Error(
+        `You need additional ${(requiredFee + 1000) / 10 ** 8} BELL in order to split`,
+      );
+  };
+
   return async (ords: Ord[], feeRate: number) => {
     if (!address || !verifiedAddress) return;
 
     const psbt = new Psbt({ network: networks.bitcoin });
-    ords.forEach((f) => {
-      psbt.addInput({
-        hash: f.txid,
-        index: f.vout,
-        nonWitnessUtxo: Buffer.from(f.raw_hex, 'hex'),
-      });
-    });
 
-    for (const [i, utxo] of ords.entries()) {
-      if (utxo.send && utxo.sendToAddress) {
-        if (!utxo.verifiedSendAddress) return toast.error('One of send addresss is invalid');
-        psbt.addOutput({
-          address: utxo.sendToAddress,
-          value: utxo.value,
-        });
-        if (i + 1 === ords.length) {
-          const requiredFee = gptFeeCalculate(ords.length + 1, psbt.txOutputs.length + 1, feeRate);
-          const utxos = await getApiUtxo(address);
-          if (!utxos || !utxos.length)
-            return toast.error(
-              `You need additional ${(requiredFee + 1000) / 10 ** 8} BELL in order to split`,
-            );
-          const feeValues: number[] = [];
-          for (const [i, f] of utxos.entries()) {
-            psbt.addInput({
-              hash: f.txid,
-              index: f.vout,
-              nonWitnessUtxo: Buffer.from((await getTransactionRawHex(f.txid))!, 'hex'),
-            });
-            feeValues.push(f.value);
-            if (
-              i === utxos.length - 1 &&
-              feeValues.reduce((acc, v) => (acc += v), 0) - 1000 <= requiredFee
-            )
-              return toast.error(
-                `You need additional ${(requiredFee + 1000) / 10 ** 8} BELL in order to split`,
-              );
-            if (feeValues.reduce((acc, v) => (acc += v), 0) - 1000 > requiredFee) break;
-          }
-          psbt.addOutput({
-            address,
-            value: feeValues.reduce((acc, v) => (acc += v), 0) - requiredFee,
-          });
-        }
-      } else {
-        const addedValues: number[] = [];
-        const sortedInscriptions = utxo.inscriptions.sort((a, b) => a.offset - b.offset);
-        sortedInscriptions.forEach((inscription) => {
-          const availableToFree =
-            inscription.offset - (addedValues.reduce((acc, v) => (acc += v), 0) + ORD_VALUE);
-
-          if (inscription.offset > 0 && availableToFree > 1000) {
-            psbt.addOutput({
-              address,
-              value: availableToFree,
-            });
-            addedValues.push(availableToFree);
-          }
-          psbt.addOutput({
-            address: address,
-            value: ORD_VALUE,
-          });
-          addedValues.push(ORD_VALUE);
-        });
-        if (i + 1 === ords.length) {
-          const lastOutputValue =
-            utxo.value -
-            addedValues.reduce((acc, v) => (acc += v), 0) -
-            gptFeeCalculate(ords.length, psbt.txOutputs.length + 1, feeRate);
-          if (lastOutputValue >= 1000) {
-            psbt.addOutput({
-              address,
-              value: lastOutputValue,
-            });
-          } else {
-            if (utxo.value - addedValues.reduce((acc, v) => (acc += v), 0) > 1000)
-              psbt.addOutput({
-                address: address,
-                value: utxo.value - addedValues.reduce((acc, v) => (acc += v), 0),
-              });
-            const requiredFee = gptFeeCalculate(
-              ords.length + 1,
-              psbt.txOutputs.length + 1,
-              feeRate,
-            );
-            const utxos = await getApiUtxo(address);
-            if (!utxos || !utxos.length)
-              return toast.error(
-                `You need additional ${(requiredFee + 1000) / 10 ** 8} BELL in order to split`,
-              );
-            const feeValues: number[] = [];
-            for (const [i, f] of utxos.entries()) {
-              psbt.addInput({
-                hash: f.txid,
-                index: f.vout,
-                nonWitnessUtxo: Buffer.from((await getTransactionRawHex(f.txid))!, 'hex'),
-              });
-              feeValues.push(f.value);
-              if (
-                i === utxos.length - 1 &&
-                feeValues.reduce((acc, v) => (acc += v), 0) - 1000 <= requiredFee
-              )
-                return toast.error(
-                  `You need additional ${(requiredFee + 1000) / 10 ** 8} BELL in order to split`,
-                );
-              if (feeValues.reduce((acc, v) => (acc += v), 0) - 1000 > requiredFee) break;
-            }
-            psbt.addOutput({
-              address,
-              value: feeValues.reduce((acc, v) => (acc += v), 0) - requiredFee,
-            });
-          }
-        } else {
-          if (utxo.value - addedValues.reduce((acc, v) => (acc += v), 0) > 1000)
-            psbt.addOutput({
-              address: address,
-              value: utxo.value - addedValues.reduce((acc, v) => (acc += v), 0),
-            });
-        }
+    try {
+      addInputsAndOutputs(psbt, ords, feeRate);
+      await handleFeeAndChange(psbt, feeRate);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+        return;
       }
     }
 
@@ -152,15 +114,13 @@ export const useSplitOrds = () => {
     signedPsbt.finalizeAllInputs();
 
     const hex = signedPsbt.extractTransaction(true).toHex();
+    console.log(hex);
     const result = await pushSplit({
-      // eslint-disable-next-line camelcase
       transaction_hex: hex,
-      locations: ords.map((f) => `${f.txid}:${f.vout}`),
+      locations: ords.map((ord) => `${ord.txid}:${ord.vout}`),
     });
-    if (!result) {
-      return;
-    }
-    if (result.length !== 64 || (result as string).includes('RPC error')) {
+
+    if (!result || result.length !== 64 || (result as string).includes('RPC error')) {
       toast.error(result);
       return;
     }
