@@ -21,7 +21,7 @@ export const useSplitOrds = () => {
     return result?.data;
   };
 
-  const addInputsAndOutputs = (psbt: Psbt, ords: Ord[], feeRate: number) => {
+  const addInputsAndOutputs = (psbt: Psbt, ords: Ord[]) => {
     if (!address) return;
     ords.forEach((ord) => {
       psbt.addInput({
@@ -53,10 +53,7 @@ export const useSplitOrds = () => {
           });
       }
 
-      const remainingValue =
-        ord.value -
-        addedValues.reduce((acc, v) => acc + v, 0) -
-        gptFeeCalculate(ords.length, psbt.txOutputs.length + 1, feeRate);
+      const remainingValue = ord.value - addedValues.reduce((acc, v) => acc + v, 0);
       if (remainingValue >= 1000) {
         psbt.addOutput({ address, value: remainingValue });
       }
@@ -98,7 +95,7 @@ export const useSplitOrds = () => {
     const psbt = new Psbt({ network: networks.bitcoin });
 
     try {
-      addInputsAndOutputs(psbt, ords, feeRate);
+      addInputsAndOutputs(psbt, ords);
       await handleFeeAndChange(psbt, feeRate);
     } catch (error) {
       if (error instanceof Error) {
@@ -113,7 +110,6 @@ export const useSplitOrds = () => {
     signedPsbt.finalizeAllInputs();
 
     const hex = signedPsbt.extractTransaction(true).toHex();
-    console.log(hex);
     const result = await pushSplit({
       transaction_hex: hex,
       locations: ords.map((ord) => `${ord.txid}:${ord.vout}`),
