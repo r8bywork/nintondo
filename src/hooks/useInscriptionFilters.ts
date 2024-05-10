@@ -12,6 +12,8 @@ interface Filters {
   from?: string;
   to?: string;
   genesisBlock?: number;
+  tokens?: string,
+  account?: string,
 }
 
 export const useInscriptionFilters = () => {
@@ -32,6 +34,8 @@ export const useInscriptionFilters = () => {
       from: searchParams.get('from') || '0',
       to: searchParams.get('to') || 'max',
       genesisBlock: parseInt(searchParams.get('genesisBlock') || '0', 10),
+      tokens: searchParams.get('tokens') || 'all',
+      account: searchParams.get('account') || 'all',
     }),
     [],
   );
@@ -59,6 +63,8 @@ export const useInscriptionFilters = () => {
       newFilters.from,
       newFilters.to,
       newFilters.genesisBlock,
+      newFilters.tokens,
+      newFilters.account,
     )
       .then((data) => {
         setInscriptions(data);
@@ -120,6 +126,23 @@ export const useInscriptionFilters = () => {
     setFilters((prev) => ({ ...prev, from: from, to: to }));
   };
 
+  const handleTokensFilterChange = (filter: string) => {
+    const newFilter = filter.toLowerCase();
+    const params = createHref({ tokens: newFilter, currentPage: 1 }, urlSearchParams);
+    navigate(`?${params}`);
+    setFilters((prev) => ({ ...prev, tokens: newFilter }));
+  };
+
+  const handleAccountFilterChange = (filter: string) => {
+    const newFilter = filter;
+    if (filter === filters.account) {
+      return;
+    }
+    const params = createHref({ account: newFilter, currentPage: 1 }, urlSearchParams);
+    navigate(`?${params}`);
+    setFilters((prev) => ({ ...prev, account: newFilter }));
+  };
+
   const handleCreationBlockClick = (filter: number) => {
     const currentFilters = { ...filters, genesisBlock: filter, currentPage: 1 };
     const params = createHref(currentFilters, new URLSearchParams());
@@ -144,6 +167,8 @@ export const useInscriptionFilters = () => {
     handleTypeFilterChange,
     handleSortByFilterChange,
     handleRangeFilterChange,
+    handleTokensFilterChange,
+    handleAccountFilterChange,
     handleImageLoad,
     handleCreationBlockClick,
     handleDeleteGenesisBlock,

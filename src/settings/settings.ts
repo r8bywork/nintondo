@@ -281,7 +281,7 @@ export const cardConfig = [
 export const filterConfig: FilterConfig = {
   activeColor: '#FFFFFF',
   styles: { boxShadow: '0 0 12px 0 rgba(255, 255, 255, 0.5)' },
-  filters: [{ text: 'Newest' }, { text: 'Oldest' }],
+  filters: [{ text: 'Newest' }, { text: 'Oldest' }, { text: 'Heaviest' }, { text: 'Lightest' }, { text: 'Trend1H' }, { text: 'Trend1D' }, { text: 'Trend1W' }, { text: 'Trend1M' }, { text: 'TopScore' }, { text: 'TopLikes' }, { text: 'TopComments' }],
 };
 
 export const filterTypeConfig: FilterConfig = {
@@ -300,6 +300,7 @@ export const filterTypeConfig: FilterConfig = {
     { text: 'Json' },
     { text: 'SVGs' },
     { text: '3D' },
+    { text: 'Other' },
   ],
 };
 
@@ -315,10 +316,22 @@ export const filterRangeConfig: FilterConfig = {
   filters: [{ type: 'range', max: 'max' }],
 };
 
+export const filterAccountConfig: FilterConfig = {
+  activeColor: '#53DCFF',
+  styles: { boxShadow: '0 0 12px 0 rgba(183, 91, 255, 0.5)' },
+  filters: [{ type: 'account', text: 'all' }],
+};
+
 export const filterGenesisConfig: FilterConfig = {
   activeColor: '#53DCFF',
   styles: { boxShadow: '0 0 12px 0 rgba(183, 91, 255, 0.5)' },
   filters: [{ text: '0', type: 'genesis' }],
+};
+
+export const filterTokensConfig: FilterConfig = {
+  activeColor: '#53DCFF',
+  styles: { boxShadow: '0 0 12px 0 rgba(183, 91, 255, 0.5)' },
+  filters: [{ text: 'All' }, { text: 'Tokens' }, { text: 'NoTokens' }],
 };
 
 export const inscriptionInfo = [

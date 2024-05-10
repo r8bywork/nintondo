@@ -13,6 +13,8 @@ export interface Filters {
   from: string;
   to: string;
   genesisBlock: number;
+  tokens: string,
+  account: string,
 }
 
 export interface FilterTag {
@@ -30,7 +32,12 @@ export interface FilterGenesis {
   text: string;
 }
 
-export type Filter = FilterTag | FilterRange | FilterGenesis;
+export interface FilterAccount {
+  type: 'account';
+  text: string;
+}
+
+export type Filter = FilterTag | FilterRange | FilterGenesis | FilterAccount;
 
 export interface FilterConfig {
   activeColor: string;

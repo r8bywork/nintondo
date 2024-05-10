@@ -1,6 +1,7 @@
 import { FC, useMemo } from 'react';
 import FilterTag from './components/FilterTag';
 import FilterRange from './components/FilterRange';
+import FilterAccount from './components/FilterAccount';
 import useItemsPerRow from '@/hooks/useItemsPerRow.ts';
 import { FilterConfig, Filter } from '@/interfaces/intefaces.ts';
 import classNames from 'classnames';
@@ -67,6 +68,20 @@ const Filter: FC<FilterProps> = ({
         styles={config.styles}
         onDeleteClick={handleFilterClick}
         classNames={'last:mr-[0px] mr-[12px]'}
+      />
+    ) : filter.type === 'account' ? (
+      <FilterAccount
+        key={`account`}
+        text={filter.text}
+        onClick={handleFilterClick}
+        // key={filter.text}
+        // text={filter.text}
+        // activeColor={config.activeColor}
+        // active={true}
+        // deletable={true}
+        // styles={config.styles}
+        // onDeleteClick={handleFilterClick}
+        // classNames={'last:mr-[0px] mr-[12px]'}
       />
     ) : (
       <FilterTag

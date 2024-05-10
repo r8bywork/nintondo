@@ -32,11 +32,14 @@ export const useExplorerGetInscriptionsList = () => {
       from?: string,
       to?: string,
       genesisBlock?: number,
+      tokens?: string,
+      account?: string,
     ): Promise<InscriptionCards | undefined> => {
       const genesisBlockUrl = genesisBlock ? `&genesis_block=${genesisBlock}` : '';
-      const url = `pub/search?&page=${page}&sort_by=${sortBy}&content_filter=${contentFilter}&time_filter=${timeFilter}&from=${from}&to=${
+      const accountUrl = account ? account != "all" && account != "any" ? `&account=${account}` : '' : '';
+      const url = `pub/search?&page=${page}&sort_by=${sortBy}&content_filter=${contentFilter}&time_filter=${timeFilter}&tokens=${tokens}&from=${from}&to=${
         to === 'max' ? '18446744073709551615' : to
-      }${genesisBlockUrl}`;
+      }${genesisBlockUrl}${accountUrl}`;
       return await fetchMarketInfo<InscriptionCards>({
         path: url,
         json: true,

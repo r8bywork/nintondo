@@ -3,6 +3,8 @@ import {
   filterConfig,
   filterGenesisConfig,
   filterRangeConfig,
+  filterTokensConfig,
+  filterAccountConfig,
   filterTimeConfig,
   filterTypeConfig,
 } from '../settings/settings.ts';
@@ -32,6 +34,8 @@ const InscriptionsPage = () => {
     handleTypeFilterChange,
     handleSortByFilterChange,
     handleRangeFilterChange,
+    handleTokensFilterChange,
+    handleAccountFilterChange,
     handleImageLoad,
     handleDeleteGenesisBlock,
   } = useInscriptionFilters();
@@ -67,6 +71,20 @@ const InscriptionsPage = () => {
               config={filterRangeConfig}
               onChange={handleRangeFilterChange}
               state={[filters.from, filters.to] as string[]}
+            />
+            <Filter
+              selectAll={{ text: 'Tokens' }}
+              SvgIcon={RangeSvg}
+              config={filterTokensConfig}
+              onChange={handleTokensFilterChange}
+              state={filters.tokens ?? ''}
+            />
+            <Filter
+              selectAll={{ text: 'Account' }}
+              SvgIcon={RangeSvg}
+              config={filterAccountConfig}
+              onChange={handleAccountFilterChange}
+              state={filters.account ?? ''}
             />
             {urlSearchParams.get('genesisBlock') && (
               <Filter
