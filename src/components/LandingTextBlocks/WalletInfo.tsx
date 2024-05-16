@@ -7,11 +7,29 @@ import wallet6 from '../../assets/walletScreens/wallet6.jpg';
 import Exit from '../../assets/exit.svg?react';
 import ArrowRight from '../../assets/arrowright.svg?react';
 import ArrowLeft from '../../assets/arrowleft.svg?react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { GitHubRelease } from '@/interfaces/intefaces';
 const WalletInfo = () => {
   const walletImages = [wallet1, wallet2, wallet3, wallet4, wallet5, wallet6];
   const [modalImage, setModalImage] = useState<string>('');
+  const [gitData, setGitData] = useState<GitHubRelease>();
+  const fetchLatestRelease = async (owner: string, repo: string) => {
+    const url = `https://api.github.com/repos/${owner}/${repo}/releases/latest`;
 
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Ошибка: ${response.statusText}`);
+    }
+    return await response.json();
+  };
+
+  useEffect(() => {
+    fetchLatestRelease('Nintondo', 'extension').then((res) => setGitData(res));
+  }, []);
+
+  useEffect(() => {
+    console.log(gitData);
+  }, [gitData]);
   const changeImage = (direction: string) => {
     const currentImageIndex = walletImages.indexOf(modalImage);
     const totalImages = walletImages.length;
@@ -31,82 +49,46 @@ const WalletInfo = () => {
   return (
     <div className='w-full mx-auto text-lg text-white'>
       <h2 className='text-4xl font-bold mb-4'>Wallet</h2>
-      <p>Nintondo Wallet for Bells - A New Horizon for Your Crypto Adventures!</p>
-      <p>🌿 Version 0.1.1 - Bringing the Charm of Animal Crossing to Cryptocurrency</p>
-      <p>🍃 Welcome to Nintondo Wallet! 🍃</p>
       <p>
-        We're thrilled to introduce Nintondo Wallet, your newest companion in the whimsical world of
-        Bells cryptocurrency. Inspired by the beloved universe of Animal Crossing, our wallet is
-        more than just a tool; it's a delightful journey into the heart of a community where fun
-        meets finance.
+        <b>Welcome to Nintondo Wallet!</b>
+      </p>
+      <p>
+        <b>Your Ultimate Bells Coin Companion</b>
       </p>
       <br />
-      <p>🌸 Key Features:</p>
-      <ul className={'pl-4 list-disc'}>
+      <ul className={'ml-4 list-disc'}>
         <li>
           <p>
-            Village Marketplace: Just like your favorite Animal Crossing marketplace, trade and
-            manage your Bells with ease and charm.
+            <b>Store and Send Bells</b>: Securely manage your Bells coin with ease.
           </p>
         </li>
         <li>
           <p>
-            Tom Nook's Security: Top-notch security measures, ensuring your Bells is as safe as a
-            bell in Tom Nook's vault.
+            <b>Seed Phrase Backup</b>: Safeguard your treasures by backing up your seed phrase.
           </p>
         </li>
         <li>
           <p>
-            Island Backup: Never lose your data with our Island Backup system, safeguarding your
-            wallet like the serene islands of Animal Crossing.
+            <b>Customizable Interface</b>: Personalize your wallet to match your unique style.
           </p>
         </li>
         <li>
           <p>
-            Nook Miles Rewards: Earn Nook Miles for every transaction, adding an exciting twist to
-            your cryptocurrency journey.
-          </p>
-        </li>
-        <li>
-          <p>
-            Customizable Interface: Personalize your wallet with themes and characters from Animal
-            Crossing, making finance fun!
+            <b>NFT Management</b>: View and send NFTs directly within your wallet.
           </p>
         </li>
       </ul>
       <br />
-      <p>🍂 What's New in 0.1.1:</p>
-      <ul className={'pl-4 list-disc'}>
-        <li>
-          <p>Removed tidecoin leftovers</p>
-        </li>
-        <li>
-          <p>Removed host permission from manifest</p>
-        </li>
-        <li>
-          <p>Changed api provider to receive last bells price</p>
-        </li>
-        <li>
-          <p>Added error handling for pushing txs</p>
-        </li>
-        <li>
-          <p>Fixed keyring's bugs</p>
-        </li>
-      </ul>
+      <p>Start your adventure with Nintondo Wallet and keep your virtual village thriving!</p>
       <br />
-      <p>🌟 Join Our Community:</p>
       <p>
-        Step into a world where your financial journey is intertwined with the charm and simplicity
-        of Animal Crossing. Join our community, share tips, and make new friends, all while managing
-        your Bells cryptocurrency. Let's create a community as heartwarming and supportive as the
-        townsfolk of Animal Crossing!
+        📥 <b>Download Now</b> (Last Version: {gitData?.name || '0.1'}):
       </p>
       <br />
-      <p className={'font-bold'}>📥 Download Now:</p> <br />
       <p>
         <a
           className={'underline'}
-          href='https://github.com/Nintondo/extension/releases/download/0.1.1/chrome-0.1.1.zip'
+          href={gitData?.assets[0].browser_download_url}
         >
           Chrome Extension
         </a>
@@ -115,24 +97,12 @@ const WalletInfo = () => {
       <p>
         <a
           className={'underline'}
-          href={'https://github.com/Nintondo/extension/releases/download/0.1.1/firefox-0.1.1.xpi'}
+          href={gitData?.assets[1].browser_download_url}
         >
           Firefox Extension
         </a>
       </p>
       <br />
-      <p>
-        Ready to embark on this enchanting crypto adventure? Download Nintondo Wallet for Bells and
-        turn your cryptocurrency experience into an idyllic escapade. Let`s make our financial
-        journey not just profitable, but also delightful!
-      </p>
-      <p>
-        Note: Nintondo Wallet is not affiliated with Nintendo or the Animal Crossing franchise.
-        Bells is a meme cryptocurrency and should be enjoyed as part of a balanced financial
-        portfolio.
-      </p>
-      <br />
-      <p className={'mb-[20px]'}>Happy Bell Hunting! 🛎️</p>
       <div className='grid grid-cols-3 gap-4'>
         {walletImages.map((image, index) => (
           <img

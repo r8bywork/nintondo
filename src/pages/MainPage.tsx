@@ -70,14 +70,6 @@ const MainPage = () => {
             <WalletInfo />
           </div>
         </div>
-        <span className={'text-white text-[18px] inline-block mb-[40px]'}>
-          We want to clarify that the information provided about cryptocurrencies and the links to
-          various exchanges on our website are for informational purposes only. We do not endorse,
-          verify, or vouch for the reliability of these exchanges. Cryptocurrency investments carry
-          inherent risks, and we strongly advise you to exercise due diligence, use your best
-          judgment, and consult with financial experts if necessary before engaging in any
-          transactions. Remember to carefully assess your risk tolerance and invest responsibly.
-        </span>
         {/* <Footer />*/}
         <div className='bg-black w-full'>
           <div className='max-w-[1080px] mx-auto'>
