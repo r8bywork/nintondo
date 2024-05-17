@@ -11,9 +11,15 @@ interface YesNoModalProps {
   onCancel: () => void;
   onError: () => void;
   onSuccess: () => void;
+  inscriptionPrices: number[];
 }
 
-export const YesNoModal = ({ onCancel, onError, onSuccess }: YesNoModalProps) => {
+export const YesNoModal = ({
+  onCancel,
+  onError,
+  onSuccess,
+  inscriptionPrices,
+}: YesNoModalProps) => {
   const { isOpen: isCustomizeOpen, open: openCustomize, close: closeCustomize } = useModal();
   const [feeRate, setFeeRate] = useState(DEFAULT_FEE_RATE);
 
@@ -26,7 +32,7 @@ export const YesNoModal = ({ onCancel, onError, onSuccess }: YesNoModalProps) =>
     isError,
   } = useQuery({
     queryKey: ['make-dumy-utxos'],
-    queryFn: () => makeDummyUTXOsReq(feeRate),
+    queryFn: () => makeDummyUTXOsReq(feeRate, inscriptionPrices),
     enabled: false,
     retry: false,
   });

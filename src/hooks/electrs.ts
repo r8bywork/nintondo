@@ -1,5 +1,5 @@
 import { IToken } from '@/interfaces/intefaces';
-import { ApiOrdUTXO, ApiUTXO, Fees, Inscription } from '../interfaces/api';
+import { AddressUtxoDummy, ApiOrdUTXO, ApiUTXO, Fees, Inscription } from '../interfaces/api';
 import { fetchBELLMainnet } from '../utils';
 import { useCallback } from 'react';
 import { useNintondoManagerContext } from '@/utils/bell-provider';
@@ -20,6 +20,14 @@ export const getTransactionRawHex = async (txId: string) => {
 export const getApiUtxo = async (address: string) => {
   return await fetchBELLMainnet<ApiUTXO[]>({
     path: `/address/${address}/utxo`,
+  });
+};
+
+export const getDummyInscriptions = async (address: string, data: number[]) => {
+  return await fetchBELLMainnet<AddressUtxoDummy[]>({
+    path: `/address/${address}/ords`,
+    method: 'POST',
+    body: JSON.stringify(data),
   });
 };
 

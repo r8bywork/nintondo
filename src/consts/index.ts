@@ -38,8 +38,8 @@ export const OLD_CONTENT_URL = `${OLD_CONTENT}/pub/content`;
 // export const PREVIEW_URL = 'http://93.125.14.5:8111/pub/preview';
 // export const CONTENT_URL = 'http://93.125.14.5:8111/pub/content';
 
-export const DUMMY_UTXO_VALUE = 10_000;
-export const DEFAULT_FEE_RATE = 100;
+export const DUMMY_UTXO_VALUE = 1000;
+export const DEFAULT_FEE_RATE = 400;
 export const ORD_VALUE = 1000;
 
 export const FEE_ADDRESS = 'BMPNoA3NXhWoL89AkvFpYHEv8orNpUn5qq';

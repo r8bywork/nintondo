@@ -2,52 +2,77 @@ import { useCallback } from 'react';
 import { useNintondoManagerContext } from '../utils/bell-provider';
 import { ApiOrdUTXO, ApiUTXO } from '../interfaces/api';
 import { Psbt, Transaction, networks } from 'belcoinjs-lib';
-import { MarketplaceToken } from '../interfaces/marketapi';
 import { DUMMY_UTXO_VALUE, FEE_ADDRESS } from '../consts';
 import { fetchBELLMainnet, gptFeeCalculate } from '../utils';
 import toast from 'react-hot-toast';
-import { getApiUtxo, getTransactionRawHex } from './electrs';
+import { getApiUtxo, getDummyInscriptions, getTransactionRawHex } from './electrs';
 import { SignPsbtData } from '@/interfaces/nintondo-manager-provider';
 import { SORT_FILTERS } from '@/pages/MarketplacePage';
+import { PreparedToBuyInscription } from '@/interfaces/intefaces';
 
 export const useMakeDummyUTXOS = () => {
   const { signPsbtInputs } = useNintondoManagerContext();
   const { address } = useNintondoManagerContext();
 
   return useCallback(
-    async (fee: number): Promise<ApiUTXO[] | undefined> => {
+    async (feeRate: number, inscriptionsPrices: number[]): Promise<ApiUTXO[] | undefined> => {
       if (!address) return;
 
       let utxos = await getApiUtxo(address);
       if (!utxos) return;
-      for (const i of utxos) {
+      // for (const i of utxos) {
+      //   i.rawHex = await getTransactionRawHex(i.txid);
+      // }
+
+      let sum = 0;
+      const targetSum = inscriptionsPrices.reduce((acc, val) => (acc += val), 0);
+      const selectedUtxos = [];
+
+      for (const utxo of utxos) {
+        selectedUtxos.push(utxo);
+        sum += utxo.value;
+        if (
+          sum - targetSum + 0.01 * 10 ** 8 + DUMMY_UTXO_VALUE * 2 + gptFeeCalculate(4, 8, feeRate) >
+          gptFeeCalculate(selectedUtxos.length, inscriptionsPrices.length * 3 + 1, feeRate)
+        )
+          break;
+      }
+
+      for (const i of selectedUtxos) {
         i.rawHex = await getTransactionRawHex(i.txid);
       }
 
-      if (utxos.filter((f) => f.rawHex === undefined).length > 0)
+      if (selectedUtxos.filter((f) => f.rawHex === undefined).length > 0)
         throw new Error('Need raw hex in order to make dummy UTXOs');
 
       let psbt = new Psbt({ network: networks.bitcoin });
-      for (const i of utxos) {
+      selectedUtxos.forEach((i) => {
         psbt.addInput({
           hash: i.txid,
           index: i.vout,
           sequence: 0xffffffff,
           nonWitnessUtxo: Buffer.from(i.rawHex!, 'hex'),
         });
-      }
+      });
 
-      psbt.addOutput({
-        address,
-        value: DUMMY_UTXO_VALUE,
+      inscriptionsPrices.forEach((i) => {
+        psbt.addOutput({
+          address,
+          value: DUMMY_UTXO_VALUE,
+        });
+        psbt.addOutput({
+          address,
+          value: DUMMY_UTXO_VALUE,
+        });
+        psbt.addOutput({
+          address,
+          value: i,
+        });
       });
-      psbt.addOutput({
-        address,
-        value: DUMMY_UTXO_VALUE,
-      });
+
       const change =
         utxos.reduce((acc, f) => (acc += f.value), 0) -
-        gptFeeCalculate(utxos.length, 3, fee) -
+        gptFeeCalculate(utxos.length, 3, feeRate) -
         DUMMY_UTXO_VALUE * 2;
 
       if (change <= 0) {
@@ -214,7 +239,7 @@ export const useCheckInscription = () => {
   const { address } = useNintondoManagerContext();
 
   return useCallback(
-    async (inscription: MarketplaceToken): Promise<ApiOrdUTXO | undefined> => {
+    async (inscription: { outpoint: string; owner: string }): Promise<ApiOrdUTXO | undefined> => {
       if (!address) return;
       const foundInscriptions = await fetchBELLMainnet<ApiOrdUTXO[]>({
         path: `/address/${inscription.owner}/ords?search=${inscription.outpoint}`,
@@ -232,18 +257,37 @@ export const useCheckInscription = () => {
   );
 };
 
-export const useHasEnoughUtxos = () => {
+export const usePrepareInscriptions = () => {
   const { address } = useNintondoManagerContext();
 
-  return useCallback(async (): Promise<ApiUTXO[] | undefined> => {
-    if (!address) return;
-    const utxos = await getApiUtxo(address);
-    if (!utxos || utxos.length <= 2) return;
-    for (const i of utxos) {
-      i.rawHex = await getTransactionRawHex(i.txid);
-    }
-    return utxos;
-  }, [address, getApiUtxo, getTransactionRawHex]);
+  return useCallback(
+    async (
+      data: {
+        price: number;
+        seller: string;
+        sellerUtxo: ApiOrdUTXO;
+      }[],
+    ): Promise<PreparedToBuyInscription[] | undefined> => {
+      if (!address) return;
+      const dummyUtxos = await getDummyInscriptions(
+        address,
+        data.map((f) => f.price),
+      );
+      if (!dummyUtxos) return;
+      const prepared: PreparedToBuyInscription[] = dummyUtxos.map((f, i) => {
+        f.dummy.forEach(async (utxo) => {
+          utxo.rawHex = await getTransactionRawHex(utxo.txid);
+        });
+        return {
+          inscription: { address: data[i].seller, price: data[i].price },
+          sellerOrdUtxo: data[i].sellerUtxo,
+          utxos: f.dummy.concat(f.fee),
+        };
+      });
+      return prepared;
+    },
+    [address, getApiUtxo, getTransactionRawHex],
+  );
 };
 
 export const useCreateBuyingSignedPsbt = () => {
@@ -255,30 +299,22 @@ export const useCreateBuyingSignedPsbt = () => {
   };
 
   return useCallback(
-    async (
-      datas: {
-        inscription: { address: string; price: number };
-        sellerOrdUtxo: ApiOrdUTXO;
-      }[],
-      utxos: ApiUTXO[],
-      feeRate: number,
-    ) => {
+    async (datas: PreparedToBuyInscription[], feeRate: number) => {
       if (!address) return;
       if (!Number.isInteger(feeRate)) return;
       const psbtsToSign: SignPsbtData[] = [];
-      let sortedUtxos = utxos.sort((a, b) => a.value - b.value);
       for (const data of datas) {
         const buyerPsbt = new Psbt({ network: networks.bitcoin });
 
         buyerPsbt.addInput({
-          hash: sortedUtxos[0].txid,
-          index: sortedUtxos[0].vout,
-          nonWitnessUtxo: Buffer.from(utxos[0].rawHex!, 'hex'),
+          hash: data.utxos[0].txid,
+          index: data.utxos[0].vout,
+          nonWitnessUtxo: Buffer.from(data.utxos[0].rawHex!, 'hex'),
         });
         buyerPsbt.addInput({
-          hash: sortedUtxos[1].txid,
-          index: sortedUtxos[1].vout,
-          nonWitnessUtxo: Buffer.from(utxos[1].rawHex!, 'hex'),
+          hash: data.utxos[1].txid,
+          index: data.utxos[1].vout,
+          nonWitnessUtxo: Buffer.from(data.utxos[1].rawHex!, 'hex'),
         });
         buyerPsbt.addInput({
           hash: data.sellerOrdUtxo.txid,
@@ -286,8 +322,8 @@ export const useCreateBuyingSignedPsbt = () => {
           nonWitnessUtxo: Buffer.from(data.sellerOrdUtxo.rawHex!, 'hex'),
           sighashType: Transaction.SIGHASH_SINGLE | Transaction.SIGHASH_ANYONECANPAY,
         });
-        const splicedUtxos = sortedUtxos.splice(0, 2);
-        sortedUtxos.forEach((f) => {
+        const splicedUtxos = data.utxos.splice(0, 2);
+        data.utxos.forEach((f) => {
           buyerPsbt.addInput({
             hash: f.txid,
             index: f.vout,
@@ -320,10 +356,10 @@ export const useCreateBuyingSignedPsbt = () => {
           value: DUMMY_UTXO_VALUE,
         });
 
-        const fee = gptFeeCalculate(sortedUtxos.length + 2, 7, feeRate);
+        const fee = gptFeeCalculate(data.utxos.length + 2, 7, feeRate);
 
         const change =
-          sortedUtxos.concat(splicedUtxos).reduce((acc, cur) => acc + cur.value, 0) -
+          data.utxos.concat(splicedUtxos).reduce((acc, cur) => acc + cur.value, 0) -
           fee -
           splicedUtxos.reduce((acc, sum) => (acc += sum.value), 0) +
           DUMMY_UTXO_VALUE * 2 -
@@ -343,7 +379,7 @@ export const useCreateBuyingSignedPsbt = () => {
         const a = buyerPsbt.finalizeAllInputs().extractTransaction(true).getId();
         console.log({ a });
 
-        const inputsToSign = [0, 1, ...utxos.map((_, i) => i + 3)];
+        const inputsToSign = [0, 1, ...data.utxos.map((_, i) => i + 3)];
 
         psbtsToSign.push({
           psbtBase64: buyerPsbt.toBase64(),
@@ -356,8 +392,6 @@ export const useCreateBuyingSignedPsbt = () => {
             })),
           },
         });
-
-        sortedUtxos = [{ txid: '', vout: 5, value: DUMMY_UTXO_VALUE, rawHex: '' }];
       }
 
       const signedListPsbtsBase64: string[] = [];

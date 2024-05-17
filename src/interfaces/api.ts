@@ -73,3 +73,8 @@ export interface SplitHistoryItem {
   locations: string[];
   confirmed: boolean;
 }
+
+export interface AddressUtxoDummy {
+  dummy: ApiUTXO[];
+  fee: ApiUTXO[];
+}

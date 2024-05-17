@@ -60,7 +60,6 @@ const useNintondoManager = () => {
   );
 
   const verifyAddress = useCallback(async () => {
-    console.log('VERIFY ADDRESS');
     if (!nintondo) return;
     const connectedAddress = address ?? (await connectWallet());
     if (!connectedAddress) return;
@@ -79,10 +78,16 @@ ${connectedAddress}
 
     try {
       const signedMessage = await nintondo.signMessage(message);
-      const signatureBuffer = Buffer.from(signedMessage, 'base64');
+      const signatureBufferBase64 = Buffer.from(signedMessage, 'base64');
+      const signatureBufferHex = Buffer.from(signedMessage, 'hex');
       const publicKeyBuffer = Buffer.from(await nintondo.getPublicKey(), 'hex');
       const pair = ECPair.fromPublicKey(publicKeyBuffer);
-      const verified = pair.verify(Buffer.from(sha256(message)), signatureBuffer);
+      let verified;
+      try {
+        verified = pair.verify(Buffer.from(sha256(message)), signatureBufferBase64);
+      } catch (e) {
+        verified = pair.verify(Buffer.from(sha256(message)), signatureBufferHex);
+      }
       if (verified) {
         const publicAddress = getAddress(publicKeyBuffer, AddressType.P2PKH);
         if (publicAddress === connectedAddress) {
@@ -91,7 +96,7 @@ ${connectedAddress}
             {
               address: connectedAddress,
               // eslint-disable-next-line camelcase
-              signed_message_base64: signedMessage,
+              signed_message_string: signedMessage,
               // eslint-disable-next-line camelcase
               public_key_hex: await nintondo.getPublicKey(),
             },

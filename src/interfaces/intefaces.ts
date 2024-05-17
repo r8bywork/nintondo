@@ -1,4 +1,5 @@
 import { CSSProperties } from 'react';
+import { ApiOrdUTXO, ApiUTXO } from './api';
 
 export interface Header {
   name: string;
@@ -235,4 +236,10 @@ interface GitHubAsset {
   created_at: string;
   updated_at: string;
   browser_download_url: string;
+}
+
+export interface PreparedToBuyInscription {
+  inscription: { address: string; price: number };
+  sellerOrdUtxo: ApiOrdUTXO;
+  utxos: ApiUTXO[];
 }
