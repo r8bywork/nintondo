@@ -61,3 +61,19 @@ export interface MarketplaceTokensView {
   total_pages: number;
   tokens: Array<MarketplaceTokenView>;
 }
+
+export interface MarketplaceOrder {
+  buyer: string | null;
+  date: number; // timestamp in seconds
+  event: 'Listed' | 'Sold' | 'Unlisted';
+  outpoint: string;
+  price: number;
+  receiver: string | null;
+  seller: string;
+}
+
+export interface MarketplaceOrders {
+  current_page: number;
+  total_pages: number;
+  orders: MarketplaceOrder[];
+}

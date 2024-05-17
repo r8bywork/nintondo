@@ -3,12 +3,16 @@ import { useNintondoManagerContext } from '../utils/bell-provider';
 import { ApiOrdUTXO, ApiUTXO } from '../interfaces/api';
 import { Psbt, Transaction, networks } from 'belcoinjs-lib';
 import { DUMMY_UTXO_VALUE, FEE_ADDRESS } from '../consts';
-import { fetchBELLMainnet, gptFeeCalculate } from '../utils';
+import { fetchBELLMainnet, gptFeeCalculate, shortAddress } from '../utils';
 import toast from 'react-hot-toast';
 import { getApiUtxo, getDummyInscriptions, getTransactionRawHex } from './electrs';
 import { SignPsbtData } from '@/interfaces/nintondo-manager-provider';
 import { SORT_FILTERS } from '@/pages/MarketplacePage';
 import { PreparedToBuyInscription } from '@/interfaces/intefaces';
+import { useSearchParams } from 'react-router-dom';
+import { MarketplaceOrder } from '@/interfaces/marketapi';
+import { ItemField } from '@/components/InlineTable/InlineTable';
+import dayjs from 'dayjs';
 
 export const useMakeDummyUTXOS = () => {
   const { signPsbtInputs } = useNintondoManagerContext();
@@ -429,4 +433,39 @@ export const getMarketplaceFilters = (searchParams: URLSearchParams) => {
     page: isNaN(rawPage) || rawPage < 1 ? 1 : rawPage,
     filter: rawFilter in SORT_FILTERS ? rawFilter : Object.keys(SORT_FILTERS)[0],
   };
+};
+
+export const useOrdersFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const rawPage = Number(searchParams.get('page'));
+
+  const changePage = (page: number) => {
+    searchParams.set('page', (page + 1).toString());
+
+    setSearchParams(searchParams);
+  };
+
+  return {
+    tick: searchParams.get('tick') || 'amid',
+    page: isNaN(rawPage) || rawPage < 1 ? 1 : rawPage,
+    changePage,
+  };
+};
+
+export const convertOrdersToView = (orders: MarketplaceOrder[]): ItemField[] => {
+  return orders.map((order) => ({
+    rawTxid: { value: order.outpoint },
+    txid: { value: shortAddress(order.outpoint), bold: true },
+    event: { value: order.event, marked: order.event === 'Listed' },
+    // TODO: Add after backend improvement
+    price: { value: '8,500', under: '$0.00', additional: 'sats/atom' },
+    // TODO: Add after backend improvement
+    quantity: { value: '1,517' },
+    // TODO: add value in $
+    total: { value: order.price.toLocaleString(), under: '$0.00', additional: 'sats' },
+    from: { value: shortAddress(order.seller) },
+    to: { value: order.receiver ? shortAddress(order.receiver) : '-' },
+    time: { value: dayjs.unix(order.date).format('MM/DD/YYYY A hh:mm:ss') },
+  }));
 };

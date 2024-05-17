@@ -18,7 +18,7 @@ export type Item = {
 };
 
 export type ItemField = {
-  [key: string]: Item;
+  [key: string]: Item | undefined;
 };
 
 export type FieldComponentProps = {
@@ -78,7 +78,7 @@ export const InlineTable = ({
             className={classNames({
               'hover:bg-[rgba(255,255,255,0.1)] cursor-pointer': Boolean(onRowClick),
             })}
-            key={item[keyId].value}
+            key={item[keyId]?.value}
             onClick={() => onRowClick?.(item)}
           >
             {fields.map((field, cellIdx) => (
@@ -88,9 +88,9 @@ export const InlineTable = ({
                   cellIdx === 0 ? 'text-left' : 'text-right',
                   {
                     'border-b': rowIdx !== data.length - 1,
-                    'font-bold': item[field.key].bold,
+                    'font-bold': item[field.key]?.bold,
                   },
-                  selectedId === item[keyId].value ? 'text-[#FFBB00]' : 'text-[#fff]',
+                  selectedId === item[keyId]?.value ? 'text-[#FFBB00]' : 'text-[#fff]',
                   cellIdx === 0 ? firstCellClassName : cellClassName,
                   field.className,
                 )}
@@ -98,25 +98,25 @@ export const InlineTable = ({
               >
                 {field.Component ? (
                   <field.Component
-                    under={item[field.key].under}
-                    additional={item[field.key].additional}
+                    under={item[field.key]?.under}
+                    additional={item[field.key]?.additional}
                     item={item}
                     keyId={keyId}
-                    id={item[keyId].value}
+                    id={item[keyId]?.value}
                   >
-                    {item[field.key].value}
+                    {item[field.key]?.value}
                   </field.Component>
                 ) : (
                   <>
-                    <p className={classNames(item[field.key].marked && 'text-[#53DCFF]')}>
-                      {item[field.key].value}
+                    <p className={classNames(item[field.key]?.marked && 'text-[#53DCFF]')}>
+                      {item[field.key]?.value}
                       <span className='text-[#4B4B4B] font-normal'>
                         {' '}
-                        {item[field.key].additional}
+                        {item[field.key]?.additional}
                       </span>
                     </p>
                     <p className={classNames('text-[#4B4B4B] leading-[21px]', underClassName)}>
-                      {item[field.key].under}
+                      {item[field.key]?.under}
                     </p>
                   </>
                 )}

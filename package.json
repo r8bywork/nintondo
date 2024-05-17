@@ -23,6 +23,7 @@
     "belpair": "0.0.8",
     "buffer": "6.0.3",
     "classnames": "2.3.3",
+    "dayjs": "^1.11.11",
     "js-cookie": "3.0.5",
     "jwt-decode": "4.0.0",
     "lodash": "4.17.21",
