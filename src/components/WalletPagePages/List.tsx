@@ -293,7 +293,7 @@ export const List = ({ isListed = false }: ListProps) => {
           </div>
           <button
             onClick={handleListAllClick}
-            className='font-bold py-[6px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)] disabled:opacity-50'
+            className='font-bold py-[6px] rounded-[20px] text-[20px] transition duration-300 text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)] disabled:opacity-50'
             disabled={selectedTransfers.total === 0}
           >
             {buttonText} {selectedTransfers.total.toLocaleString()}

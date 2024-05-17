@@ -454,8 +454,8 @@ export const useOrdersFilters = () => {
 };
 
 export const convertOrdersToView = (orders: MarketplaceOrder[]): ItemField[] => {
-  return orders.map((order) => ({
-    rawTxid: { value: order.outpoint },
+  return orders.map((order, idx) => ({
+    id: { value: idx.toString() },
     txid: { value: shortAddress(order.outpoint), bold: true },
     event: { value: order.event, marked: order.event === 'Listed' },
     // TODO: Add after backend improvement

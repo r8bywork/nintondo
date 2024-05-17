@@ -18,8 +18,8 @@ const TabSelect = ({
   buttonClassName,
 }: TabSelectProps) => {
   return (
-    <div className={classNames('flex', className)}>
-      {fields.map((item, idx) => {
+    <div className={classNames('flex gap-[12px]', className)}>
+      {fields.map((item) => {
         return (
           <button
             style={
@@ -35,7 +35,6 @@ const TabSelect = ({
             className={classNames(
               'px-5 bg-white z-[2] max-md:px-3 rounded-[30px] text-[20px] font-bold text-black max-md:mt-[10px] tab-animated overflow-hidden transition duration-300',
               {
-                'md:mr-[12px] max-md:mr-[5px]': idx !== fields.length - 1,
                 'tab-animated-active': activeTab === item.value,
               },
               buttonClassName,

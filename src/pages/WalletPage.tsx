@@ -75,16 +75,16 @@ const WalletPage = () => {
     );
 
   return (
-    <div className='max-w-[1440px] px-[25px] mx-auto flex pt-[221px] max-medium:pt-[88px] flex-col text-white'>
+    <div className='max-w-[1440px] gap-6 px-[25px] mx-auto flex pt-[150px] max-medium:pt-[88px] flex-col text-white'>
       <TabSelect
         fields={TABS}
         activeTab={currentTab}
         onHandleChange={handleActiveTabChange}
-        buttonClassName='mt-0 max-md:mt-0 mr-0 md:mr-0 py-[6px] px-[45px] leading-[21px] h-[33px] max-md:mr-0'
-        className='w-fit gap-[1px] max-medium:gap-[6px]'
+        buttonClassName='mt-0 flex-1 py-[10px] min-w-[230px] px-[45px] leading-[21px] h-[40px] mr-0 max-md:mr-0 md:mr-0'
+        className='flex-1 gap-[6px] flex-wrap bg-[#000]'
       />
 
-      <div className='pt-[33px] max-medium:pt-[52px]'>
+      <div className='max-medium:pt-[52px]'>
         {WALLET_PAGE_COMPONENTS[currentTab as WalletPageTabs].component}
       </div>
     </div>
