@@ -39,7 +39,7 @@ export const TickDropdown = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { favorites, removeFromFavorite } = useFavorites();
 
-  const tick = searchParams.get('tick') || DATA[0].tick.value;
+  const tick = searchParams.get('tick') || DATA[0].tick?.value;
 
   const handleTickChange = (tick: string) => {
     searchParams.set('tick', tick);
@@ -58,7 +58,7 @@ export const TickDropdown = () => {
   };
 
   const handleRowClick = (item: ItemField) => {
-    handleTickChange(item.tick.value);
+    handleTickChange(`${item.tick?.value}`);
   };
 
   return (

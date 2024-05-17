@@ -1,4 +1,4 @@
-import { Field, InlineTable, ItemField } from '../InlineTable/InlineTable';
+import { Field, InlineTable } from '../InlineTable/InlineTable';
 import Pagination from '../Table/Pagination';
 import Arrow from '../../assets/TableArrow.svg?react';
 import { useQuery } from '@tanstack/react-query';
@@ -8,7 +8,6 @@ import { MARKET_API_URL } from '@/consts';
 import { convertOrdersToView, useOrdersFilters } from '@/hooks/market';
 import Loading from 'react-loading';
 import classNames from 'classnames';
-import { MarketplaceOrders } from '@/interfaces/marketapi';
 
 const FIELDS: Field[] = [
   { key: 'txid', title: 'ATOMICALS TXID' },
@@ -19,89 +18,6 @@ const FIELDS: Field[] = [
   { key: 'from', title: 'FROM' },
   { key: 'to', title: 'TO' },
   { key: 'time', title: 'TIME' },
-];
-
-const MOCK_DATA: ItemField[] = [
-  {
-    txid: { value: '2e86b...2d4a7:0', bold: true },
-    event: { value: 'Unlisted' },
-    price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
-    quantity: { value: '1,517' },
-    total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
-    from: { value: 'bc1p4...y7vz2' },
-    to: { value: '-' },
-    time: { value: '4/18/2024, 5:59:58 PM' },
-  },
-  {
-    txid: { value: '2e86b...2d4a7:0', bold: true },
-    event: { value: 'Unlisted' },
-    price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
-    quantity: { value: '1,517' },
-    total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
-    from: { value: 'bc1p4...y7vz2' },
-    to: { value: '-' },
-    time: { value: '4/18/2024, 5:59:58 PM' },
-  },
-  {
-    txid: { value: '2e86b...2d437:0', bold: true },
-    event: { value: 'Unlisted' },
-    price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
-    quantity: { value: '1,517' },
-    total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
-    from: { value: 'bc1p4...y7vz2' },
-    to: { value: '-' },
-    time: { value: '4/18/2024, 5:59:58 PM' },
-  },
-  {
-    txid: { value: '2e86b...2d427:0', bold: true },
-    event: { value: 'Unlisted' },
-    price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
-    quantity: { value: '1,517' },
-    total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
-    from: { value: 'bc1p4...y7vz2' },
-    to: { value: '-' },
-    time: { value: '4/18/2024, 5:59:58 PM' },
-  },
-  {
-    txid: { value: '2e86b...2a427:0', bold: true },
-    event: { value: 'Listed', marked: true },
-    price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
-    quantity: { value: '1,517' },
-    total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
-    from: { value: 'bc1p4...y7vz2' },
-    to: { value: '-' },
-    time: { value: '4/18/2024, 5:59:58 PM' },
-  },
-  {
-    txid: { value: '2e86b...3d427:0', bold: true },
-    event: { value: 'Listed', marked: true },
-    price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
-    quantity: { value: '1,517' },
-    total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
-    from: { value: 'bc1p4...y7vz2' },
-    to: { value: '-' },
-    time: { value: '4/18/2024, 5:59:58 PM' },
-  },
-  {
-    txid: { value: '2e89b...3d427:0', bold: true },
-    event: { value: 'Unlisted' },
-    price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
-    quantity: { value: '1,517' },
-    total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
-    from: { value: 'bc1p4...y7vz2' },
-    to: { value: '-' },
-    time: { value: '4/18/2024, 5:59:58 PM' },
-  },
-  {
-    txid: { value: '2e89b...3d427:0', bold: true },
-    event: { value: 'Unlisted' },
-    price: { value: '8,500', under: '$5.28', additional: 'sats/atom' },
-    quantity: { value: '1,517' },
-    total: { value: '12,894,500', under: '$8008.74', additional: 'sats' },
-    from: { value: 'bc1p4...y7vz2' },
-    to: { value: '-' },
-    time: { value: '4/18/2024, 5:59:58 PM' },
-  },
 ];
 
 export const Orders = () => {

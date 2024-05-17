@@ -13,10 +13,10 @@ export const Favorite = ({ item, group }: FavoriteProps) => {
 
   const onStarClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    if (favorites[group]?.includes(item.tick.value)) {
-      removeFromFavorite(group, item.tick.value);
+    if (favorites[group]?.includes(`${item.tick?.value}`)) {
+      removeFromFavorite(group, `${item.tick?.value}`);
     } else {
-      addToFavorite(group, item.tick.value);
+      addToFavorite(group, `${item.tick?.value}`);
     }
   };
 
@@ -26,13 +26,13 @@ export const Favorite = ({ item, group }: FavoriteProps) => {
         onClick={onStarClick}
         className='w-[16px] h-[16px] flex'
       >
-        {favorites[group]?.includes(item.tick.value) ? (
+        {favorites[group]?.includes(`${item.tick?.value}`) ? (
           <FilledStar className='w-[16px] h-[15px]' />
         ) : (
           <Star className='w-[16px] h-[15px]' />
         )}
       </button>
-      <div className='text-[#4b4b4b]'>{item.num.value}</div>
+      <div className='text-[#4b4b4b]'>{item.num?.value}</div>
     </div>
   );
 };
