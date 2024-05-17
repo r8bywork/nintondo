@@ -144,19 +144,17 @@ export const ConfirmationModal = ({
           CONFIRM
         </button>
       </div>
-      {isCustomizeOpen && (
-        <Modal
-          isOpen
+      <Modal
+        isOpen={isCustomizeOpen}
+        onClose={closeCustomize}
+      >
+        <CustomizeModal
+          defaultFee={feeRate}
+          normalFee={DEFAULT_FEE_RATE}
           onClose={closeCustomize}
-        >
-          <CustomizeModal
-            defaultFee={feeRate}
-            normalFee={DEFAULT_FEE_RATE}
-            onClose={closeCustomize}
-            onConfirm={handleCustomizeFee}
-          />
-        </Modal>
-      )}
+          onConfirm={handleCustomizeFee}
+        />
+      </Modal>
     </div>
   );
 };

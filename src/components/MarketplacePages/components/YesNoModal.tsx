@@ -98,19 +98,17 @@ export const YesNoModal = ({
           </div>
         </div>
       )}
-      {isCustomizeOpen && (
-        <Modal
-          isOpen
+      <Modal
+        isOpen={isCustomizeOpen}
+        onClose={closeCustomize}
+      >
+        <CustomizeModal
+          defaultFee={feeRate}
           onClose={closeCustomize}
-        >
-          <CustomizeModal
-            defaultFee={feeRate}
-            onClose={closeCustomize}
-            onConfirm={handleCustomizeFee}
-            normalFee={DEFAULT_FEE_RATE}
-          />
-        </Modal>
-      )}
+          onConfirm={handleCustomizeFee}
+          normalFee={DEFAULT_FEE_RATE}
+        />
+      </Modal>
     </div>
   );
 };
