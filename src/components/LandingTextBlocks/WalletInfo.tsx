@@ -1,3 +1,5 @@
+import ChromeIcon from '../../assets/ChromeIcon.svg?react';
+import FirefoxIcon from '../../assets/firefox2019.svg?react';
 import wallet1 from '../../assets/walletScreens/wallet1.jpg';
 import wallet2 from '../../assets/walletScreens/wallet2.jpg';
 import wallet3 from '../../assets/walletScreens/wallet3.jpg';
@@ -82,26 +84,30 @@ const WalletInfo = () => {
       <p>Start your adventure with Nintondo Wallet and keep your virtual village thriving!</p>
       <br />
       <p>
-        📥 <b>Download Now</b> (Last Version: {gitData?.name || '0.1'}):
+        <b>Download Now</b> (Latest Version: {gitData?.name || '0.1'}):
       </p>
       <br />
-      <p>
-        <a
-          className={'underline'}
-          href={gitData?.assets[0].browser_download_url}
-        >
-          Chrome Extension
-        </a>
-      </p>
-      <br /> <br />
-      <p>
-        <a
-          className={'underline'}
-          href={gitData?.assets[1].browser_download_url}
-        >
-          Firefox Extension
-        </a>
-      </p>
+      <div className='ml-5'>
+        <p className='flex items-center'>
+          <ChromeIcon />
+          <a
+            className={'underline'}
+            href={gitData?.assets[0].browser_download_url}
+          >
+            Chrome Extension
+          </a>
+        </p>
+        <br />
+        <p className='flex items-center'>
+          <FirefoxIcon />
+          <a
+            className={'underline'}
+            href={gitData?.assets[1].browser_download_url}
+          >
+            Firefox Extension
+          </a>
+        </p>
+      </div>
       <br />
       <div className='grid grid-cols-3 gap-4'>
         {walletImages.map((image, index) => (

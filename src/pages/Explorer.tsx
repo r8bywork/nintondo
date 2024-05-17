@@ -75,6 +75,7 @@ const Explorer = () => {
             fields={TabSelectFields}
             activeTab={activeTab}
             onHandleChange={onHandleChange}
+            className='mr-[12px]'
           />
           <Search />
         </div>
