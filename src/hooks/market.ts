@@ -273,22 +273,26 @@ export const usePrepareInscriptions = () => {
       }[],
     ): Promise<PreparedToBuyInscription[] | undefined> => {
       if (!address) return;
-      const dummyUtxos = await getDummyInscriptions(
-        address,
-        data.map((f) => f.price),
-      );
-      if (!dummyUtxos) return;
-      const prepared: PreparedToBuyInscription[] = dummyUtxos.map((f, i) => {
-        f.dummy.forEach(async (utxo) => {
-          utxo.rawHex = await getTransactionRawHex(utxo.txid);
+      try {
+        const dummyUtxos = await getDummyInscriptions(
+          address,
+          data.map((f) => f.price),
+        );
+        if (!dummyUtxos) return;
+        const prepared: PreparedToBuyInscription[] = dummyUtxos.map((f, i) => {
+          f.dummy.forEach(async (utxo) => {
+            utxo.rawHex = await getTransactionRawHex(utxo.txid);
+          });
+          return {
+            inscription: { address: data[i].seller, price: data[i].price },
+            sellerOrdUtxo: data[i].sellerUtxo,
+            utxos: f.dummy.concat(f.fee),
+          };
         });
-        return {
-          inscription: { address: data[i].seller, price: data[i].price },
-          sellerOrdUtxo: data[i].sellerUtxo,
-          utxos: f.dummy.concat(f.fee),
-        };
-      });
-      return prepared;
+        return prepared;
+      } catch (e) {
+        return undefined;
+      }
     },
     [address, getApiUtxo, getTransactionRawHex],
   );

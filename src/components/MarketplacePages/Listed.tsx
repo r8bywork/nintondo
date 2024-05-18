@@ -95,9 +95,8 @@ const Listed = () => {
       toast.error('Connect your wallet first');
       return false;
     }
-    const tokenUtxos: ApiOrdUTXO[] = [];
-    for (const tokenToBuy of tokensToBuy) {
-      const utxo = await checkInscription(tokenToBuy);
+    for (const token of selectedTokens) {
+      const utxo = await checkInscription(token);
       if (!utxo) {
         toast.error('Failed to find inscription utxo');
         return;
@@ -106,7 +105,7 @@ const Listed = () => {
     }
     setTokenUtxos(tokenUtxos);
     const utxos = await prepareInscriptions(
-      tokensToBuy.map((f, i) => ({
+      selectedTokens.map((f, i) => ({
         price: f.amount * f.price_per_token,
         seller: f.owner,
         sellerUtxo: tokenUtxos[i],
