@@ -5,7 +5,7 @@ import { Psbt, Transaction, networks } from 'belcoinjs-lib';
 import { DUMMY_UTXO_VALUE, FEE_ADDRESS } from '../consts';
 import { fetchBELLMainnet, gptFeeCalculate, shortAddress } from '../utils';
 import toast from 'react-hot-toast';
-import { getApiUtxo, getDummyInscriptions, getTransactionRawHex } from './electrs';
+import { getApiUtxo, getDummyUTXOS, getTransactionRawHex } from './electrs';
 import { SignPsbtData } from '@/interfaces/nintondo-manager-provider';
 import { PreparedToBuyInscription } from '@/interfaces/intefaces';
 import { useSearchParams } from 'react-router-dom';
@@ -271,22 +271,30 @@ export const usePrepareInscriptions = () => {
         seller: string;
         sellerUtxo: ApiOrdUTXO;
       }[],
+      useRawHex: boolean = false,
     ): Promise<PreparedToBuyInscription[] | undefined> => {
       if (!address) return;
       try {
-        const dummyUtxos = await getDummyInscriptions(
+        const dummyUtxos = await getDummyUTXOS(
           address,
           data.map((f) => f.price),
         );
         if (!dummyUtxos) return;
+        if (useRawHex) {
+          for (const data of dummyUtxos) {
+            for (const dummy of data.dummy) {
+              dummy.rawHex = await getTransactionRawHex(dummy.txid);
+            }
+            for (const pay of data.fee) {
+              pay.rawHex = await getTransactionRawHex(pay.txid);
+            }
+          }
+        }
         const prepared: PreparedToBuyInscription[] = dummyUtxos.map((f, i) => {
-          f.dummy.forEach(async (utxo) => {
-            utxo.rawHex = await getTransactionRawHex(utxo.txid);
-          });
           return {
             inscription: { address: data[i].seller, price: data[i].price },
             sellerOrdUtxo: data[i].sellerUtxo,
-            utxos: f.dummy.concat(f.fee),
+            utxos: f.dummy.concat(...f.fee),
           };
         });
         return prepared;
@@ -313,7 +321,6 @@ export const useCreateBuyingSignedPsbt = () => {
       const psbtsToSign: SignPsbtData[] = [];
       for (const data of datas) {
         const buyerPsbt = new Psbt({ network: networks.bitcoin });
-
         buyerPsbt.addInput({
           hash: data.utxos[0].txid,
           index: data.utxos[0].vout,
@@ -417,6 +424,7 @@ export const useCreateBuyingSignedPsbt = () => {
           psbtsToSign[0].psbtBase64,
           psbtsToSign[0].options,
         );
+        console.log(partiallySignedPsbtbase64);
         if (!partiallySignedPsbtbase64) return;
         const psbt = Psbt.fromBase64(partiallySignedPsbtbase64);
         signedListPsbtsBase64.push(fixSignatures(psbt, psbtsToSign[0]));

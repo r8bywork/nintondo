@@ -23,9 +23,9 @@ export const getApiUtxo = async (address: string) => {
   });
 };
 
-export const getDummyInscriptions = async (address: string, data: number[]) => {
+export const getDummyUTXOS = async (address: string, data: number[]) => {
   return await fetchBELLMainnet<AddressUtxoDummy[]>({
-    path: `/address/${address}/ords`,
+    path: `/address/${address}/utxo`,
     method: 'POST',
     body: JSON.stringify(data),
   });

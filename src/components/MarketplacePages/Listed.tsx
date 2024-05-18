@@ -90,25 +90,29 @@ const Listed = () => {
     handleModalCloseClick();
   };
 
-  const checkUtxos = async () => {
+  const checkUtxos = async (tokens: MarketplaceTokenView[]) => {
     if (!verifiedAddress) {
       toast.error('Connect your wallet first');
       return false;
     }
-    for (const token of selectedTokens) {
+    let localTokens: MarketplaceTokenView[] = [];
+    if (!tokensToBuy.length) localTokens = tokens;
+    else localTokens = tokensToBuy;
+    const localTokenUtxos: ApiOrdUTXO[] = [];
+    for (const token of localTokens) {
       const utxo = await checkInscription(token);
       if (!utxo) {
         toast.error('Failed to find inscription utxo');
         return;
       }
-      tokenUtxos.push(utxo);
+      localTokenUtxos.push(utxo);
     }
-    setTokenUtxos(tokenUtxos);
+    setTokenUtxos(localTokenUtxos);
     const utxos = await prepareInscriptions(
-      selectedTokens.map((f, i) => ({
+      localTokens.map((f, i) => ({
         price: f.amount * f.price_per_token,
         seller: f.owner,
-        sellerUtxo: tokenUtxos[i],
+        sellerUtxo: localTokenUtxos[i],
       })),
     );
     if (!utxos) {
@@ -120,12 +124,12 @@ const Listed = () => {
 
   const handleBuyClick = async (token: MarketplaceTokenView) => {
     setTokensToBuy([token]);
-    if (await checkUtxos()) openModal();
+    if (await checkUtxos([token])) openModal();
   };
 
   const handleBuySelectedClick = async () => {
     setTokensToBuy(selectedTokens);
-    if (await checkUtxos()) openModal();
+    if (await checkUtxos(selectedTokens)) openModal();
   };
 
   const handleRangeChange = (value: number) => {
@@ -150,6 +154,7 @@ const Listed = () => {
           seller: f.owner,
           sellerUtxo: tokenUtxos[i],
         })),
+        true,
       );
       if (receivedPreparedToBuyInscriptions) {
         preparedToBuyInscriptions = receivedPreparedToBuyInscriptions;
@@ -250,7 +255,7 @@ const Listed = () => {
       </Modal>
       <Modal
         isOpen={isYesNoOpen}
-        onClose={handleYesNoClose}
+        onClose={handleYesNoCancel}
       >
         <YesNoModal
           onCancel={handleYesNoCancel}
