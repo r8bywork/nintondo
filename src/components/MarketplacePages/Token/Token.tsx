@@ -48,7 +48,7 @@ const Token: FC<TokenProps> = ({
         </div>
         <div className='w-[2px] h-[55px] bg-white'></div>
         <div className=''>
-          <p className='text-[#FFBB00] text-[18px]'>{token.price_per_token.toFixed(4)}</p>
+          <p className='text-[#FFBB00] text-[18px]'>{token.price_per_token / 10 ** 8}</p>
           <span></span>
         </div>
       </div>

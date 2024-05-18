@@ -17,6 +17,7 @@ import { Listed } from '@/interfaces/api';
 import { omit } from 'lodash';
 import { Unlist } from './components/Unlist';
 import { BottomSelect } from '../BottomSelect/BottomSelect';
+import { ListModal } from './components/ListModal';
 
 type SelectedTransfers = {
   transfers: Record<string, ITransfer[]>;
@@ -59,8 +60,8 @@ export const List = ({ isListed = false }: ListProps) => {
   const makeAuthRequest = useMakeAuthRequests();
   const createSignedListPsbt = useCreateListedSignedPSBT();
 
-  const [price, setPrice] = useState<number>(0.2);
-  const tick = searchParams.get('tick') || '';
+  // const [price, setPrice] = useState<number>(0.2);
+  const tick = searchParams.get('tick') || selectedTick?.tick;
 
   const buttonText = useMemo(() => {
     return isListed ? 'UNLIST' : 'LIST';
@@ -84,7 +85,6 @@ export const List = ({ isListed = false }: ListProps) => {
   const getUserTokens = useGetUserTokens();
 
   const handleClose = () => {
-    setPrice(0);
     close();
   };
 
@@ -166,7 +166,7 @@ export const List = ({ isListed = false }: ListProps) => {
     );
   };
 
-  const list = async () => {
+  const list = async (price: number) => {
     if (selectedTransfers.total < 1) return;
     const public_key_hex = await getPublicKey();
     const psbts_base64 = await createSignedListPsbt(
@@ -342,10 +342,10 @@ export const List = ({ isListed = false }: ListProps) => {
                   </div>
                 </div>
               </div>
-              <p className='text-[16px] text-[#4B4B4B]'>
+              {/* <p className='text-[16px] text-[#4B4B4B]'>
                 The total value is limited to between 50000 sats (0.0005 BTC) and 20000000 sats (0.2
                 BTC).
-              </p>
+              </p> */}
             </div>
           )}
 
@@ -408,25 +408,32 @@ export const List = ({ isListed = false }: ListProps) => {
               unlist={unlist}
             />
           ) : (
-            <div className='flex flex-col gap-[15px]'>
-              <input
-                inputMode='numeric'
-                pattern='[0-9]*'
-                className='rounded-[50px] outline-none px-[10px] py-[3px] text-[20px] bg-[#4b4b4b]'
-                value={price}
-                onChange={(e) =>
-                  setPrice((price) =>
-                    isNaN(Number(e.target.value)) ? price : Number(e.target.value),
-                  )
-                }
-              />
-              <button
-                onClick={list}
-                className='max-[1200px]:flex-1 font-bold py-[6px] px-[101px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)]'
-              >
-                LIST {selectedTransfers.total.toLocaleString()} {selectedTick?.tick}
-              </button>
-            </div>
+            // <div className='flex flex-col gap-[15px]'>
+            //   <input
+            //     inputMode='numeric'
+            //     pattern='[0-9]*'
+            //     className='rounded-[50px] outline-none px-[10px] py-[3px] text-[20px] bg-[#4b4b4b]'
+            //     value={price}
+            //     onChange={(e) =>
+            //       setPrice((price) =>
+            //         isNaN(Number(e.target.value)) ? price : Number(e.target.value),
+            //       )
+            //     }
+            //   />
+            //   <button
+            //     onClick={list}
+            //     className='max-[1200px]:flex-1 font-bold py-[6px] px-[101px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)]'
+            //   >
+            //     LIST {selectedTransfers.total.toLocaleString()} {selectedTick?.tick}
+            //   </button>
+            // </div>
+            <ListModal
+              list={list}
+              tick={tick ?? ''}
+              onCancel={handleClose}
+              amount={toModal.total}
+              transfers={toModal.transfers}
+            />
           )}
         </div>
       </Modal>

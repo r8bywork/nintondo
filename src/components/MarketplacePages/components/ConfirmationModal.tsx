@@ -114,7 +114,7 @@ export const ConfirmationModal = ({
               <p className='text-[20px] max-medium:text-[14px]'>~$4325.29</p>
             </div>
             <div className='flex justify-between items-center'>
-              <p className='text-[20px] text-[#4B4B4B] max-medium:text-[14px]'>BTC</p>
+              <p className='text-[20px] text-[#4B4B4B] max-medium:text-[14px]'>BEL</p>
               <p className='text-[20px]'></p>
             </div>
           </div>
@@ -125,7 +125,7 @@ export const ConfirmationModal = ({
             <p className='text-[20px] text-[#4B4B4B]'>0</p>
           </div>
           <div className='flex w-[200px] max-medium:w-[120px] justify-between pt-[6px]'>
-            <p className='text-[20px] text-[#4B4B4B] max-medium:text-[14px]'>BTC</p>
+            <p className='text-[20px] text-[#4B4B4B] max-medium:text-[14px]'>BEL</p>
             <p className='text-[20px]'></p>
           </div>
         </div>

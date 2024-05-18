@@ -360,7 +360,7 @@ export const CollectionPageMock = {
   image: Image,
   name: 'Bitcoin Apes',
   createdAt: 'February 2023',
-  currency: 'BTC',
+  currency: 'BEL',
   details: [
     {
       title: 'supply',
@@ -374,7 +374,7 @@ export const CollectionPageMock = {
     {
       title: 'creation fee',
       value: 32.208,
-      additionalSymbol: 'BTC',
+      additionalSymbol: 'BEL',
     },
     {
       title: 'range',

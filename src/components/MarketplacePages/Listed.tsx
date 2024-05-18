@@ -233,7 +233,7 @@ const Listed = () => {
           onClick={handleBuySelectedClick}
           disabled={!selectedTokens.length}
         >
-          BUY {stats.amount.toLocaleString()} {tick} for 0 BTC
+          BUY {stats.amount.toLocaleString()} {tick} for 0 BEL
         </button>
       </BottomSelect>
       <Modal

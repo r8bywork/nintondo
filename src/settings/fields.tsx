@@ -525,7 +525,7 @@ export const collectionsFieldsTable: Field<Collection>[] = [
     name: 'CREATION FEE',
     render: (value) => (
       <span>
-        {value.toLocaleString()} <span className={'text-[#4B4B4B]'}>BTC</span>
+        {value.toLocaleString()} <span className={'text-[#4B4B4B]'}>BEL</span>
       </span>
     ),
   },

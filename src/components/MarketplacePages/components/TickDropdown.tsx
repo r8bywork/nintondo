@@ -12,7 +12,7 @@ import { Select } from '@/components/Controls/Select';
 const FIELDS: Field[] = [
   { key: 'num', title: '#', Component: createFavoriteWithGroup('tick') },
   { key: 'tick', title: 'TICK' },
-  { key: 'volume', title: 'VOLUME BTC' },
+  { key: 'volume', title: 'VOLUME BEL' },
   { key: 'price', title: 'PRICE' },
   { key: 'day', title: '24H' },
 ];
