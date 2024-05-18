@@ -11,6 +11,7 @@ import { useNintondoManagerContext } from '@/utils/bell-provider';
 // import axios from 'axios';
 import { ReactNode, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { History } from '../components/WalletPagePages/History'
 // import { useSearchParams } from 'react-router-dom';
 
 type Tab = {
@@ -31,7 +32,7 @@ const WALLET_PAGE_COMPONENTS: Record<WalletPageTabs, Tab> = {
   },
   history: {
     title: 'HISTORY',
-    component: <>History</>,
+    component: <History />,
   },
   collections: {
     title: 'COLLECTIONS',
@@ -81,7 +82,7 @@ const WalletPage = () => {
         activeTab={currentTab}
         onHandleChange={handleActiveTabChange}
         buttonClassName='mt-0 flex-1 py-[10px] min-w-[230px] px-[45px] leading-[21px] h-[40px] mr-0 max-md:mr-0 md:mr-0'
-        className='flex-1 gap-[6px] flex-wrap bg-[#000]'
+        className='flex-1 gap-[15px] flex-wrap bg-[#000]'
       />
 
       <div className='max-medium:pt-[52px]'>

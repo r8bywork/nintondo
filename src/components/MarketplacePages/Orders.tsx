@@ -17,12 +17,17 @@ const FIELDS: Field[] = [
 ];
 
 export const Orders = () => {
-  const { page, changePage, tick } = useOrdersFilters();
+  const { page, changePage, tick, filter } = useOrdersFilters();
 
   const { data, isLoading, isError, isSuccess } = useQuery({
-    queryKey: ['orders', tick, page],
-    queryFn: async () =>
-      axios.get(`${MARKET_API_URL}/pub/tokens/history?tick=${tick}&page=${page}`),
+    queryKey: ['orders', tick, page, filter],
+    queryFn: async () => {
+      return axios.get(
+        `${MARKET_API_URL}/pub/tokens/history?tick=${tick}&page=${page}${
+          filter !== 'all' ? `&event=${filter}` : ''
+        }`,
+      );
+    },
     select: (data) => ({ ...data!.data, data: convertOrdersToView(data!.data.events) }),
   });
 

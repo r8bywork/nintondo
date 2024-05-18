@@ -61,15 +61,15 @@ export const ListModal = ({ transfers, amount, list, onCancel, tick }: ListProps
         }, [] as ReactNode[])}
       </div>
       <div className='flex justify-between w-full flex-col gap-1'>
-        <span>Enter price BEL/{tick}</span>
+        <p className='text-[20px] font-bold'>Enter price <span className='text-[#4b4b4b] font-normal'>BEL/{tick}</span></p>
         <input
           inputMode='numeric'
           pattern='[0-9]*'
-          className='rounded-[50px] outline-none px-[10px] py-[3px] text-[20px] bg-[#4b4b4b] w-full'
+          className='rounded-[50px] outline-none px-[20px] py-[3px] text-[18px] leading-[30px] bg-[#4b4b4b] w-full'
           placeholder={`BEL/${tick}`}
           value={price}
           onChange={(e) =>
-            setPrice((price) => (isNaN(Number(e.target.value)) ? price : Number(e.target.value)))
+            setPrice((price) => (!isFinite(Number(e.target.value)) ? price : Number(e.target.value)))
           }
         />
       </div>

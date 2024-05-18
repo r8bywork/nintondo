@@ -28,7 +28,7 @@ export const HistoryTable = ({
   totalPages,
 }: HistoryTable) => {
   return (
-    <div className='flex flex-col pt-[47px]'>
+    <div className='flex flex-col pt-[47px] w-full'>
       <div className='relative flex justify-center min-h-[670px]'>
         {isSuccess && !data?.length && (
           <p className='absolute top-[100px] text-[24px] font-bold text-center'>
@@ -40,24 +40,26 @@ export const HistoryTable = ({
             Error while loading <span>orders history</span>.
           </p>
         )}
-        <div className='relative w-full overflow-x-auto'>
-          {isLoading && (
-            <div className='absolute w-full h-full flex justify-center items-center'>
-              <Loading type='balls' />
-            </div>
-          )}
-          <div className={classNames({ 'opacity-40': isLoading })}>
-            {(isLoading || isSuccess) && (
-              <InlineTable
-                fields={fields}
-                data={data || []}
-                cellClassName='pl-[50px] max-medium:pl-[35px]'
-                underClassName='font-bold'
-                keyId='id'
-              />
+        {!isError && (
+          <div className='relative w-full overflow-x-auto'>
+            {isLoading && (
+              <div className='absolute w-full h-full flex justify-center items-center'>
+                <Loading type='balls' />
+              </div>
             )}
+            <div className={classNames({ 'opacity-40': isLoading })}>
+              {(isLoading || isSuccess) && (
+                <InlineTable
+                  fields={fields}
+                  data={data || []}
+                  cellClassName='pl-[50px] max-medium:pl-[35px]'
+                  underClassName='font-bold'
+                  keyId='id'
+                />
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <div className='pt-[15px]'>
         <Pagination

@@ -304,7 +304,7 @@ export const List = ({ isListed = false }: ListProps) => {
         <div className='flex flex-col flex-1 gap-[40px]'>
           <div className='flex items-center gap-[24px]'>
             <h1 className='text-[32px] font-bold leading-[34px]'>
-              List <span className='text-[#53DCFF]'>{selectedTick?.tick}</span>
+              {isListed ? 'Unlist' : 'List'} <span className='text-[#53DCFF]'>{selectedTick?.tick}</span>
             </h1>
             {isListed || (
               <button

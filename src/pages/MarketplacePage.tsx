@@ -8,6 +8,7 @@ import { ReactNode, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { TickDropdown } from '@/components/MarketplacePages/components/TickDropdown';
 import { Filter } from '@/components/MarketplacePages/components/Filter';
+import { EVENT_FILTERS, SORT_FILTERS } from '@/utils/market/constants';
 
 type Tab = {
   title: string;
@@ -16,19 +17,6 @@ type Tab = {
 };
 
 type MarketPlaceTabs = 'listed' | 'orders';
-
-export const SORT_FILTERS = {
-  lowhigh: 'Price: Low → High',
-  highlow: 'Price: High → Low',
-  latestearliest: 'List Time: Latest → Earliest',
-  earliestlatest: 'List Time: Earliest → Latest',
-};
-
-const EVENT_FILTERS = {
-  listed: 'Listed',
-  sold: 'Sold',
-  unlisted: 'Unlisted',
-};
 
 const MARKETPLACE_COMPONENTS: Record<MarketPlaceTabs, Tab> = {
   listed: {
@@ -48,7 +36,7 @@ const MARKETPLACE_COMPONENTS: Record<MarketPlaceTabs, Tab> = {
     component: <Orders />,
     filter: (
       <Filter
-        defaultFilter='listed'
+        defaultFilter={Object.keys(EVENT_FILTERS)[0]}
         filterKey='event'
         filters={EVENT_FILTERS}
         tag='Event: '
@@ -66,10 +54,18 @@ const MarketplacePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handleActiveTabChange = (tab: string) => {
-    searchParams.set('tab', tab);
-    searchParams.set('page', '1');
+    const newSearchParams = new URLSearchParams();
 
-    setSearchParams(searchParams);
+    newSearchParams.set('tab', tab);
+    newSearchParams.set('page', '1');
+
+    const tick = searchParams.get('tick'); 
+
+    if (tick) {
+      newSearchParams.set('tick', tick);
+    }
+
+    setSearchParams(newSearchParams);
   };
 
   const currentTab = useMemo(() => {
@@ -91,7 +87,7 @@ const MarketplacePage = () => {
             activeTab={currentTab}
             onHandleChange={handleActiveTabChange}
             buttonClassName='mt-0 max-md:mt-0 flex-1 mr-0 md:mr-0 py-[10px] px-[45px] leading-[21px] h-[40px] max-md:mr-0'
-            className='flex-1 gap-[1px] max-medium:gap-[6px] bg-[#000]'
+            className='flex-1 gap-[13px] max-medium:gap-[6px] bg-[#000]'
           />
           <TickDropdown />
         </div>

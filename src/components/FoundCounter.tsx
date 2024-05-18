@@ -5,6 +5,7 @@ interface FoundCounterProps {
   customText: string;
   classNames?: string;
 }
+
 const FoundCounter = ({ count, customText, classNames }: FoundCounterProps) => {
   return (
     <span className={cn('text-[#4B4B4B] font-16px', classNames)}>

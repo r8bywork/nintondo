@@ -7,12 +7,12 @@ import { fetchBELLMainnet, gptFeeCalculate, shortAddress } from '../utils';
 import toast from 'react-hot-toast';
 import { getApiUtxo, getDummyInscriptions, getTransactionRawHex } from './electrs';
 import { SignPsbtData } from '@/interfaces/nintondo-manager-provider';
-import { SORT_FILTERS } from '@/pages/MarketplacePage';
 import { PreparedToBuyInscription } from '@/interfaces/intefaces';
 import { useSearchParams } from 'react-router-dom';
 import { MarketplaceOrder } from '@/interfaces/marketapi';
 import { ItemField } from '@/components/InlineTable/InlineTable';
 import dayjs from 'dayjs';
+import { EVENT_FILTERS, SORT_FILTERS } from '@/utils/market/constants';
 
 export const useMakeDummyUTXOS = () => {
   const { signPsbtInputs } = useNintondoManagerContext();
@@ -450,9 +450,12 @@ export const useOrdersFilters = () => {
     setSearchParams(searchParams);
   };
 
+  const filter = searchParams.get('event');
+
   return {
     tick: searchParams.get('tick') || 'amid',
     page: isNaN(rawPage) || rawPage < 1 ? 1 : rawPage,
+    filter: filter || '' in EVENT_FILTERS ? filter : Object.keys(EVENT_FILTERS).at(0),
     changePage,
   };
 };

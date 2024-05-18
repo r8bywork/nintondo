@@ -74,7 +74,7 @@ export const Filter = ({ filters, defaultFilter, filterKey, tag, className }: Fi
           ))}
         </div>
       }
-      dropdownClassName='max-medium:w-full origin-top-left max-medium:origin-top w-full'
+      dropdownClassName='z-10 max-medium:w-full origin-top-left max-medium:origin-top w-full'
       containerClassName='w-full'
     />
   );
