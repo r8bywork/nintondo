@@ -67,7 +67,7 @@ export const YesNoModal = ({
             <div className='flex w-[400px] max-medium:w-[220px] flex-col gap-[10px]'>
               <div className='flex justify-between'>
                 <p className='text-[20px] text-[#4B4B4B]'>TRANSACTION FEE RATE</p>
-                <p className='text-[20px] pt-[4px] max-medium:pt-0'>{feeRate}</p>
+                <p className='text-[20px] pt-[4px] max-medium:pt-0'>{feeRate.toLocaleString()}</p>
               </div>
             </div>
             <div className='flex w-[200px] max-medium:w-[120px] flex-col gap-[10px] max-medium:gap-[49px] pt-[6px]'>

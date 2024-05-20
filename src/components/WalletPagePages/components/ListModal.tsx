@@ -1,6 +1,7 @@
+import { useNumericInput } from '@/hooks/useNumericInput';
 import { ITransfer } from '@/interfaces/intefaces';
 import classNames from 'classnames';
-import { ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
 
 interface ListProps {
   transfers: Record<string, ITransfer[]>;
@@ -11,7 +12,8 @@ interface ListProps {
 }
 
 export const ListModal = ({ transfers, amount, list, onCancel, tick }: ListProps) => {
-  const [price, setPrice] = useState<string | number>('');
+  const [price, changePrice] = useNumericInput(0);
+
   return (
     <div className='flex flex-col gap-[34px] items-center'>
       <h1 className='text-[20px] leading-[21px] font-bold'>Confirmation</h1>
@@ -61,16 +63,16 @@ export const ListModal = ({ transfers, amount, list, onCancel, tick }: ListProps
         }, [] as ReactNode[])}
       </div>
       <div className='flex justify-between w-full flex-col gap-1'>
-        <p className='text-[20px] font-bold'>Enter price <span className='text-[#4b4b4b] font-normal'>BEL/{tick}</span></p>
+        <p className='text-[20px] font-bold'>
+          Enter price <span className='text-[#4b4b4b] font-normal'>BEL/{tick}</span>
+        </p>
         <input
           inputMode='numeric'
           pattern='[0-9]*'
           className='rounded-[50px] outline-none px-[20px] py-[3px] text-[18px] leading-[30px] bg-[#4b4b4b] w-full'
           placeholder={`BEL/${tick}`}
           value={price}
-          onChange={(e) =>
-            setPrice((price) => (!isFinite(Number(e.target.value)) ? price : Number(e.target.value)))
-          }
+          onChange={(e) => changePrice(e.target.value)}
         />
       </div>
       <div className='flex px-[24px] py-[9px] justify-between w-full border border-[#53DCFF] rounded-[50px]'>

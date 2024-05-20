@@ -1,3 +1,4 @@
+import { useNumericInput } from '@/hooks/useNumericInput';
 import classNames from 'classnames';
 import { useRef, useState } from 'react';
 
@@ -18,7 +19,7 @@ export const CustomizeModal = ({
 }: CustomizeModalProps) => {
   const ref = useRef<HTMLInputElement>(null);
   const [feeType, setFeeType] = useState<FeeType>('normal');
-  const [customFee, setCustomFee] = useState(defaultFee);
+  const [customFee, changeCustomFee] = useNumericInput(defaultFee, { integerOnly: true });
 
   const handleCustomClick = () => {
     setFeeType('custom');
@@ -46,7 +47,7 @@ export const CustomizeModal = ({
           </button>
           <div className='font-bold text-[20px] leading-[21px] text-[#FFBB00] flex gap-[10px]'>
             {normalFee}
-            <span className='font-normal text-[#4b4b4b]'>sasts/vB</span>
+            <span className='font-normal text-[#4b4b4b]'>sats/vB</span>
           </div>
         </div>
         <div
@@ -68,14 +69,10 @@ export const CustomizeModal = ({
               inputMode='numeric'
               pattern='[0-9]*'
               value={customFee}
-              onChange={(e) =>
-                setCustomFee((customFee) =>
-                  !isFinite(Number(e.target.value)) ? customFee : Number(e.target.value),
-                )
-              }
+              onChange={(e) => changeCustomFee(e.target.value)}
             />
             <p className='text-[20px] leading-[21px] font-normal text-[#4b4b4b] break-keep flex-grow-1'>
-              sasts/vB
+              sats/vB
             </p>
           </div>
         </div>
@@ -88,7 +85,7 @@ export const CustomizeModal = ({
           CANCEL
         </button>
         <button
-          onClick={() => onConfirm(feeType === 'custom' ? customFee : defaultFee)}
+          onClick={() => onConfirm(feeType === 'custom' ? Number(customFee) : defaultFee)}
           className='shadow-[0px_1px_18px_0px_#FFD45C80] py-[6px] px-[45px] rounded-full bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)] text-[#000] text-[20px] leading-[21px] font-bold '
         >
           CONFIRM
