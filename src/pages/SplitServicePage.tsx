@@ -33,10 +33,10 @@ const SplitServicePage = () => {
   const makeAuthRequests = useMakeAuthRequests();
 
   const getOffsets = useCallback(async (): Promise<Ord[]> => {
-    const response =
-      (await makeAuthRequests(() => axios.get(`${OLD_ELECTRS}/offset_ords/address/${address}`)))
-        ?.data ?? [];
-    return response.ords as Ord[];
+    const response = (
+      await makeAuthRequests(() => axios.get(`${OLD_ELECTRS}/offset_ords/address/${address}`))
+    )?.data;
+    return response as Ord[];
   }, [address]);
 
   const getSplits = useCallback(async () => {
@@ -84,15 +84,22 @@ const SplitServicePage = () => {
     setLoading(true);
     setSelectedOrds([]);
     setOrds([]);
-    if (!address || !verifiedAddress) return;
+
+    if (!address || !verifiedAddress) {
+      return;
+    }
+
     let ords = await getOffsets();
     const splits = await getSplits();
-    const { filteredOrds, unmatchedSplits } = filterOrdsAndFindUnmatchedSplits(ords, splits);
-
+    const { filteredOrds, unmatchedSplits } = filterOrdsAndFindUnmatchedSplits(ords, splits ?? []);
     ords = filteredOrds.sort((a, b) => b.available_to_free - a.available_to_free);
+
     setOrds(ords);
     setLoading(false);
-    if (unmatchedSplits.length > 0) await confirmSplits(unmatchedSplits.map((f) => f.txid));
+
+    if (unmatchedSplits.length > 0) {
+      await confirmSplits(unmatchedSplits.map((f) => f.txid));
+    }
   }, [address, verifiedAddress, getSplits]);
 
   useEffect(() => {

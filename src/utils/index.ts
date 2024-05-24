@@ -228,15 +228,28 @@ export const filterOrdsAndFindUnmatchedSplits = (
   ords: Ord[],
   splits: Split[],
 ): { filteredOrds: Ord[]; unmatchedSplits: Split[] } => {
-  const ordLocations = new Set(ords.map((ord) => `${ord.txid}:${ord.vout}`));
+  const ordLocations = new Set(
+    ords.map((ord) => {
+      const location = `${ord.txid}:${ord.vout}`;
+      return location;
+    }),
+  );
+
   const unmatchedSplits: Split[] = [];
+
   const filteredOrds = ords.filter((ord) => {
-    const isMatched = splits.some((split) => split.locations.includes(`${ord.txid}:${ord.vout}`));
+    const isMatched = splits.some((split) => {
+      const includesLocation = split.locations.includes(`${ord.txid}:${ord.vout}`);
+      return includesLocation;
+    });
     return !isMatched;
   });
 
   splits.forEach((split) => {
-    const hasMatch = split.locations.some((location) => ordLocations.has(location));
+    const hasMatch = split.locations.some((location) => {
+      const locationMatch = ordLocations.has(location);
+      return locationMatch;
+    });
     if (!hasMatch) {
       unmatchedSplits.push(split);
     }
@@ -271,16 +284,12 @@ export const shareData = () => {
       })
       .then(() => {
         return 0;
-      })
-      .catch((error) => console.log('Ошибка при попытке поделиться', error));
+      });
   } else {
     copyToClipboard(url);
   }
 };
 
 export const copyToClipboard = (text: string) => {
-  navigator.clipboard.writeText(text).then(
-    () => toast('Copied!'),
-    (error) => console.log(error),
-  );
+  navigator.clipboard.writeText(text).then(() => toast('Copied!'));
 };

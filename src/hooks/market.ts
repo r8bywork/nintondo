@@ -348,7 +348,7 @@ export const useCreateBuyingSignedPsbt = () => {
 
         buyerPsbt.addOutput({
           address: address,
-          value: DUMMY_UTXO_VALUE * 2,
+          value: splicedUtxos.reduce((acc, val) => (acc += val.value), 0),
         });
         buyerPsbt.addOutput({
           address: address,
@@ -390,9 +390,6 @@ export const useCreateBuyingSignedPsbt = () => {
           address: address,
           value: change,
         });
-
-        const a = buyerPsbt.finalizeAllInputs().extractTransaction(true).getId();
-        console.log({ a });
 
         const inputsToSign = [0, 1, ...data.utxos.map((_, i) => i + 3)];
 
