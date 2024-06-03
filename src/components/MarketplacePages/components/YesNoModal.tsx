@@ -32,7 +32,10 @@ export const YesNoModal = ({
     isError,
   } = useQuery({
     queryKey: ['make-dumy-utxos'],
-    queryFn: () => makeDummyUTXOsReq(feeRate, inscriptionPrices),
+    queryFn: async () => {
+      const utxos = await makeDummyUTXOsReq(feeRate, inscriptionPrices);
+      if (utxos) onSuccess();
+    },
     enabled: false,
     retry: false,
   });

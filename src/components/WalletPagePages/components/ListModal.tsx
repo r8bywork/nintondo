@@ -77,9 +77,9 @@ export const ListModal = ({ transfers, amount, list, onCancel, tick }: ListProps
         <span className='font-normal'>- service fee per transfer 0.01 BEL</span>
       </div>
       <div className='flex px-[24px] py-[9px] justify-between w-full border border-[#53DCFF] rounded-[50px]'>
-        <p className='text-[20px] font-bold leading-[21px] text-[#53DCFF]'>TOTAL</p>
+        <p className='text-[20px] font-bold leading-[21px] text-[#53DCFF]'>TOTAL PROFIT</p>
         <p className='text-[20px] font-bold leading-[21px]'>
-          {(amount * (Number(price) ?? 0) - 0.01).toLocaleString()}
+          {(amount * (Number(price) ?? 0) - 0.01).toLocaleString() + ' BEL'}
         </p>
       </div>
       <div className='flex gap-[52px]'>

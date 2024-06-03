@@ -74,6 +74,7 @@ const Listed = () => {
 
   const handleYesNoClose = () => {
     closeYesNo();
+    openModal();
   };
 
   const handleModalClose = () => {
@@ -86,7 +87,7 @@ const Listed = () => {
   };
 
   const handleYesNoCancel = () => {
-    handleYesNoClose();
+    closeYesNo();
     handleModalCloseClick();
   };
 

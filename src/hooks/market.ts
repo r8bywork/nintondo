@@ -32,6 +32,7 @@ export const useMakeDummyUTXOS = () => {
         throw new Error('Need raw hex in order to make dummy UTXOs');
 
       let psbt = new Psbt({ network: networks.bitcoin });
+
       utxos.forEach((i) => {
         psbt.addInput({
           hash: i.txid,
@@ -46,10 +47,12 @@ export const useMakeDummyUTXOS = () => {
           address,
           value: DUMMY_UTXO_VALUE,
         });
+
         psbt.addOutput({
           address,
           value: DUMMY_UTXO_VALUE,
         });
+
         psbt.addOutput({
           address,
           value: i,
@@ -59,13 +62,13 @@ export const useMakeDummyUTXOS = () => {
       const change =
         utxos.reduce((acc, f) => (acc += f.value), 0) -
         gptFeeCalculate(utxos.length, 3, feeRate) -
-        DUMMY_UTXO_VALUE * 2;
+        inscriptionsPrices.reduce((acc, val) => (acc += val), 0) -
+        DUMMY_UTXO_VALUE * 2 * inscriptionsPrices.length;
 
-      if (change <= 0) {
+      if (change < 0) {
         toast.error('Not enough funds');
         return;
       }
-
       psbt.addOutput({
         address,
         value: change,
@@ -85,17 +88,16 @@ export const useMakeDummyUTXOS = () => {
         json: false,
       });
 
-      if (!pushedTxId || pushedTxId.length !== 64) {
+      if (!pushedTxId || pushedTxId.length !== 64 || pushedTxId.includes('RPC error')) {
         toast.error(`${pushedTxId}`);
         return;
       }
 
       let txFound = false;
       while (!txFound) {
-        const utxos = await fetchBELLMainnet<ApiUTXO[]>({
-          path: `/address/${address}/utxo`,
-        });
-        if (utxos === undefined || utxos.find((f) => f.txid === transaction.getId()) === undefined)
+        const utxos = await getDummyUTXOS(address, inscriptionsPrices);
+
+        if (utxos === undefined || !utxos.length)
           await new Promise((resolve) => {
             setTimeout(() => {
               resolve(undefined);
@@ -113,6 +115,7 @@ export const useMakeDummyUTXOS = () => {
           hex: txHex,
         });
       }
+
       return utxos;
     },
     [signPsbtInputs, address, getApiUtxo],
@@ -171,11 +174,11 @@ export const useCreateListedSignedPSBT = () => {
 
         sellerPsbt.addOutput({
           address: placeholderAddress,
-          value: 2,
+          value: 0,
         });
         sellerPsbt.addOutput({
           address: placeholderAddress,
-          value: 2,
+          value: 0,
         });
         sellerPsbt.addOutput({
           address: address,
@@ -225,15 +228,15 @@ export const useCheckInscription = () => {
   const { address } = useNintondoManagerContext();
 
   return useCallback(
-    async (inscription: { outpoint: string; owner: string }): Promise<ApiOrdUTXO | undefined> => {
+    async (inscription: { number: number; owner: string }): Promise<ApiOrdUTXO | undefined> => {
       if (!address) return;
       const foundInscriptions = await fetchBELLMainnet<ApiOrdUTXO[]>({
-        path: `/address/${inscription.owner}/ords?search=${inscription.outpoint}`,
+        path: `/address/${inscription.owner}/ords?search=${inscription.number}`,
       });
       if (!foundInscriptions || foundInscriptions.length <= 0) return;
       const sellerOrdUtxo = foundInscriptions[0];
       if (!sellerOrdUtxo) {
-        toast.error(`Failed to find seller utxo: ${inscription.outpoint}`);
+        toast.error(`Failed to find seller utxo: ${inscription.number}`);
         return;
       }
       sellerOrdUtxo.hex = await getTransactionRawHex(sellerOrdUtxo?.txid);

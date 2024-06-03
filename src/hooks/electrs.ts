@@ -44,9 +44,9 @@ export const getDummyUTXOS = async (address: string, data: number[]) => {
   });
 };
 
-export const searchInscriptoins = async (address: string, txid: string) => {
+export const searchInscriptoins = async (address: string, number: number) => {
   return await fetchBELLMainnet<ApiOrdUTXO[]>({
-    path: `/address/${address}/ords?search=${txid}`,
+    path: `/address/${address}/ords?search=${number}`,
   });
 };
 
