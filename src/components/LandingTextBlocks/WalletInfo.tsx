@@ -29,9 +29,6 @@ const WalletInfo = () => {
     fetchLatestRelease('Nintondo', 'extension').then((res) => setGitData(res));
   }, []);
 
-  useEffect(() => {
-    console.log(gitData);
-  }, [gitData]);
   const changeImage = (direction: string) => {
     const currentImageIndex = walletImages.indexOf(modalImage);
     const totalImages = walletImages.length;

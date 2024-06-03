@@ -59,7 +59,7 @@ const MarketplacePage = () => {
     newSearchParams.set('tab', tab);
     newSearchParams.set('page', '1');
 
-    const tick = searchParams.get('tick'); 
+    const tick = searchParams.get('tick');
 
     if (tick) {
       newSearchParams.set('tick', tick);

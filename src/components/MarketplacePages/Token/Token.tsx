@@ -24,7 +24,13 @@ const Token: FC<TokenProps> = ({
 }) => {
   return (
     <div
-      className={cn('flex flex-col justify-between p-[15px] rounded-[24px] gap-[10px]')}
+      className={cn(
+        'flex flex-col justify-between p-[15px] rounded-[24px] gap-[10px] border-[1px] transition-all',
+        {
+          'border-[#FFBB00]': checked,
+          'border-[transparent]': !checked,
+        },
+      )}
       style={{ background }}
     >
       <div className='flex justify-between items-center'>

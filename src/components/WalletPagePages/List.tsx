@@ -174,7 +174,7 @@ export const List = ({ isListed = false }: ListProps) => {
         r.flatMap((f) => ({
           txid: f.inscription_id.slice(0, -2),
           vout: Number(f.inscription_id.slice(-1)),
-          price: f.amount * price,
+          price: Math.floor(f.amount * price * 10 ** 8),
         })),
       ),
     );
@@ -304,7 +304,8 @@ export const List = ({ isListed = false }: ListProps) => {
         <div className='flex flex-col flex-1 gap-[40px]'>
           <div className='flex items-center gap-[24px]'>
             <h1 className='text-[32px] font-bold leading-[34px]'>
-              {isListed ? 'Unlist' : 'List'} <span className='text-[#53DCFF]'>{selectedTick?.tick}</span>
+              {isListed ? 'Unlist' : 'List'}{' '}
+              <span className='text-[#53DCFF]'>{selectedTick?.tick}</span>
             </h1>
             {isListed || (
               <button
@@ -408,25 +409,6 @@ export const List = ({ isListed = false }: ListProps) => {
               unlist={unlist}
             />
           ) : (
-            // <div className='flex flex-col gap-[15px]'>
-            //   <input
-            //     inputMode='numeric'
-            //     pattern='[0-9]*'
-            //     className='rounded-[50px] outline-none px-[10px] py-[3px] text-[20px] bg-[#4b4b4b]'
-            //     value={price}
-            //     onChange={(e) =>
-            //       setPrice((price) =>
-            //         isNaN(Number(e.target.value)) ? price : Number(e.target.value),
-            //       )
-            //     }
-            //   />
-            //   <button
-            //     onClick={list}
-            //     className='max-[1200px]:flex-1 font-bold py-[6px] px-[101px] rounded-[20px] text-[20px] text-black shadow-[0px_1px_18px_0px_#FFD45C80] bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)]'
-            //   >
-            //     LIST {selectedTransfers.total.toLocaleString()} {selectedTick?.tick}
-            //   </button>
-            // </div>
             <ListModal
               list={list}
               tick={tick ?? ''}

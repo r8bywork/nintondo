@@ -16,7 +16,7 @@ export const Unlist = ({ transfers, amount, unlist, onCancel }: UnlistProps) => 
       <p className='text-[20px] leading-[21px] text-[#53DCFF]'>Unlist following tokens?</p>
       <div
         className={classNames(
-          'flex gap-[34px] max-w-[500px] overflow-auto',
+          'flex gap-[34px] max-w-[500px] overflow-auto pb-4',
           Object.values(transfers).flat().length > 2 && 'px-[62px] -mx-[62px]',
         )}
       >

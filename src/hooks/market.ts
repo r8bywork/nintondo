@@ -22,40 +22,22 @@ export const useMakeDummyUTXOS = () => {
     async (feeRate: number, inscriptionsPrices: number[]): Promise<ApiUTXO[] | undefined> => {
       if (!address) return;
 
-      let utxos = await getApiUtxo(address);
-      if (!utxos) return;
-      // for (const i of utxos) {
-      //   i.rawHex = await getTransactionRawHex(i.txid);
-      // }
+      const targetSum =
+        inscriptionsPrices.reduce((acc, val) => (acc += val), 0) +
+        (0.01 * 10 ** 8 + DUMMY_UTXO_VALUE * 2 + gptFeeCalculate(4, 8, feeRate)) *
+          inscriptionsPrices.length;
 
-      let sum = 0;
-      const targetSum = inscriptionsPrices.reduce((acc, val) => (acc += val), 0);
-      const selectedUtxos = [];
-
-      for (const utxo of utxos) {
-        selectedUtxos.push(utxo);
-        sum += utxo.value;
-        if (
-          sum - targetSum + 0.01 * 10 ** 8 + DUMMY_UTXO_VALUE * 2 + gptFeeCalculate(4, 8, feeRate) >
-          gptFeeCalculate(selectedUtxos.length, inscriptionsPrices.length * 3 + 1, feeRate)
-        )
-          break;
-      }
-
-      for (const i of selectedUtxos) {
-        i.rawHex = await getTransactionRawHex(i.txid);
-      }
-
-      if (selectedUtxos.filter((f) => f.rawHex === undefined).length > 0)
+      let utxos = await getApiUtxo(address, { amount: targetSum, hex: true });
+      if (!utxos || utxos.filter((f) => f.hex === undefined).length > 0)
         throw new Error('Need raw hex in order to make dummy UTXOs');
 
       let psbt = new Psbt({ network: networks.bitcoin });
-      selectedUtxos.forEach((i) => {
+      utxos.forEach((i) => {
         psbt.addInput({
           hash: i.txid,
           index: i.vout,
           sequence: 0xffffffff,
-          nonWitnessUtxo: Buffer.from(i.rawHex!, 'hex'),
+          nonWitnessUtxo: Buffer.from(i.hex!, 'hex'),
         });
       });
 
@@ -128,12 +110,12 @@ export const useMakeDummyUTXOS = () => {
           txid: transaction.getId(),
           vout: i,
           value: transaction.outs[i].value,
-          rawHex: txHex,
+          hex: txHex,
         });
       }
       return utxos;
     },
-    [signPsbtInputs, address, getApiUtxo, getTransactionRawHex],
+    [signPsbtInputs, address, getApiUtxo],
   );
 };
 
@@ -197,7 +179,7 @@ export const useCreateListedSignedPSBT = () => {
         });
         sellerPsbt.addOutput({
           address: address,
-          value: Math.floor(inscription.price),
+          value: Math.floor(inscription.price) - 1000000,
         });
 
         psbtsToSign.push({
@@ -254,7 +236,7 @@ export const useCheckInscription = () => {
         toast.error(`Failed to find seller utxo: ${inscription.outpoint}`);
         return;
       }
-      sellerOrdUtxo.rawHex = await getTransactionRawHex(sellerOrdUtxo?.txid);
+      sellerOrdUtxo.hex = await getTransactionRawHex(sellerOrdUtxo?.txid);
       return sellerOrdUtxo;
     },
     [address, getTransactionRawHex],
@@ -283,10 +265,10 @@ export const usePrepareInscriptions = () => {
         if (useRawHex) {
           for (const data of dummyUtxos) {
             for (const dummy of data.dummy) {
-              dummy.rawHex = await getTransactionRawHex(dummy.txid);
+              dummy.hex = await getTransactionRawHex(dummy.txid);
             }
             for (const pay of data.fee) {
-              pay.rawHex = await getTransactionRawHex(pay.txid);
+              pay.hex = await getTransactionRawHex(pay.txid);
             }
           }
         }
@@ -302,7 +284,7 @@ export const usePrepareInscriptions = () => {
         return undefined;
       }
     },
-    [address, getApiUtxo, getTransactionRawHex],
+    [address, getTransactionRawHex],
   );
 };
 
@@ -324,17 +306,17 @@ export const useCreateBuyingSignedPsbt = () => {
         buyerPsbt.addInput({
           hash: data.utxos[0].txid,
           index: data.utxos[0].vout,
-          nonWitnessUtxo: Buffer.from(data.utxos[0].rawHex!, 'hex'),
+          nonWitnessUtxo: Buffer.from(data.utxos[0].hex!, 'hex'),
         });
         buyerPsbt.addInput({
           hash: data.utxos[1].txid,
           index: data.utxos[1].vout,
-          nonWitnessUtxo: Buffer.from(data.utxos[1].rawHex!, 'hex'),
+          nonWitnessUtxo: Buffer.from(data.utxos[1].hex!, 'hex'),
         });
         buyerPsbt.addInput({
           hash: data.sellerOrdUtxo.txid,
           index: data.sellerOrdUtxo.vout,
-          nonWitnessUtxo: Buffer.from(data.sellerOrdUtxo.rawHex!, 'hex'),
+          nonWitnessUtxo: Buffer.from(data.sellerOrdUtxo.hex!, 'hex'),
           sighashType: Transaction.SIGHASH_SINGLE | Transaction.SIGHASH_ANYONECANPAY,
         });
         const splicedUtxos = data.utxos.splice(0, 2);
@@ -342,7 +324,7 @@ export const useCreateBuyingSignedPsbt = () => {
           buyerPsbt.addInput({
             hash: f.txid,
             index: f.vout,
-            nonWitnessUtxo: Buffer.from(f.rawHex!, 'hex'),
+            nonWitnessUtxo: Buffer.from(f.hex!, 'hex'),
           });
         });
 
@@ -356,7 +338,7 @@ export const useCreateBuyingSignedPsbt = () => {
         });
         buyerPsbt.addOutput({
           address: data.inscription.address,
-          value: data.inscription.price,
+          value: data.inscription.price - 1000000,
         });
         buyerPsbt.addOutput({
           address: FEE_ADDRESS,
@@ -421,7 +403,6 @@ export const useCreateBuyingSignedPsbt = () => {
           psbtsToSign[0].psbtBase64,
           psbtsToSign[0].options,
         );
-        console.log(partiallySignedPsbtbase64);
         if (!partiallySignedPsbtbase64) return;
         const psbt = Psbt.fromBase64(partiallySignedPsbtbase64);
         signedListPsbtsBase64.push(fixSignatures(psbt, psbtsToSign[0]));

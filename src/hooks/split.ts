@@ -4,7 +4,7 @@ import { Ord } from '@/interfaces/nintondo-manager-provider';
 import { gptFeeCalculate } from '@/utils';
 import { useNintondoManagerContext } from '@/utils/bell-provider';
 import { networks, Psbt } from 'belcoinjs-lib';
-import { getApiUtxo, getTransactionRawHex } from './electrs';
+import { getApiUtxo } from './electrs';
 import toast from 'react-hot-toast';
 import { PushSplit } from '@/interfaces/marketapi';
 import axios from 'axios';
@@ -62,19 +62,18 @@ export const useSplitOrds = () => {
 
   const handleFeeAndChange = async (psbt: Psbt, feeRate: number) => {
     if (!address) return;
-    const requiredFee = gptFeeCalculate(psbt.txInputs.length, psbt.txOutputs.length + 1, feeRate);
-    const utxos = await getApiUtxo(address!);
+    const requiredFee =
+      gptFeeCalculate(psbt.txInputs.length, psbt.txOutputs.length + 1, feeRate) + 1000;
+    const utxos = await getApiUtxo(address!, { amount: requiredFee, hex: true });
     if (!utxos || !utxos.length)
-      throw new Error(
-        `You need additional ${(requiredFee + 1000) / 10 ** 8} BELL in order to split`,
-      );
+      throw new Error(`You need additional ${requiredFee / 10 ** 8} BELL in order to split`);
 
     let totalUtxoValue = 0;
     for (const utxo of utxos) {
       psbt.addInput({
         hash: utxo.txid,
         index: utxo.vout,
-        nonWitnessUtxo: Buffer.from((await getTransactionRawHex(utxo.txid))!, 'hex'),
+        nonWitnessUtxo: Buffer.from(utxo.hex!, 'hex'),
       });
       totalUtxoValue += utxo.value;
       if (totalUtxoValue - 1000 > requiredFee) {

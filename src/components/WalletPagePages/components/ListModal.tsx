@@ -20,7 +20,7 @@ export const ListModal = ({ transfers, amount, list, onCancel, tick }: ListProps
       <p className='text-[20px] leading-[21px] text-[#53DCFF]'>List following tokens?</p>
       <div
         className={classNames(
-          'flex gap-[34px] max-w-[500px] overflow-auto',
+          'flex gap-[34px] max-w-[500px] overflow-auto pb-4',
           Object.values(transfers).flat().length > 2 && 'px-[62px] -mx-[62px]',
         )}
       >
@@ -74,11 +74,12 @@ export const ListModal = ({ transfers, amount, list, onCancel, tick }: ListProps
           value={price}
           onChange={(e) => changePrice(e.target.value)}
         />
+        <span className='font-normal'>- service fee per transfer 0.01 BEL</span>
       </div>
       <div className='flex px-[24px] py-[9px] justify-between w-full border border-[#53DCFF] rounded-[50px]'>
         <p className='text-[20px] font-bold leading-[21px] text-[#53DCFF]'>TOTAL</p>
         <p className='text-[20px] font-bold leading-[21px]'>
-          {(amount * (Number(price) ?? 0)).toLocaleString()}
+          {(amount * (Number(price) ?? 0) - 0.01).toLocaleString()}
         </p>
       </div>
       <div className='flex gap-[52px]'>

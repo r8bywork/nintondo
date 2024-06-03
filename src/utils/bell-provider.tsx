@@ -63,20 +63,9 @@ const useNintondoManager = () => {
     if (!nintondo) return;
     const connectedAddress = address ?? (await connectWallet());
     if (!connectedAddress) return;
-    const message = `
-Welcome to Nintondo!
-
-If you sign you agree to our policy.
-
-This request will not trigger a blockchain transaction.
-
-Your authentication status will reset after 24 hours.
-
-Wallet address:
-${connectedAddress}
-    `;
 
     try {
+      const message = (await axios.get(`${BACKEND_URL}/auth/nonce/${connectedAddress}`)).data;
       const signedMessage = await nintondo.signMessage(message);
       const signatureBufferBase64 = Buffer.from(signedMessage, 'base64');
       const signatureBufferHex = Buffer.from(signedMessage, 'hex');

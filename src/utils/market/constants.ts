@@ -11,4 +11,3 @@ export const EVENT_FILTERS = {
   sold: 'Sold',
   unlisted: 'Unlisted',
 };
-

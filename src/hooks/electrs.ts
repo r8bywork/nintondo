@@ -17,10 +17,23 @@ export const getTransactionRawHex = async (txId: string) => {
   });
 };
 
-export const getApiUtxo = async (address: string) => {
-  return await fetchBELLMainnet<ApiUTXO[]>({
+// export const getApiUtxo = async (address: string) => {
+//   return await fetchBELLMainnet<ApiUTXO[]>({
+//     path: `/address/${address}/utxo`,
+//   });
+// };
+
+export interface UtxoQueryParams {
+  hex?: boolean;
+  amount?: number;
+}
+
+export const getApiUtxo = async (address: string, params?: UtxoQueryParams) => {
+  const data = await fetchBELLMainnet<ApiUTXO[]>({
     path: `/address/${address}/utxo`,
+    params: params as Record<string, string>,
   });
+  return data;
 };
 
 export const getDummyUTXOS = async (address: string, data: number[]) => {
