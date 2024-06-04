@@ -262,9 +262,10 @@ export const usePrepareInscriptions = () => {
       try {
         const dummyUtxos = await getDummyUTXOS(
           address,
-          data.map((f) => f.price),
+          data.map((f) => f.price + 1000000 + 4000 + gptFeeCalculate(1 + 2, 7, 1000)),
         );
         if (!dummyUtxos) return;
+
         if (useRawHex) {
           for (const data of dummyUtxos) {
             for (const dummy of data.dummy) {
@@ -275,11 +276,12 @@ export const usePrepareInscriptions = () => {
             }
           }
         }
+
         const prepared: PreparedToBuyInscription[] = dummyUtxos.map((f, i) => {
           return {
             inscription: { address: data[i].seller, price: data[i].price },
             sellerOrdUtxo: data[i].sellerUtxo,
-            utxos: f.dummy.concat(...f.fee),
+            utxos: [...f.dummy, ...f.fee],
           };
         });
         return prepared;

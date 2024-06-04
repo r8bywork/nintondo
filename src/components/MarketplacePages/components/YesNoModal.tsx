@@ -3,9 +3,9 @@ import Loading from 'react-loading';
 import { CustomizeModal } from './CustomizeModal';
 import { DEFAULT_FEE_RATE } from '@/consts';
 import { useModal } from '@/hooks/useModal';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useMakeDummyUTXOS } from '@/hooks/market';
-import { useQuery } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 
 interface YesNoModalProps {
   onCancel: () => void;
@@ -22,33 +22,24 @@ export const YesNoModal = ({
 }: YesNoModalProps) => {
   const { isOpen: isCustomizeOpen, open: openCustomize, close: closeCustomize } = useModal();
   const [feeRate, setFeeRate] = useState(DEFAULT_FEE_RATE);
-
   const makeDummyUTXOsReq = useMakeDummyUTXOS();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const {
-    isLoading,
-    refetch: makeDummyUTXOs,
-    isSuccess,
-    isError,
-  } = useQuery({
-    queryKey: ['make-dumy-utxos'],
-    queryFn: async () => {
+  const makeDummy = async () => {
+    setIsLoading(true);
+    try {
       const utxos = await makeDummyUTXOsReq(feeRate, inscriptionPrices);
       if (utxos) onSuccess();
-    },
-    enabled: false,
-    retry: false,
-  });
-
-  useEffect(() => {
-    if (!isLoading && isSuccess) {
-      onSuccess();
-    }
-
-    if (!isLoading && isError) {
+      else onError();
+    } catch (e) {
+      if (e instanceof Error) {
+        toast.error(e.message);
+      }
       onError();
+    } finally {
+      setIsLoading(false);
     }
-  }, [isLoading, isSuccess, isError]);
+  };
 
   const handleCustomizeFee = (feeRate: number) => {
     setFeeRate(feeRate);
@@ -93,7 +84,7 @@ export const YesNoModal = ({
               CANCEL
             </button>
             <button
-              onClick={() => makeDummyUTXOs()}
+              onClick={() => makeDummy()}
               className='shadow-[0px_1px_18px_0px_#FFD45C80] py-[6px] px-[45px] rounded-full bg-[linear-gradient(90deg,#FFFFFF_0%,#FFBB00_99.07%)] text-[#000] text-[20px] font-bold '
             >
               CREATE

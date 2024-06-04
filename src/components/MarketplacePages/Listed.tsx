@@ -14,7 +14,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { DEFAULT_FEE_RATE, MARKET_API_URL } from '@/consts';
 import { useSearchParams } from 'react-router-dom';
-import { shortAddress } from '@/utils';
+import { gptFeeCalculate, shortAddress } from '@/utils';
 import Loading from 'react-loading';
 import { ConfirmationModal } from './components/ConfirmationModal';
 import { BottomSelect } from '../BottomSelect/BottomSelect';
@@ -50,7 +50,7 @@ const Listed = () => {
 
   const makeAuthRequests = useMakeAuthRequests();
 
-  const { verifiedAddress, getPublicKey } = useNintondoManagerContext();
+  const { verifiedAddress, getPublicKey, getBalance } = useNintondoManagerContext();
 
   const { tick, page, filter } = getMarketplaceFilters(searchParams);
 
@@ -97,8 +97,21 @@ const Listed = () => {
       return false;
     }
     let localTokens: MarketplaceTokenView[] = [];
-    if (!tokensToBuy.length) localTokens = tokens;
+    if (tokens) localTokens = tokens;
     else localTokens = tokensToBuy;
+
+    const totalPrice = localTokens.reduce(
+      (acc, val) =>
+        (acc +=
+          val.price_per_token * val.amount + 1000000 + 4000 + gptFeeCalculate(1 + 2, 7, 1000)),
+      0,
+    );
+    const balance = await getBalance();
+    if (!balance || balance <= totalPrice) {
+      toast.error('Insufficient funds');
+      return;
+    }
+
     const localTokenUtxos: ApiOrdUTXO[] = [];
     for (const token of localTokens) {
       const utxo = await checkInscription(token);

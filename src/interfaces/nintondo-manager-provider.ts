@@ -12,6 +12,7 @@ export interface INintondoManagerProvider {
   disconnect: () => Promise<void>;
   inscribeTransfer: (tick: string) => Promise<number | undefined>;
   signMultiPsbt: (data: SignPsbtData[]) => Promise<string[] | undefined>;
+  getBalance: () => Promise<number | undefined>;
 }
 
 interface BaseUserToSignInput {

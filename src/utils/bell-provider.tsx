@@ -59,6 +59,11 @@ const useNintondoManager = () => {
     [nintondo],
   );
 
+  const getBalance = useCallback(async () => {
+    if (!verifiedAddress) return;
+    return await nintondo.getBalance();
+  }, [verifiedAddress]);
+
   const verifyAddress = useCallback(async () => {
     if (!nintondo) return;
     const connectedAddress = address ?? (await connectWallet());
@@ -197,6 +202,7 @@ const useNintondoManager = () => {
     disconnect,
     inscribeTransfer,
     signMultiPsbt,
+    getBalance,
   };
 };
 
