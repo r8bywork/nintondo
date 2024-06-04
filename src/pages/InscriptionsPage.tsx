@@ -114,7 +114,7 @@ const InscriptionsPage = () => {
                   <div key={index}>
                     <Card
                       onClick={() => navigate(`/bellinals/inscription/${card.id}`)}
-                      image={`${CONTENT_API_URL}/pub/preview/${card.id}`}
+                      url={`${CONTENT_API_URL}/pub/preview/${card.id}`}
                       onLoadHandler={() => handleImageLoad(card.id)}
                       text={card.number}
                       date={card.created}

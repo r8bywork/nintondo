@@ -1,8 +1,8 @@
-import ModelViewerComponent from './ModelViewerComponent.tsx';
-import JsonViewer from 'components/Card/JsonViewer.tsx';
+import { CONTENT_API_URL } from '@/consts';
+
 interface ContentComponentProps {
   contentType: string;
-  image: string;
+  url: string;
   imageSize: string;
   blurImage?: boolean;
   onLoadHandler: () => void;
@@ -10,7 +10,7 @@ interface ContentComponentProps {
 
 const ContentComponent = ({
   contentType,
-  image,
+  url,
   imageSize,
   onLoadHandler,
   blurImage,
@@ -31,28 +31,21 @@ const ContentComponent = ({
           )}
           <img
             alt={'image'}
-            src={image}
+            src={url}
             style={{ width: imageSize, height: imageSize }}
             onLoad={onLoadHandler}
             className={'rounded-[10px] mb-[18px]'}
           />
         </div>
-      ) : contentType === 'model' ? (
-        <ModelViewerComponent
-          src={image}
-          imageSize={imageSize}
-        />
       ) : (
-        <div
-          className='mb-[18px] text-white flex flex-col overflow-hidden'
-          style={{
-            maxWidth: imageSize,
-            height: imageSize,
-            overflowWrap: 'anywhere',
-          }}
-        >
-          <JsonViewer jsonString={image} />
-        </div>
+        <iframe
+          src={`${CONTENT_API_URL}/pub/html/${url}`}
+          sandbox='allow-scripts'
+          loading='lazy'
+          scrolling='no'
+          onLoad={onLoadHandler}
+          className={`rounded-[10px] flex justify-center items-center w-[${imageSize}] h-[${imageSize}]`}
+        />
       )}
     </>
   );

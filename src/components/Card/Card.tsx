@@ -7,7 +7,7 @@ import { formattedStringFromTimestamp } from '@/utils/index.ts';
 
 interface CardProps {
   onClick?: () => void;
-  image: string;
+  url: string;
   text?: number;
   date?: number;
   owner?: string;
@@ -29,7 +29,7 @@ const Card = ({
   date,
   tags,
   BigCard,
-  image,
+  url,
   contentType,
   owner,
   onLoadHandler,
@@ -57,7 +57,7 @@ const Card = ({
       <ContentComponent
         contentType={contentType}
         imageSize={imageSize}
-        image={image}
+        url={url}
         onLoadHandler={onLoadHandler}
         blurImage={blurImage}
       />

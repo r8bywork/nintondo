@@ -12,17 +12,14 @@ import {
 } from '../hooks/marketinfo.ts';
 import { InscriptionInfo, InscriptionOwner } from '../interfaces/inscriptions.ts';
 import UploadIcon from '../assets/card/share.svg?react';
-import { CONTENT_API_URL } from '@/consts';
 import { useInscriptionFilters } from '@/hooks/useInscriptionFilters.ts';
 import { shareData } from '@/utils';
 
 const InscriptionPage = () => {
   const { hash } = useParams();
   const navigate = useNavigate();
-  const [data, setData] = useState<InscriptionInfo[]>([]);
-  const [owner, setOwner] = useState<InscriptionOwner[]>([]);
-  const [image, setImage] = useState<string>('');
-  const [type, setType] = useState<string>();
+  const [data, setData] = useState<InscriptionInfo | undefined>(undefined);
+  const [owner, setOwner] = useState<InscriptionOwner | undefined>(undefined);
   const getInscriptionInfo = useExplorerGetInscriptionInfo();
   const getInscriptionOwner = useExplorerGetInscriptionOwner();
   const { handleCreationBlockClick } = useInscriptionFilters();
@@ -34,39 +31,10 @@ const InscriptionPage = () => {
       Promise.all([getInscriptionInfo(hash), getInscriptionOwner(hash)]).then(
         ([reqData, reqOwner]) => {
           if (!reqData) return;
-          setData([reqData] as InscriptionInfo[]);
-          setOwner([{ owner: reqOwner?.owner ?? 'Not found' }] as InscriptionOwner[]);
+          setData(reqData as InscriptionInfo);
+          setOwner({ owner: reqOwner?.owner ?? 'Not found' } as InscriptionOwner);
         },
       );
-      fetch(`${CONTENT_API_URL}/pub/content/${hash}`)
-        .then((response) => {
-          const contentType = response.headers.get('content-type');
-          if (
-            contentType &&
-            (contentType.includes('text') || contentType.includes('application/'))
-          ) {
-            return response.text().then((json) => {
-              setType('text');
-              setImage(json);
-            });
-          } else if (contentType && contentType.includes('image/')) {
-            return response.blob().then((blob) => {
-              const reader = new FileReader();
-              reader.onload = () => {
-                const base64Data = reader.result as string;
-                setType('image');
-                setImage(base64Data);
-              };
-              reader.readAsDataURL(blob);
-            });
-          } else if (contentType && contentType.includes('model')) {
-            return response.text().then((json) => {
-              setType('text');
-              setImage(json);
-            });
-          }
-        })
-        .catch((error) => console.error('Error loading image data:', error));
     }
   }, [hash]);
 
@@ -83,16 +51,16 @@ const InscriptionPage = () => {
             </button>
             <Search placeholder={'Search'} />
           </div>
-          {image && data[0] && owner[0] && type && (
+          {data && (
             <Card
-              text={data[0].number}
+              url={data?.id}
+              contentType=''
+              text={data?.number}
               tags={[
-                { tagText: data[0].file_type, active: true },
+                { tagText: data?.file_type, active: true },
                 { SvgIcon: UploadIcon, onClick: shareData },
               ]}
-              image={image}
-              contentType={type}
-              date={data[0].created}
+              date={data?.created}
               BigCard
               onLoadHandler={() => {}}
               blurImage={false}
@@ -105,9 +73,9 @@ const InscriptionPage = () => {
             <Title text={'Inscription Info'} />
           </div>
           <div className={'mt-[25px]'}>
-            {data[0] && owner[0] && (
+            {data && owner && (
               <Table
-                data={[{ ...data[0], ...owner[0] }] as InscriptionInfo[]}
+                data={[{ ...data, ...owner }] as InscriptionInfo[]}
                 fields={InscriptionInfoFields}
                 marketplace
                 functions={functions}
