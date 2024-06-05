@@ -91,7 +91,10 @@ const SplitServicePage = () => {
 
     let ords = await getOffsets();
     const splits = await getSplits();
-    const { filteredOrds, unmatchedSplits } = filterOrdsAndFindUnmatchedSplits(ords, splits ?? []);
+    const { filteredOrds, unmatchedSplits } = filterOrdsAndFindUnmatchedSplits(
+      ords ?? [],
+      splits ?? [],
+    );
     ords = filteredOrds.sort((a, b) => b.available_to_free - a.available_to_free);
 
     setOrds(ords);
