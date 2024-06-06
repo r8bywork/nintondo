@@ -124,15 +124,6 @@ const Header = () => {
                 <div className='text-white hover:text-yellow-500 cursor-pointer'>
                   <NavLink
                     className='flex items-center gap-3'
-                    to='/user-inscriptions'
-                    onClick={() => setShowPopover(false)}
-                  >
-                    My inscriptions <DroprightIcon className='w-3' />
-                  </NavLink>
-                </div>
-                <div className='text-white hover:text-yellow-500 cursor-pointer'>
-                  <NavLink
-                    className='flex items-center gap-3'
                     to='/split-service'
                     onClick={() => setShowPopover(false)}
                   >

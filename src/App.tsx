@@ -9,8 +9,6 @@ import InscriptionPage from './pages/InscriptionPage.tsx';
 // import CollectionsPage from './pages/CollectionsPage.tsx';
 // import { Provider } from 'react-redux';
 import SplitServicePage from './pages/SplitServicePage.tsx';
-import MarketplacePage from './pages/MarketplacePage.tsx';
-import WalletPage from './pages/WalletPage.tsx';
 // import { store } from './redux/store/store.ts';
 
 const App = () => {
@@ -43,18 +41,18 @@ const App = () => {
             path='/bellinals/collections/:hash'
             element={<CollectionPage />}
           /> */}
-        <Route
+        {/* <Route
           path='/marketplace'
           element={<MarketplacePage />}
-        />
+        /> */}
         <Route
           path='/split-service/*'
           element={<SplitServicePage />}
         />
-        <Route
+        {/* <Route
           path='/user-inscriptions'
           element={<WalletPage />}
-        />
+        /> */}
       </Routes>
     </Router>
     // </Provider>
