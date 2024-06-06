@@ -1,17 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BACKEND_URL } from '@/consts';
 import { useMakeAuthRequests } from '@/hooks/auth';
 import { SplitHistoryItem } from '@/interfaces/api';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { Field, InlineTable, ItemField } from '../InlineTable/InlineTable';
 import Loading from 'react-loading';
-import { shortAddress } from '@/utils';
-import { TableLink } from './components/TableLink';
-
-const TABLE_HEADER: Field[] = [
-  { key: 'shortenTXID', title: 'TXID', Component: TableLink },
-  { key: 'confirmed', title: 'CONFIRMED' },
-];
 
 interface HistoryModalProps {
   onClose: () => void;
@@ -24,12 +17,7 @@ export const HistoryModal = ({ onClose }: HistoryModalProps) => {
     queryKey: ['split-history'],
     queryFn: () =>
       makeAuthRequest(() => axios.get(`${BACKEND_URL}/split/history`, { withCredentials: true })),
-    select: (res) =>
-      (res?.data as SplitHistoryItem[]).map((item) => ({
-        txid: { value: item.txid },
-        shortenTXID: { value: shortAddress(item.txid) },
-        confirmed: { value: item.confirmed ? 'Yes' : 'No' },
-      })) as ItemField[],
+    select: (res) => (res?.data as SplitHistoryItem[]).map((item) => item.txid) as string[],
   });
 
   return (
@@ -37,14 +25,17 @@ export const HistoryModal = ({ onClose }: HistoryModalProps) => {
       {isLoading && <Loading type='balls' />}
       <div className='max-h-[420px] overflow-y-auto px-[20px]'>
         {isSuccess && (
-          <InlineTable
-            headClassName='sticky top-0 bg-[#191919]'
-            fields={TABLE_HEADER}
-            data={data}
-            keyId='txid'
-            cellClassName='px-[20px]'
-            firstCellClassName='pl-[20px]'
-          />
+          <div className='flex flex-col gap-3 text-[#53DCFF] py-3 items-center'>
+            <span className='text-white font-bold text-[26px]'>TXIDS</span>
+            {data?.map((f, i) => (
+              <a
+                href={`/explorer/tx/${f}`}
+                key={i}
+              >
+                {f}
+              </a>
+            ))}
+          </div>
         )}
       </div>
       <button
