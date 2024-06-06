@@ -1,5 +1,4 @@
 import React, { FC, useEffect, useState } from 'react';
-import cn from 'classnames';
 
 interface Props {
   pageCount: number;
@@ -21,7 +20,6 @@ const Pagination: FC<Props> = ({
   className,
   rightBtnPlaceholder,
   leftBtnPlaceholder,
-  dotsClassName,
   activeClassName = '',
   currentPage = 1,
   onPageChange,
@@ -70,9 +68,7 @@ const Pagination: FC<Props> = ({
   };
 
   const shouldShowLeftPage = currentPage - Math.floor(visiblePageButtonsCount / 2) > 1;
-  const shouldShowLeftDots = currentPage - Math.floor(visiblePageButtonsCount / 2) > 2;
   const shouldShowRightPage = currentPage + Math.floor(visiblePageButtonsCount / 2) < pageCount;
-  const shouldShowRightDots = currentPage + Math.floor(visiblePageButtonsCount / 2) < pageCount - 1;
   const handlePageChange = (page: number) => {
     if (page !== currentPage) {
       onPageChange(page);
@@ -91,36 +87,28 @@ const Pagination: FC<Props> = ({
 
   return (
     <div className={className}>
-      {currentPage > 0 && leftBtnPlaceholder && visiblePageButtonsCount > 4 && (
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          className={arrowsClassName}
-        >
-          {leftBtnPlaceholder}
-        </button>
-      )}
+      <button
+        onClick={() => handlePageChange(currentPage - 1)}
+        className={arrowsClassName}
+        disabled={!(currentPage > 0 && leftBtnPlaceholder && visiblePageButtonsCount > 4)}
+      >
+        {leftBtnPlaceholder}
+      </button>
       {shouldShowLeftPage && <LinkItem page={1} />}
-      {shouldShowLeftDots && (
-        <span className={cn(buttonsClassName, dotsClassName, 'select-none')}>...</span>
-      )}
       {visiblePages().map((pageNumber) => (
         <LinkItem
           key={`page-${pageNumber}`}
           page={pageNumber + 1}
         />
       ))}
-      {shouldShowRightDots && (
-        <span className={cn(buttonsClassName, dotsClassName, 'select-none')}>...</span>
-      )}
       {shouldShowRightPage && <LinkItem page={pageCount + 1} />}
-      {currentPage < pageCount - 1 && rightBtnPlaceholder && visiblePageButtonsCount > 4 && (
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          className={arrowsClassName}
-        >
-          {rightBtnPlaceholder}
-        </button>
-      )}
+      <button
+        onClick={() => handlePageChange(currentPage + 1)}
+        disabled={!(currentPage < pageCount && rightBtnPlaceholder && visiblePageButtonsCount > 4)}
+        className={arrowsClassName}
+      >
+        {rightBtnPlaceholder}
+      </button>
     </div>
   );
 };
