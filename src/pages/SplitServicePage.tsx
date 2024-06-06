@@ -5,13 +5,11 @@ import { useCallback, useEffect, useState } from 'react';
 import UtxoSelector from '@/components/SplitServiceComponents/UtxoSelector';
 import SplitVisualizer from '@/components/SplitServiceComponents/SplitVisualizer';
 import SplitSummary from '@/components/SplitServiceComponents/SplitSummary';
-import { BACKEND_URL, OLD_ELECTRS } from '@/consts';
+import { OLD_ELECTRS } from '@/consts';
 import Loading from 'react-loading';
 import FeeSelector from '@/components/SplitServiceComponents/FeeSelector';
 import { Fees } from '@/interfaces/api';
 import { getFees } from '@/hooks/electrs';
-import { Split } from '@/interfaces/marketapi';
-import { filterOrdsAndFindUnmatchedSplits } from '@/utils';
 import { useMakeAuthRequests } from '@/hooks/auth';
 import { useModal } from '@/hooks/useModal';
 import { Modal } from '@/components/Modal';
@@ -39,18 +37,18 @@ const SplitServicePage = () => {
     return response as Ord[];
   }, [address]);
 
-  const getSplits = useCallback(async () => {
-    const result = await makeAuthRequests(() =>
-      axios.get<Split[]>(`${BACKEND_URL}/split`, { withCredentials: true }),
-    );
-    return result?.data ?? [];
-  }, []);
+  // const getSplits = useCallback(async () => {
+  //   const result = await makeAuthRequests(() =>
+  //     axios.get<Split[]>(`${BACKEND_URL}/split`, { withCredentials: true }),
+  //   );
+  //   return result?.data ?? [];
+  // }, []);
 
-  const confirmSplits = useCallback(async (txs: string[]) => {
-    await makeAuthRequests(() =>
-      axios.put(`${BACKEND_URL}/split`, { txs }, { withCredentials: true }),
-    );
-  }, []);
+  // const confirmSplits = useCallback(async (txs: string[]) => {
+  //   await makeAuthRequests(() =>
+  //     axios.put(`${BACKEND_URL}/split`, { txs }, { withCredentials: true }),
+  //   );
+  // }, []);
 
   const selectedOrdHandler = (ord: Ord) => {
     setSelectedOrds((prev) => [...prev, ord]);
@@ -89,21 +87,21 @@ const SplitServicePage = () => {
       return;
     }
 
-    let ords = await getOffsets();
-    const splits = await getSplits();
-    const { filteredOrds, unmatchedSplits } = filterOrdsAndFindUnmatchedSplits(
-      ords ?? [],
-      splits ?? [],
-    );
-    ords = filteredOrds.sort((a, b) => b.available_to_free - a.available_to_free);
+    const ords = await getOffsets();
+    // const splits = await getSplits();
+    // const { filteredOrds, unmatchedSplits } = filterOrdsAndFindUnmatchedSplits(
+    //   ords ?? [],
+    //   splits ?? [],
+    // );
+    // ords = filteredOrds.sort((a, b) => b.available_to_free - a.available_to_free);
 
     setOrds(ords);
     setLoading(false);
 
-    if (unmatchedSplits.length > 0) {
-      await confirmSplits(unmatchedSplits.map((f) => f.txid));
-    }
-  }, [address, verifiedAddress, getSplits]);
+    // if (ords.length > 0) {
+    //   await confirmSplits(ords.map((f) => f.txid));
+    // }
+  }, [address, verifiedAddress]);
 
   useEffect(() => {
     setSelectedOrds([]);
