@@ -14,7 +14,6 @@ import FoundCounter from '../components/FoundCounter.tsx';
 import Pagination from '../components/Table/Pagination.tsx';
 import Arrow from '../assets/TableArrow.svg?react';
 import { useNavigate } from 'react-router-dom';
-import Skeleton from '../components/Placeholders/Skeleton.tsx';
 import { CONTENT_API_URL } from '@/consts';
 import { useInscriptionFilters } from '@/hooks/useInscriptionFilters.ts';
 import Filter from '@/components/Controls/Filter.tsx';
@@ -109,7 +108,7 @@ const InscriptionsPage = () => {
                 customText={'inscriptions'}
                 classNames={'px-[15px]'}
               />
-              <div className='max-w-[1250px] mx-auto flex flex-wrap pt-[10px] max-lowerMobile:gap-[5px] gap-[10px] max-lg:justify-center'>
+              <div className='max-w-[1250px] mx-auto flex flex-wrap pt-[10px] max-lowerMobile:gap-[5px] gap-[10px] max-lg:justify-center min-h-[843px]'>
                 {inscriptions?.inscriptions.map((card, index) => (
                   <div key={index}>
                     <Card
@@ -126,25 +125,40 @@ const InscriptionsPage = () => {
                   </div>
                 ))}
               </div>
-              {inscriptions.count >= 18 && (
-                <Pagination
-                  activeClassName='bg-[#FFBB00] text-black'
-                  leftBtnPlaceholder={<Arrow />}
-                  rightBtnPlaceholder={<Arrow className={'rotate-180 flex'} />}
-                  buttonsClassName='flex items-center justify-center w-auto min-w-[2.25rem] px-[6px] h-9 bg-[#191919] rounded-full'
-                  currentPage={filters.currentPage}
-                  arrowsClassName='h-full flex items-center p-[10px] bg-[#191919] rounded-[26px]'
-                  className={
-                    'text-white flex justify-center pt-[30px] pb-[30px] items-center gap-x-[10px] text-center align-middle'
-                  }
-                  pageCount={inscriptions.pages}
-                  onPageChange={onPageChange}
-                />
-              )}
             </>
           ) : (
-            <Skeleton classNames='h-[80dvh]' />
+            <>
+              <FoundCounter
+                customText={'inscriptions'}
+                classNames={'px-[15px]'}
+              />
+              <div className='max-w-[1250px] mx-auto flex flex-wrap pt-[10px] max-lowerMobile:gap-[5px] gap-[10px] max-lg:justify-center'>
+                {Array(18)
+                  .fill(undefined)
+                  .map((_, f) => (
+                    <div
+                      key={f}
+                      className='w-[200px] h-[271px] rounded-[12px] bg-slate-800 animate-pulse'
+                    ></div>
+                  ))}
+              </div>
+            </>
           )}
+          {/* {inscriptions.count >= 18 && ( */}
+          <Pagination
+            activeClassName='bg-[#FFBB00] text-black'
+            leftBtnPlaceholder={<Arrow />}
+            rightBtnPlaceholder={<Arrow className={'rotate-180 flex'} />}
+            buttonsClassName='flex items-center justify-center w-auto min-w-[2.25rem] px-[6px] h-9 bg-[#191919] rounded-full'
+            currentPage={filters.currentPage}
+            arrowsClassName='h-full flex items-center p-[10px] bg-[#191919] rounded-[26px]'
+            className={
+              'text-white flex justify-center pt-[30px] pb-[30px] items-center gap-x-[10px] text-center align-middle'
+            }
+            pageCount={inscriptions?.pages ?? 0}
+            onPageChange={onPageChange}
+          />
+          {/* )} */}
         </div>
       </div>
     </div>
