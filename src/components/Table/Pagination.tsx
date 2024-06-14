@@ -64,7 +64,12 @@ const Pagination: FC<Props> = ({
       }
     }
 
-    return Array.from({ length: endPage - startPage + 2 }, (_, i) => startPage + i);
+    return Array.from({
+      length: endPage - startPage +
+        (visiblePageButtonsCount - 1 === endPage ||
+          endPage === currentPage - 1 ?
+          2 : 1)
+    }, (_, i) => startPage + i);
   };
 
   const shouldShowLeftPage = currentPage - Math.floor(visiblePageButtonsCount / 2) > 1;
