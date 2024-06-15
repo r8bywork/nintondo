@@ -14,11 +14,13 @@ import { useMakeAuthRequests } from '@/hooks/auth';
 import { useModal } from '@/hooks/useModal';
 import { Modal } from '@/components/Modal';
 import { HistoryModal } from '@/components/SplitServiceComponents/HistoryModal';
+import { useSearchParams } from 'react-router-dom';
 
 const SplitServicePage = () => {
   const { address, verifiedAddress } = useNintondoManagerContext();
   const [ords, setOrds] = useState<Ord[]>([]);
   const [loading, setLoading] = useState(false);
+  const [searchParams] = useSearchParams();
 
   const [selectedOrds, setSelectedOrds] = useState<Ord[]>([]);
   const [selectedAll, setSelectedAll] = useState<boolean>(false);
@@ -32,7 +34,13 @@ const SplitServicePage = () => {
 
   const getOffsets = useCallback(async (): Promise<Ord[]> => {
     const response = (
-      await makeAuthRequests(() => axios.get(`${OLD_ELECTRS}/offset_ords/address/${address}`))
+      await makeAuthRequests(() =>
+        axios.get(
+          `${OLD_ELECTRS}/offset_ords/address/${address}${
+            searchParams.size ? `?${searchParams}` : ''
+          }`,
+        ),
+      )
     )?.data;
     return response as Ord[];
   }, [address]);
