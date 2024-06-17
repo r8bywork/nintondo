@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import axios from 'axios';
-import { fetchExplorer } from '../utils';
+import { fetchBELLMainnet, fetchExplorer } from '../utils';
 import {
   additionalFields,
   AddressStats,
@@ -10,6 +10,7 @@ import {
   Transaction,
   TransactionData,
 } from '../interfaces/intefaces.ts';
+import { OriginalOrd } from '@/interfaces/nintondo-manager-provider.ts';
 
 export const useExplorerTxInfo = () => {
   return useCallback(async (hash: string): Promise<Transaction[]> => {
@@ -27,6 +28,27 @@ export const useExplorerTxInfo = () => {
 
     const response = await axios.get(`https://api.nintondo.io/api/tx/${hash}`);
     return [{ ...response.data, ...memPool, fee: { ...feeEstimates } }];
+  }, []);
+};
+
+export const useGetOrdByTxid = () => {
+  return useCallback(async (address: string, query: string): Promise<OriginalOrd[] | undefined> => {
+    return await fetchBELLMainnet<OriginalOrd[]>({
+      path: `/address/${address}/ords?search=${query}`,
+      json: true,
+      method: 'GET',
+    });
+  }, []);
+};
+
+
+export const useGetRawHex = () => {
+  return useCallback(async (hash: string): Promise<string | undefined> => {
+    return await fetchBELLMainnet<string>({
+      path: `/tx/${hash}/hex`,
+      json: false,
+      method: 'GET',
+    });
   }, []);
 };
 

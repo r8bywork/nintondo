@@ -180,7 +180,7 @@ const SplitServicePage = () => {
           onHistoryClick={open}
         />
       </div>
-      <div className='flex gap-6'>
+      <div className='flex gap-6 max-md:flex-col'>
         <FeeSelector
           onChange={(value) => {
             setSelectedFeeRate(value);

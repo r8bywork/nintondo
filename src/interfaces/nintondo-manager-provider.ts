@@ -42,11 +42,25 @@ export interface ToSignInput {
   sighashTypes?: number[];
 }
 
+export interface OriginalOrd {
+  txid: string;
+  vout: number;
+  confirmed: boolean;
+  status: Status;
+  value: number;
+  content_type: string;
+  content_length: number;
+  inscription_id: string;
+  inscription_number: number;
+  offset: number;
+}
+
 export interface Ord {
   available_to_free: number;
   inscriptions: InscriptionMetaInfo[];
   status: Status;
   txid: string;
+  confirmed: boolean;
   value: number;
   vout: number;
   inscriptionIndex?: number;

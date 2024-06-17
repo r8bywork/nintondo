@@ -3,6 +3,7 @@ import BigArrowRight from '@/assets/BigArrowRight.svg?react';
 import { FC } from 'react';
 import SplitUtxo from './components/SplitUtxo';
 import SendUtxo from './components/SendUtxo';
+import Search from '@/pages/components/Search/Search';
 
 interface SplitVisualizerProps {
   selectedOrds: Ord[];
@@ -46,8 +47,11 @@ const SplitVisualizer: FC<SplitVisualizerProps> = ({
   if (!selectedOrds.length)
     return (
       <div className='flex flex-col min-w-[55%] border-2 border-[#191919] rounded-lg p-4'>
-        <div className='w-full flex justify-between items-center'>
+        <div className='w-full flex justify-between items-center pb-[15px]'>
           <p className='text-lg font-medium'>Splits</p>
+          <div className='max-w-[600px] w-full mx-[15px]'>
+            <Search placeholder='txid' utxo={true} selectedOrds={selectedOrds} setSelectedOrds={setSelectedOrds} />
+          </div>
           <button
             className={
               'text-[20px] flex items-center border px-[20px] py-[6px] gap-[10px] leading-[21px] transition rounded-[50px]'
@@ -66,8 +70,11 @@ const SplitVisualizer: FC<SplitVisualizerProps> = ({
   return (
     <div className='flex flex-col min-w-[55%] border-2 border-[#191919] rounded-lg p-4'>
       <div className='flex flex-col pb-[]'>
-        <div className='w-full flex justify-between items-center'>
+        <div className='w-full flex justify-between items-center pb-[15px]'>
           <p className='text-lg font-medium'>Splits</p>
+          <div className='max-w-[600px] w-full mx-[15px]'>
+            <Search placeholder='txid' utxo={true} selectedOrds={selectedOrds} setSelectedOrds={setSelectedOrds} />
+          </div>
           <button
             className={
               'text-[20px] flex border items-center px-[20px] py-[6px] gap-[10px] leading-[21px] transition rounded-[50px]'

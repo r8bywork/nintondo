@@ -2,7 +2,6 @@ import { useSplitOrds } from '@/hooks/split';
 import { Ord } from '@/interfaces/nintondo-manager-provider';
 import { FC, useState } from 'react';
 import toast from 'react-hot-toast';
-// import toast from 'react-hot-toast';
 import Loading from 'react-loading';
 
 interface SplitSummaryProps {
@@ -33,7 +32,7 @@ const SplitSummary: FC<SplitSummaryProps> = ({ selectedOrds, updateOrds, selecte
   if (!selectedOrds.length) return;
 
   return (
-    <div className='max-w-fit flex flex-col items-center justify-center text-lg border-2 border-[#191919] rounded-lg p-4 gap-1'>
+    <div className='md:max-w-fit max-md:w-full flex flex-col items-center justify-center text-lg border-2 border-[#191919] rounded-lg p-4 gap-1'>
       <div>
         <p>Total utxos to split: {selectedOrds.length}</p>
         <p>
