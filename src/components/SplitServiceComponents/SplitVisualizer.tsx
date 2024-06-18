@@ -1,23 +1,28 @@
-import { Ord } from '@/interfaces/nintondo-manager-provider';
+import { Ord, OriginalOrd } from '@/interfaces/nintondo-manager-provider';
 import BigArrowRight from '@/assets/BigArrowRight.svg?react';
-import { FC } from 'react';
+import { Dispatch, FC, SetStateAction } from 'react';
 import SplitUtxo from './components/SplitUtxo';
 import SendUtxo from './components/SendUtxo';
 import Search from '@/pages/components/Search/Search';
+import { useGetRawHex } from '@/hooks/explorerapi';
+import { transformOrd } from '@/utils';
 
 interface SplitVisualizerProps {
   selectedOrds: Ord[];
   setSelectedOrds: (ords: Ord[]) => void;
   removeSelectedOrdHandler: (ord: Ord) => void;
   onHistoryClick: () => void;
+  setOrds: Dispatch<SetStateAction<Ord[]>>;
 }
 
 const SplitVisualizer: FC<SplitVisualizerProps> = ({
+  setOrds,
   selectedOrds,
   setSelectedOrds,
   removeSelectedOrdHandler,
   onHistoryClick,
 }) => {
+  const getRawHex = useGetRawHex()
   const switchToInscription = (ord: Ord, direction: 'next' | 'previous') => {
     setSelectedOrds(
       selectedOrds.map((o) => {
@@ -36,6 +41,19 @@ const SplitVisualizer: FC<SplitVisualizerProps> = ({
     );
   };
 
+  const pressOrds = async (ord: OriginalOrd) => {
+    const raw_hex = await getRawHex(ord.txid)
+    if (!selectedOrds || !setSelectedOrds) return
+    const existingOrd = selectedOrds.find(f => f.txid === ord.txid);
+    if (!existingOrd && raw_hex) {
+      setSelectedOrds([...selectedOrds, transformOrd(ord, raw_hex)]);
+      setOrds((prev: Ord[]): Ord[] => {
+        const index = prev.findIndex((f) => f.txid === ord.txid && f.vout === ord.vout);
+        return [...prev.slice(0, index), ...prev.slice(index + 1)];
+      });
+    }
+  }
+
   const updateSend = (ord: Ord) => {
     setSelectedOrds(
       selectedOrds.map((o) =>
@@ -47,10 +65,10 @@ const SplitVisualizer: FC<SplitVisualizerProps> = ({
   if (!selectedOrds.length)
     return (
       <div className='flex flex-col min-w-[55%] border-2 border-[#191919] rounded-lg p-4'>
-        <div className='w-full flex justify-between items-center pb-[15px]'>
+        <div className='w-full flex justify-between items-center max-md:flex-col max-md:gap-[20px] pb-[15px]'>
           <p className='text-lg font-medium'>Splits</p>
           <div className='max-w-[600px] w-full mx-[15px]'>
-            <Search placeholder='txid' utxo={true} selectedOrds={selectedOrds} setSelectedOrds={setSelectedOrds} />
+            <Search placeholder='txid' utxo={true} pressResults={pressOrds} />
           </div>
           <button
             className={
@@ -73,7 +91,7 @@ const SplitVisualizer: FC<SplitVisualizerProps> = ({
         <div className='w-full flex justify-between items-center pb-[15px]'>
           <p className='text-lg font-medium'>Splits</p>
           <div className='max-w-[600px] w-full mx-[15px]'>
-            <Search placeholder='txid' utxo={true} selectedOrds={selectedOrds} setSelectedOrds={setSelectedOrds} />
+            <Search placeholder='txid' utxo={true} pressResults={pressOrds} />
           </div>
           <button
             className={

@@ -1,5 +1,5 @@
 import { Split } from '@/interfaces/marketapi';
-import { Ord } from '@/interfaces/nintondo-manager-provider';
+import { Ord, OriginalOrd } from '@/interfaces/nintondo-manager-provider';
 import {
   CONTENT_API_URL,
   MARKET_API_URL,
@@ -18,8 +18,8 @@ export const fetchBELLMainnet = async <T>({
   const url = `${NINTONDO_API_URL}${path}`;
   const params = props.params
     ? Object.entries(props.params)
-        .map((k) => `${k[0]}=${k[1]}`)
-        .join('&')
+      .map((k) => `${k[0]}=${k[1]}`)
+      .join('&')
     : '';
   const res = await fetch(
     `${url.toString()}${Number(params.length) > 0 ? '?' : ''}${params ?? ''}`,
@@ -302,3 +302,24 @@ export const shareData = () => {
 export const copyToClipboard = (text: string) => {
   navigator.clipboard.writeText(text).then(() => toast('Copied!'));
 };
+
+export const transformOrd = (ord: OriginalOrd, raw_hex: string): Ord => {
+  return {
+    txid: ord.txid,
+    vout: ord.vout,
+    value: ord.value,
+    confirmed: ord.status.confirmed,
+    raw_hex,
+    status: ord.status,
+    inscriptions: [
+      {
+        content_type: ord.content_type,
+        content_length: ord.content_length,
+        inscription_id: ord.inscription_id,
+        inscription_number: ord.inscription_number,
+        offset: ord.offset
+      }
+    ],
+    available_to_free: ord.value - 1000,
+  }
+}
