@@ -1,4 +1,4 @@
-import './ToogleSwitch.css';
+import styles from './ToggleSwitch.module.scss';
 
 interface ToggleSwitchProps {
   isChecked: boolean;
@@ -8,15 +8,15 @@ interface ToggleSwitchProps {
 
 const ToggleSwitch = ({ isChecked, title, onToggle }: ToggleSwitchProps) => {
   return (
-    <div className='flex text-[18px] gap-[10px] items-center'>
-      <span>{title}</span>
-      <label className='switch'>
+    <div className={styles.switchContainer}>
+      {title && <span className={styles.title}>{title}</span>}
+      <label className={styles.switch}>
         <input
           type='checkbox'
           checked={isChecked}
           onChange={onToggle}
         />
-        <span className='slider round'></span>
+        <span className={styles.slider}></span>
       </label>
     </div>
   );
