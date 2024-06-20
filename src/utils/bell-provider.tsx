@@ -83,25 +83,21 @@ const useNintondoManager = () => {
         verified = pair.verify(Buffer.from(sha256(message)), signatureBufferHex);
       }
       if (verified) {
-        const publicAddress = getAddress(publicKeyBuffer, AddressType.P2PKH);
-        if (publicAddress === connectedAddress) {
-          await axios.post(
-            `${BACKEND_URL}/auth/login`,
-            {
-              address: connectedAddress,
-              // eslint-disable-next-line camelcase
-              signed_message_string: signedMessage,
-              // eslint-disable-next-line camelcase
-              public_key_hex: await nintondo.getPublicKey(),
-            },
-            { withCredentials: true },
-          );
+        await axios.post(
+          `${BACKEND_URL}/auth/login`,
+          {
+            address: connectedAddress,
+            // eslint-disable-next-line camelcase
+            signed_message_string: signedMessage,
+            // eslint-disable-next-line camelcase
+            public_key_hex: await nintondo.getPublicKey(),
+          },
+          { withCredentials: true },
+        );
 
-          const accessToken = Cookies.get('access_token');
-          if (accessToken) setVerifiedAddress(true);
+        setVerifiedAddress(true);
 
-          // localStorage.setItem('verifiedAddress', connectedAddress);
-        } else toast.error('Failed to verify address');
+        // localStorage.setItem('verifiedAddress', connectedAddress);
       } else toast.error('Failed to verify address');
     } catch (e) {
       console.log(e);
