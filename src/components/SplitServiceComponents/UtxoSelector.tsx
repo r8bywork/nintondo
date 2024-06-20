@@ -1,11 +1,16 @@
 import { Ord } from '@/interfaces/nintondo-manager-provider';
 import { FC } from 'react';
+import ToggleSwitch from '../ToggleSwitch/ToogleSwitch';
 
 interface UtxoSelectorProps {
   ords: Ord[];
   selectOrdHandler: (ord: Ord) => void;
   selectedAll: boolean;
   setSelectedAll: () => void;
+  switchProps: {
+    hideSmall: boolean;
+    onToggle: () => void;
+  };
 }
 
 const UtxoSelector: FC<UtxoSelectorProps> = ({
@@ -13,13 +18,19 @@ const UtxoSelector: FC<UtxoSelectorProps> = ({
   selectOrdHandler,
   selectedAll,
   setSelectedAll,
+  switchProps,
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
   return (
     <div className='flex flex-col min-w-[45%] border-2 border-[#191919] rounded-lg p-4'>
-      <div className='w-full flex justify-between items-center'>
+      <div className='w-full flex max-md:flex-col justify-between items-center'>
         <p className='text-lg font-medium'>Select utxos to split</p>
+        <ToggleSwitch
+          title={'Show small'}
+          isChecked={switchProps.hideSmall}
+          onToggle={switchProps.onToggle}
+        />
         <div className='flex justify-center gap-3 items-center'>
           <input
             type='checkbox'

@@ -26,18 +26,25 @@ const SplitServicePage = () => {
   const [selectedAll, setSelectedAll] = useState<boolean>(false);
   const [feeRates, setFeeRate] = useState<Fees>({ fast: 3000, slow: 200 });
 
+  const [hideSmall, setHideSmall] = useState<boolean>(false);
   const [selectedFeeRate, setSelectedFeeRate] = useState<number | string>(37);
 
   const { isOpen, open, close } = useModal();
 
   const makeAuthRequests = useMakeAuthRequests();
+  useEffect(() => {
+    if (hideSmall) {
+      searchParams.set('hide_small', 'true');
+    } else {
+      searchParams.delete('hide_small');
+    }
+  }, [hideSmall]);
 
   const getOffsets = useCallback(async (): Promise<Ord[]> => {
     const response = (
       await makeAuthRequests(() =>
         axios.get(
-          `${OLD_ELECTRS}/offset_ords/address/${address}${
-            searchParams.size ? `?${searchParams}` : ''
+          `${OLD_ELECTRS}/offset_ords/address/${address}${searchParams.size ? `?${searchParams}` : ''
           }`,
         ),
       )
@@ -115,7 +122,7 @@ const SplitServicePage = () => {
     setSelectedOrds([]);
     setOrds([]);
     updateOrds();
-  }, [updateOrds]);
+  }, [updateOrds, hideSmall]);
 
   useEffect(() => {
     updateFees();
@@ -171,6 +178,10 @@ const SplitServicePage = () => {
     <div className='min-h-screen max-w-[1700px] mx-auto flex pt-[150px] flex-col text-white gap-4 text-white p-4'>
       <div className='flex justify-center flex-col lg:flex-row gap-4'>
         <UtxoSelector
+          switchProps={{
+            hideSmall: hideSmall,
+            onToggle: () => setHideSmall(!hideSmall),
+          }}
           ords={ords}
           selectOrdHandler={selectedOrdHandler}
           setSelectedAll={() => {
