@@ -27,7 +27,7 @@ const UtxoSelector: FC<UtxoSelectorProps> = ({
       <div className='w-full flex max-md:flex-col justify-between items-center'>
         <p className='text-lg font-medium'>Select utxos to split</p>
         <ToggleSwitch
-          title={'Show small'}
+          title={'Only small'}
           isChecked={switchProps.hideSmall}
           onToggle={switchProps.onToggle}
         />
