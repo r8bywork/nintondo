@@ -1,8 +1,9 @@
-import { useState, useCallback, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { createHref } from '@/utils';
-import { InscriptionCards } from '@/interfaces/inscriptions.ts';
+import { useCallback, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import { useExplorerGetInscriptionsList } from '@/hooks/marketinfo.ts';
+import { InscriptionCards } from '@/interfaces/inscriptions.ts';
+import { createHref } from '@/utils';
 
 interface Filters {
   currentPage: number;
@@ -25,7 +26,7 @@ export const useInscriptionFilters = () => {
 
   const parseSearchParams = useCallback(
     (searchParams: URLSearchParams) => ({
-      currentPage: parseInt(searchParams.get('currentPage') || '1', 10) - 1,
+      currentPage: Number.parseInt(searchParams.get('currentPage') || '1', 10),
       sortBy: searchParams.get('sortBy') || 'newest',
       contentType: searchParams.get('contentType') || 'all',
       timeFilter: searchParams.get('timeFilter') || 'all',
@@ -34,7 +35,7 @@ export const useInscriptionFilters = () => {
         Number(searchParams.get('to')) < Number.MAX_SAFE_INTEGER
           ? searchParams.get('to') || 'max'
           : 'max',
-      genesisBlock: parseInt(searchParams.get('genesisBlock') || '0', 10),
+      genesisBlock: Number.parseInt(searchParams.get('genesisBlock') || '0', 10),
     }),
     [],
   );
@@ -78,7 +79,7 @@ export const useInscriptionFilters = () => {
   }, [location.search]);
 
   const onPageChange = (newPage: number) => {
-    const params = createHref({ currentPage: newPage + 1 }, urlSearchParams);
+    const params = createHref({ currentPage: newPage }, urlSearchParams);
     navigate(`?${params}`);
   };
 

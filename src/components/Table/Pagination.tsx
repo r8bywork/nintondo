@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import React, { FC, useEffect, useState } from 'react';
 
 interface Props {
@@ -26,14 +27,18 @@ const Pagination: FC<Props> = ({
 }) => {
   const calculateButtons = (size: number) => {
     switch (true) {
-      case size < 500:
+      case size < 500: {
         return 2;
-      case size <= 600:
+      }
+      case size <= 600: {
         return 3;
-      case size <= 700:
+      }
+      case size <= 700: {
         return 4;
-      default:
+      }
+      default: {
         return 5;
+      }
     }
   };
   const [visiblePageButtonsCount, setVisiblePageButtonsCount] = useState<number>(
@@ -53,10 +58,10 @@ const Pagination: FC<Props> = ({
   const halfCount = Math.floor(visiblePageButtonsCount / 2);
 
   const visiblePages = () => {
-    let startPage = currentPage - halfCount > 0 ? currentPage - halfCount : 0;
+    let startPage = currentPage - 1 - halfCount > 0 ? currentPage - halfCount : 1;
     let endPage = currentPage + halfCount < pageCount ? currentPage + halfCount : pageCount - 1;
 
-    if (endPage - startPage + 1 < visiblePageButtonsCount) {
+    if (endPage - startPage < visiblePageButtonsCount) {
       if (startPage === 1) {
         endPage = Math.min(visiblePageButtonsCount, pageCount);
       } else if (endPage === pageCount) {
@@ -64,13 +69,21 @@ const Pagination: FC<Props> = ({
       }
     }
 
-    return Array.from({ length: endPage - startPage + 2 }, (_, i) => startPage + i);
+    return Array.from(
+      {
+        length:
+          endPage -
+          startPage +
+          (visiblePageButtonsCount === endPage || endPage === currentPage - 1 ? 2 : 0),
+      },
+      (_, i) => startPage + i,
+    );
   };
 
   const shouldShowLeftPage = currentPage - Math.floor(visiblePageButtonsCount / 2) > 1;
   const shouldShowRightPage = currentPage + Math.floor(visiblePageButtonsCount / 2) < pageCount;
   const handlePageChange = (page: number) => {
-    if (page !== currentPage) {
+    if (page !== currentPage && page <= pageCount && page >= 1) {
       onPageChange(page);
     }
   };
@@ -78,8 +91,8 @@ const Pagination: FC<Props> = ({
   const LinkItem: FC<{ page: number }> = ({ page }) => (
     <button
       key={page}
-      onClick={() => handlePageChange(page - 1)} // Уменьшаем на 1 для корректной внутренней логики
-      className={`${buttonsClassName}${currentPage === page - 1 ? ` ${activeClassName}` : ''}`}
+      onClick={() => handlePageChange(page)}
+      className={`${buttonsClassName}${currentPage === page ? ` ${activeClassName}` : ''}`}
     >
       {page}
     </button>
@@ -89,8 +102,9 @@ const Pagination: FC<Props> = ({
     <div className={className}>
       <button
         onClick={() => handlePageChange(currentPage - 1)}
-        className={arrowsClassName}
-        disabled={!(currentPage > 0 && leftBtnPlaceholder && visiblePageButtonsCount > 4)}
+        className={classNames(arrowsClassName, {
+          hidden: visiblePageButtonsCount <= 4 || currentPage === 1,
+        })}
       >
         {leftBtnPlaceholder}
       </button>
@@ -98,14 +112,15 @@ const Pagination: FC<Props> = ({
       {visiblePages().map((pageNumber) => (
         <LinkItem
           key={`page-${pageNumber}`}
-          page={pageNumber + 1}
+          page={pageNumber}
         />
       ))}
-      {shouldShowRightPage && <LinkItem page={pageCount + 1} />}
+      {shouldShowRightPage && <LinkItem page={pageCount} />}
       <button
         onClick={() => handlePageChange(currentPage + 1)}
-        disabled={!(currentPage < pageCount && rightBtnPlaceholder && visiblePageButtonsCount > 4)}
-        className={arrowsClassName}
+        className={classNames(arrowsClassName, {
+          hidden: visiblePageButtonsCount <= 4 || currentPage === pageCount,
+        })}
       >
         {rightBtnPlaceholder}
       </button>
